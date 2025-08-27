@@ -1,0 +1,55 @@
+{
+    "$schema": "https://inlang.com/schema/inlang-message-format",
+    "example_message": "Hola {username}",
+
+    "nav.home": "Inicio",
+    "nav.about": "Acerca de",
+    "nav.contact": "Contacto",
+    "nav.products": "Productos",
+    "nav.users": "Usuarios",
+    "nav.settings": "Configuración",
+
+    "page.home.title": "Bienvenido a YAML Routes",
+    "page.home.description": "Esta demo muestra el poder del enrutamiento basado en YAML con TanStack Router",
+
+    "page.about.title": "Acerca de YAML Routes",
+    "page.about.description": "YAML Routes es un paquete poderoso que simplifica la configuración de enrutamiento para aplicaciones web modernas. En lugar de archivos de ruta complejos, defines tus rutas en un formato YAML limpio y legible.",
+
+    "contact.title": "Contáctanos",
+    "contact.description": "Ponte en contacto con nuestro equipo",
+
+    "products.title": "Nuestros productos",
+    "products.description": "Descubre nuestra gama de productos",
+    "products.view_details": "Ver detalles",
+    "products.view_reviews": "Ver reseñas",
+
+    "users.title": "Perfiles de usuario",
+    "users.description": "Gestionar perfiles de usuario",
+    "users.view_profile": "Ver perfil",
+
+    "settings.title": "Configuración",
+    "settings.general": "General",
+    "settings.privacy": "Privacidad",
+    "settings.account": "Cuenta",
+    "settings.description": "Configura tus preferencias",
+
+    "profile.title": "Perfil de usuario",
+    "profile.user_id": "ID de usuario: {userId}",
+    "profile.loading": "Cargando perfil...",
+
+    "product.details.title": "Detalles del producto",
+    "product.details.product_id": "ID del producto: {productId}",
+    "product.details.loading": "Cargando detalles...",
+
+    "product.reviews.title": "Reseñas del producto",
+    "product.reviews.product_id": "Reseñas para el producto: {productId}",
+    "product.reviews.loading": "Cargando reseñas...",
+
+    "error.not_found": "Página no encontrada",
+    "error.go_home": "Volver al inicio",
+
+    "general.loading": "Cargando...",
+    "general.back": "Atrás",
+    "general.next": "Siguiente",
+    "general.previous": "Anterior"
+}

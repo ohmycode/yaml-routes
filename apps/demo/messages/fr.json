@@ -1,0 +1,55 @@
+{
+    "$schema": "https://inlang.com/schema/inlang-message-format",
+    "example_message": "Bonjour {username}",
+
+    "nav.home": "Accueil",
+    "nav.about": "À propos",
+    "nav.contact": "Contact",
+    "nav.products": "Produits",
+    "nav.users": "Utilisateurs",
+    "nav.settings": "Paramètres",
+
+    "page.home.title": "Bienvenue dans YAML Routes",
+    "page.home.description": "Cette démo présente la puissance du routage basé sur YAML avec TanStack Router",
+
+    "page.about.title": "À propos de YAML Routes",
+    "page.about.description": "YAML Routes est un package puissant qui simplifie la configuration de routage pour les applications web modernes. Au lieu de fichiers de route complexes, vous définissez vos routes dans un format YAML propre et lisible.",
+
+    "contact.title": "Contactez-nous",
+    "contact.description": "Entrez en contact avec notre équipe",
+
+    "products.title": "Nos produits",
+    "products.description": "Découvrez notre gamme de produits",
+    "products.view_details": "Voir les détails",
+    "products.view_reviews": "Voir les avis",
+
+    "users.title": "Profils utilisateurs",
+    "users.description": "Gérer les profils utilisateurs",
+    "users.view_profile": "Voir le profil",
+
+    "settings.title": "Paramètres",
+    "settings.general": "Général",
+    "settings.privacy": "Confidentialité",
+    "settings.account": "Compte",
+    "settings.description": "Configurez vos préférences",
+
+    "profile.title": "Profil utilisateur",
+    "profile.user_id": "ID utilisateur: {userId}",
+    "profile.loading": "Chargement du profil...",
+
+    "product.details.title": "Détails du produit",
+    "product.details.product_id": "ID produit: {productId}",
+    "product.details.loading": "Chargement des détails...",
+
+    "product.reviews.title": "Avis produit",
+    "product.reviews.product_id": "Avis pour le produit: {productId}",
+    "product.reviews.loading": "Chargement des avis...",
+
+    "error.not_found": "Page non trouvée",
+    "error.go_home": "Retour à l'accueil",
+
+    "general.loading": "Chargement...",
+    "general.back": "Retour",
+    "general.next": "Suivant",
+    "general.previous": "Précédent"
+}

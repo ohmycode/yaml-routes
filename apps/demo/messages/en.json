@@ -1,0 +1,55 @@
+{
+    "$schema": "https://inlang.com/schema/inlang-message-format",
+    "example_message": "Hello {username}",
+
+    "nav.home": "Home",
+    "nav.about": "About",
+    "nav.contact": "Contact",
+    "nav.products": "Products",
+    "nav.users": "Users",
+    "nav.settings": "Settings",
+
+    "page.home.title": "Welcome to YAML Routes",
+    "page.home.description": "This demo showcases the power of YAML-based routing with TanStack Router",
+
+    "page.about.title": "About YAML Routes",
+    "page.about.description": "YAML Routes is a powerful package that simplifies routing configuration for modern web applications. Instead of complex route files, you define your routes in a clean, readable YAML format.",
+
+    "contact.title": "Contact Us",
+    "contact.description": "Get in touch with our team",
+
+    "products.title": "Our Products",
+    "products.description": "Discover our range of products",
+    "products.view_details": "View Details",
+    "products.view_reviews": "View Reviews",
+
+    "users.title": "User Profiles",
+    "users.description": "Manage user profiles",
+    "users.view_profile": "View Profile",
+
+    "settings.title": "Settings",
+    "settings.general": "General",
+    "settings.privacy": "Privacy",
+    "settings.account": "Account",
+    "settings.description": "Configure your preferences",
+
+    "profile.title": "User Profile",
+    "profile.user_id": "User ID: {userId}",
+    "profile.loading": "Loading profile...",
+
+    "product.details.title": "Product Details",
+    "product.details.product_id": "Product ID: {productId}",
+    "product.details.loading": "Loading details...",
+
+    "product.reviews.title": "Product Reviews",
+    "product.reviews.product_id": "Reviews for product: {productId}",
+    "product.reviews.loading": "Loading reviews...",
+
+    "error.not_found": "Page not found",
+    "error.go_home": "Go Home",
+
+    "general.loading": "Loading...",
+    "general.back": "Back",
+    "general.next": "Next",
+    "general.previous": "Previous"
+}
