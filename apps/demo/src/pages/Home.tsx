@@ -1,12 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { routeTo } from "../routeCache.generated";
 import * as m from "../paraglide/messages.js";
+import { LanguageSwitchDemo } from "../components/LanguageSwitchDemo";
 
 export default function Home() {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold mb-6">{m["page.home.title"]()}</h1>
+
+                {/* Language switching demo */}
+                <LanguageSwitchDemo />
 
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="bg-white rounded-lg shadow-lg p-6">
@@ -17,6 +21,9 @@ export default function Home() {
                             <li>✅ Type-safe route generation</li>
                             <li>✅ TanStack Router integration</li>
                             <li>✅ Locale-specific components</li>
+                            <li>
+                                ✅ <strong>Instant language switching</strong>
+                            </li>
                         </ul>
                     </div>
 
@@ -56,6 +63,9 @@ export default function Home() {
                         </li>
                         <li>Import and use generated router and helpers</li>
                         <li>Enjoy type-safe, localized routing! 🎉</li>
+                        <li>
+                            <strong>Switch languages instantly without page reloads! ⚡</strong>
+                        </li>
                     </ol>
                 </div>
             </div>

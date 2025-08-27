@@ -110,31 +110,3 @@ product_reviews:
         productId:
             type: string
             required: true
-
-# Settings routes (nested) with spa rendering
-user_settings:
-    path:
-        en: /settings
-        fr: /parametres
-        es: /configuracion
-    component: pages/Settings
-    settings:
-        render: spa
-
-settings_profile:
-    path:
-        en: /settings/profile
-        fr: /parametres/profil
-        es: /configuracion/perfil
-    component: pages/SettingsProfile
-    settings:
-        render: spa
-
-settings_notifications:
-    path:
-        en: /settings/notifications
-        fr: /parametres/notifications
-        es: /configuracion/notificaciones
-    component: pages/SettingsNotifications
-    settings:
-        render: spa
