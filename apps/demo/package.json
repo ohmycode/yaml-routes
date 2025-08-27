@@ -4,11 +4,12 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "pnpm run build:routes && vite dev --port 3000",
+        "dev": "pnpm run routes:watch & vite dev --port 3000",
         "start": "node .output/server/index.mjs",
         "build": "pnpm run build:routes && vite build",
         "build:routes": "yaml-routes",
         "routes": "yaml-routes",
+        "routes:watch": "yaml-routes --watch",
         "serve": "vite preview",
         "test": "vitest run",
         "type-check": "tsc --noEmit",

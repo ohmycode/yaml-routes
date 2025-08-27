@@ -34,16 +34,27 @@ The CLI is designed to be incredibly easy to use:
 pnpm run build:routes
 ```
 
-### Option 2: Run directly with npx
+### Option 2: Watch mode for development 🔥
+
+```bash
+pnpm run routes:watch
+# or
+npx yaml-routes --watch
+```
+
+**Perfect for development!** Automatically regenerates routes when you modify `routing.yml`
+
+### Option 3: Run directly with npx
 
 ```bash
 npx yaml-routes
 ```
 
-### Option 3: Custom configuration
+### Option 4: Custom configuration
 
 ```bash
 npx yaml-routes --config my-routes.yml --output src/routes.generated.tsx
+npx yaml-routes --watch --config my-routes.yml    # Watch custom config
 ```
 
 ### Command Help
@@ -58,6 +69,33 @@ That's it! The CLI automatically:
 -   🔨 Generates type-safe TypeScript routes
 -   🌐 Handles i18n automatically
 -   ✅ Updates your route cache
+
+## 🔥 Development Workflow with Watch Mode
+
+For the best development experience, use watch mode:
+
+```bash
+# Start watch mode in one terminal
+pnpm run routes:watch
+
+# Start your dev server in another terminal
+pnpm run dev
+```
+
+Or use the combined dev command (starts both):
+
+```bash
+pnpm run dev:watch
+```
+
+When you modify `routing.yml`, you'll see:
+
+-   👀 **Instant detection** of file changes
+-   ⚡ **Automatic regeneration** of route cache
+-   🎯 **No manual intervention** required
+-   🔄 **Continuous watching** until you stop it
+
+Perfect for rapid development! 🚀
 
 ## 📁 Project Structure
 

@@ -79,8 +79,18 @@ pnpm run build:routes
 # Option 2: Run directly with npx (no setup needed!)
 npx yaml-routes
 
-# Option 3: Custom configuration
+# Option 3: Watch mode for development 🔥 (auto-regenerate on changes)
+npx yaml-routes --watch
+# or add to package.json:
+{
+  "scripts": {
+    "routes:watch": "yaml-routes --watch"
+  }
+}
+
+# Option 4: Custom configuration
 npx yaml-routes --config my-routes.yml --output src/routes.generated.tsx
+npx yaml-routes --watch --config my-routes.yml    # Watch custom config
 
 # Get help
 npx yaml-routes --help
@@ -92,6 +102,27 @@ npx yaml-routes --help
 -   🔨 Generates type-safe TypeScript routes
 -   🌐 Handles i18n automatically
 -   ✅ Creates `src/routeCache.generated.tsx`
+
+#### 🔥 Development with Watch Mode
+
+For the best development experience, use watch mode to automatically regenerate routes when your YAML file changes:
+
+```bash
+# Start watch mode (runs continuously)
+npx yaml-routes --watch
+
+# Or use a package.json script
+npm run routes:watch
+```
+
+When you modify your `routing.yml`:
+
+-   👀 **Instant detection** - File changes are detected immediately
+-   ⚡ **Auto-regeneration** - Routes are rebuilt automatically
+-   🎯 **Zero intervention** - No manual commands needed
+-   🔄 **Continuous watching** - Keeps running until you stop it
+
+Perfect for rapid development! 🚀
 
 #### Using the API (advanced)
 
