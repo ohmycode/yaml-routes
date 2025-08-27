@@ -1,29 +1,14 @@
-import React, { memo } from "react";
 import { useLocation } from "@tanstack/react-router";
-import { getLocale, locales } from "../paraglide/runtime.js";
+import { getLocale } from "../paraglide/runtime.js";
 import { pathMappings, getLocalizedPath } from "../routeCache.generated";
 
-interface LocaleSwitcherProps {
-    className?: string;
-    activeClassName?: string;
-    inactiveClassName?: string;
-}
-
-/**
- * Locale switcher using proper links that navigate to the current page in different locales
- * Uses the generated path mappings to create proper localized URLs
- */
-export const LocaleSwitcher = memo(function LocaleSwitcher({
-    className = "flex gap-2",
-    activeClassName = "bg-blue-800",
-    inactiveClassName = "bg-blue-500 hover:bg-blue-700",
-}: LocaleSwitcherProps) {
+export function LocaleSwitcher() {
     const location = useLocation();
     const currentLocale = getLocale();
+    const supportedLocales = ["en", "es"];
 
     // Helper function to match a URL against a pattern and extract parameters
     const matchUrlPattern = (url: string, pattern: string): { match: boolean; params: Record<string, string> } => {
-        // Convert pattern like "/user/{id}" to regex like "^/user/([^/]+)$"
         const regexPattern = pattern.replace(/\{([^}]+)\}/g, "([^/]+)");
         const regex = new RegExp(`^${regexPattern}$`);
         const match = url.match(regex);
@@ -32,11 +17,9 @@ export const LocaleSwitcher = memo(function LocaleSwitcher({
             return { match: false, params: {} };
         }
 
-        // Extract parameter names from pattern
         const paramNames = [...pattern.matchAll(/\{([^}]+)\}/g)].map((m) => m[1]);
         const params: Record<string, string> = {};
 
-        // Map captured groups to parameter names
         paramNames.forEach((name, index) => {
             params[name] = match[index + 1];
         });
@@ -56,8 +39,6 @@ export const LocaleSwitcher = memo(function LocaleSwitcher({
     // Helper function to get current page URL in a specific locale
     const getCurrentPageInLocale = (targetLocale: string): string => {
         const currentPath = location.pathname;
-
-        // Find the base path by matching against patterns
         let basePath = "/";
         let extractedParams: Record<string, string> = {};
 
@@ -74,28 +55,21 @@ export const LocaleSwitcher = memo(function LocaleSwitcher({
             if (basePath !== "/" || currentPath === "/") break;
         }
 
-        // Get the new localized path template
         const newPathTemplate = getLocalizedPath(basePath, targetLocale);
-
-        // Fill the template with extracted parameters
         return fillUrlPattern(newPathTemplate, extractedParams);
     };
 
     return (
-        <div className={className}>
-            {locales.map((locale: string) => {
+        <div className="flex gap-2">
+            {supportedLocales.map((locale) => {
                 const isActive = locale === currentLocale;
-
-                // Generate localized href for this locale
                 const localizedPath = getCurrentPageInLocale(locale);
 
                 return (
                     <a
                         key={locale}
                         href={localizedPath}
-                        className={`px-2 py-1 rounded transition-colors text-white no-underline ${isActive ? activeClassName : inactiveClassName}`}
-                        aria-label={`Switch to ${locale.toUpperCase()}`}
-                        aria-current={isActive ? "page" : undefined}
+                        className={`px-2 py-1 text-sm rounded transition-colors ${isActive ? "bg-white/20 text-white" : "text-blue-200 hover:text-white"}`}
                     >
                         {locale.toUpperCase()}
                     </a>
@@ -103,4 +77,4 @@ export const LocaleSwitcher = memo(function LocaleSwitcher({
             })}
         </div>
     );
-});
+}

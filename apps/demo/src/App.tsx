@@ -1,35 +1,38 @@
 import { StrictMode } from "react";
 import { RouterProvider, Outlet, Link } from "@tanstack/react-router";
 import { router, routeTo } from "./routeCache.generated";
-import * as m from "./paraglide/messages.js";
 import { LocaleSwitcher } from "./components/LocaleSwitcher";
+import { ThemeToggle } from "./components/ThemeToggle";
 
 // Root component for TanStack Router
 export function RootComponent() {
     return (
-        <div className="min-h-screen">
-            <nav className="bg-blue-600 text-white p-4">
-                <div className="container mx-auto flex gap-4 items-center">
-                    <Link to={routeTo("home")} className="hover:underline">
-                        {m["nav.home"]()}
+        <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+            <nav className="bg-blue-600 dark:bg-blue-800 text-white p-4 shadow-lg">
+                <div className="container mx-auto flex gap-6 items-center">
+                    <Link to={routeTo("home")} className="font-bold text-lg hover:text-blue-200 transition-colors">
+                        YAML Routes
                     </Link>
-                    <Link to={routeTo("about")} className="hover:underline">
-                        {m["nav.about"]()}
+                    <Link to={routeTo("getting_started")} className="hover:text-blue-200 transition-colors">
+                        Getting Started
                     </Link>
-                    <Link to={routeTo("special_announcement")} className="hover:underline">
-                        Special
+                    <Link to={routeTo("advanced_examples")} className="hover:text-blue-200 transition-colors">
+                        Advanced Examples
                     </Link>
-                    <Link to={routeTo("products")} className="hover:underline">
-                        {m["nav.products"]()}
+                    <Link to={routeTo("about")} className="hover:text-blue-200 transition-colors">
+                        About
+                    </Link>
+                    <Link to={routeTo("demo")} className="hover:text-blue-200 transition-colors">
+                        Demo
                     </Link>
 
-                    {/* Language switcher with direct links to localized pages */}
-                    <div className="ml-auto">
+                    <div className="ml-auto flex items-center gap-4">
                         <LocaleSwitcher />
+                        <ThemeToggle />
                     </div>
                 </div>
             </nav>
-            <main>
+            <main className="container mx-auto px-4 py-8">
                 <Outlet />
             </main>
         </div>

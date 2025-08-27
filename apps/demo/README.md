@@ -1,231 +1,131 @@
-# YAML Routes Demo
+# YAML Routes Demo & Developer Guide
 
-This demo application showcases the capabilities of `@yaml-routes/tanstack` - a YAML-based routing configuration system for TanStack Router with internationalization support.
+A comprehensive developer guide and interactive demonstration of the `@yaml-routes/tanstack` package.
 
-## 🌟 Features Demonstrated
+## 🎯 Purpose
 
--   **📝 YAML Configuration** - All routes defined in `routing.yml`
--   **🌐 Internationalization** - Support for English, French, and Spanish
--   **🎯 Type-Safe Routing** - Generated TypeScript types and helper functions
--   **🔗 Dynamic Navigation** - Automatic locale switching
--   **📱 Different Components per Locale** - Demonstrates locale-specific components
--   **⚙️ Route Parameters** - Shows parameterized routes with validation
+This demo serves as both:
+- **Interactive Documentation**: Learn how to use YAML Routes with live examples
+- **Developer Guide**: Best practices and implementation patterns
+- **Feature Showcase**: See all features in action with real code
 
-## 🚀 Quick Start
+## 🚀 Features Demonstrated
+
+### ✅ Core Functionality
+- **YAML Configuration**: Clean, declarative route definitions
+- **Type-Safe Navigation**: Generated TypeScript types and helper functions
+- **Internationalization**: Built-in i18n support with localized paths
+- **Parameter Handling**: Dynamic routes with type-safe parameters
+- **TanStack Router Integration**: Full compatibility with TanStack Router v1.x
+
+### 🎨 UI Features
+- **Dark/Light Mode**: Theme toggle with system preference detection
+- **Responsive Design**: Mobile-friendly interface
+- **Interactive Examples**: Clickable demos for all features
+
+## 📁 Key Files
+
+```
+src/
+├── App.tsx                 # Main app with navigation
+├── routeCache.generated.tsx # Generated routes (auto-created)
+├── routing.yml             # Route configuration
+├── hooks/
+│   └── useTheme.ts         # Dark/light mode hook
+├── components/
+│   ├── LocaleSwitcher.tsx  # Language switching
+│   └── ThemeToggle.tsx     # Theme toggle
+└── pages/
+    ├── Home.tsx            # Welcome page
+    ├── GettingStarted.tsx  # Installation & setup guide
+    ├── About.tsx           # Project information
+    ├── UserProfile.tsx     # Parameter demonstration
+    ├── ExamplesEN.tsx      # English examples page
+    └── ExamplesES.tsx      # Spanish examples page
+```
+
+## 🛠 Development
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Generate routes from YAML configuration - that's it!
+# Start development server with route watching
+pnpm dev
+
+# Generate routes manually
 pnpm run build:routes
 
-# Start development server
-pnpm run dev
+# Build for production
+pnpm build
 ```
 
-## ⚡ Dead Simple Integration
+## 📚 What You'll Learn
 
-The CLI is designed to be incredibly easy to use:
+1. **Basic Setup**: How to configure YAML Routes in your project
+2. **Route Definition**: YAML syntax for different route types
+3. **Type Safety**: Using generated types and helpers
+4. **Internationalization**: Multi-language routing strategies
+5. **Best Practices**: Recommended patterns and architectures
 
-### Option 1: Use the npm script (recommended)
+## 🌐 Internationalization Demo
+
+The demo showcases two languages:
+- **English** (`/`) - Default locale
+- **Spanish** (`/es/*`) - Localized paths and components
+
+Navigate between languages to see how:
+- URLs automatically adapt to the locale
+- Components can be locale-specific
+- Parameters are preserved across language switches
+
+## 🎨 Theme Support
+
+Toggle between light and dark modes to see how the theme system works:
+- System preference detection
+- localStorage persistence
+- Smooth transitions
+- Tailwind CSS integration
+
+## 📖 Routes Overview
+
+| Route | English Path | Spanish Path | Purpose |
+|-------|-------------|--------------|---------|
+| `home` | `/` | `/es/` | Welcome & overview |
+| `getting_started` | `/getting-started` | `/es/getting-started` | Setup guide |
+| `about` | `/about` | `/es/acerca-de` | Project info |
+| `user_profile` | `/user/{id}` | `/es/usuario/{id}` | Parameter demo |
+| `examples` | `/examples` | `/es/ejemplos` | Feature showcase |
+
+## 🔧 Technical Implementation
+
+- **Framework**: React + TanStack Router
+- **Styling**: Tailwind CSS with dark mode
+- **Type Safety**: Full TypeScript integration
+- **Build Tool**: Vite
+- **Package Manager**: pnpm
+
+This demo represents production-ready patterns for implementing YAML Routes in real applications.
+
+## ⚡ Quick Start
 
 ```bash
-pnpm run build:routes
-```
+# Install the package
+npm install @yaml-routes/tanstack
 
-### Option 2: Watch mode for development 🔥
+# Create routing.yml and generate routes
+npx yaml-routes
 
-```bash
-pnpm run routes:watch
-# or
+# Watch for changes during development
 npx yaml-routes --watch
 ```
 
-**Perfect for development!** Automatically regenerates routes when you modify `routing.yml`
+## 🌟 Why Use YAML Routes?
 
-### Option 3: Run directly with npx
+- **Declarative**: Define all routes in one readable file
+- **Type-Safe**: Generated TypeScript ensures correctness
+- **i18n-First**: Built-in internationalization support
+- **Framework-Ready**: Currently supports TanStack Router (React Router v7 coming soon)
+- **Zero-Runtime**: All generation happens at build time
 
-```bash
-npx yaml-routes
-```
-
-### Option 4: Custom configuration
-
-```bash
-npx yaml-routes --config my-routes.yml --output src/routes.generated.tsx
-npx yaml-routes --watch --config my-routes.yml    # Watch custom config
-```
-
-### Command Help
-
-```bash
-npx yaml-routes --help
-```
-
-That's it! The CLI automatically:
-
--   📖 Reads your `routing.yml` file
--   🔨 Generates type-safe TypeScript routes
--   🌐 Handles i18n automatically
--   ✅ Updates your route cache
-
-## 🔥 Development Workflow with Watch Mode
-
-For the best development experience, use watch mode:
-
-```bash
-# Start watch mode in one terminal
-pnpm run routes:watch
-
-# Start your dev server in another terminal
-pnpm run dev
-```
-
-Or use the combined dev command (starts both):
-
-```bash
-pnpm run dev:watch
-```
-
-When you modify `routing.yml`, you'll see:
-
--   👀 **Instant detection** of file changes
--   ⚡ **Automatic regeneration** of route cache
--   🎯 **No manual intervention** required
--   🔄 **Continuous watching** until you stop it
-
-Perfect for rapid development! 🚀
-
-## 📁 Project Structure
-
-```
-apps/demo/
-├── routing.yml              # Route configuration
-├── src/
-│   ├── App.tsx              # Main app component with navigation
-│   ├── main.tsx             # Entry point
-│   ├── routeCache.generated.tsx  # Generated routes (auto-generated)
-│   └── pages/               # Page components
-├── messages/                # i18n message files
-│   ├── en.json
-│   ├── fr.json
-│   └── es.json
-└── project.inlang/          # Paraglide i18n configuration
-```
-
-## 🔧 How It Works
-
-1. **Define Routes** - Edit `routing.yml` to add/modify routes
-2. **Generate Code** - Run `pnpm run build:routes` to generate TypeScript code
-3. **Use Routes** - Import and use generated router and helpers in your components
-
-## 🌍 Internationalization
-
-The demo supports three languages with different URL patterns:
-
--   **English (default)**: `/about`, `/products`, etc.
--   **French**: `/fr/a-propos`, `/fr/produits`, etc.
--   **Spanish**: `/es/acerca-de`, `/es/productos`, etc.
-
-### Language Switching
-
-The navigation automatically detects the current locale and provides language switching functionality that maintains the current page context.
-
-## 📄 Route Examples
-
-### Simple Route
-
-```yaml
-home:
-    path: /
-    component: pages/Home
-```
-
-### Localized Route
-
-```yaml
-about:
-    path:
-        en: /about
-        fr: /a-propos
-        es: /acerca-de
-    component: pages/About
-```
-
-### Route with Parameters
-
-```yaml
-user_profile:
-    path:
-        en: /user/{id}
-        fr: /utilisateur/{id}
-        es: /usuario/{id}
-    component: pages/UserProfile
-    parameters:
-        id:
-            type: string
-            required: true
-```
-
-### Different Components per Locale
-
-```yaml
-special_announcement:
-    path:
-        en: /special-announcement
-        fr: /annonce-speciale
-        es: /anuncio-especial
-    component:
-        en: pages/SpecialAnnouncementEN
-        fr: pages/SpecialAnnouncementFR
-        es: pages/SpecialAnnouncementES
-```
-
-## 🎯 Generated Helpers
-
-The build process generates several useful functions:
-
-### `routeTo(routeId, params?, locale?)`
-
-Type-safe route generation:
-
-```typescript
-import { routeTo } from "./routeCache.generated";
-
-// Simple navigation
-routeTo("home"); // → '/'
-
-// With parameters
-routeTo("user_profile", { id: "123" }); // → '/user/123'
-
-// Specific locale
-routeTo("about", {}, "fr"); // → '/fr/a-propos'
-```
-
-### `getLocalizedPath(basePath, locale)`
-
-Get localized versions of paths:
-
-```typescript
-getLocalizedPath("/about", "fr"); // → '/fr/a-propos'
-```
-
-## 🧪 Development
-
-```bash
-# Run tests
-pnpm run test
-
-# Type checking
-pnpm run type-check
-
-# Linting
-pnpm run lint
-```
-
-## 📚 Learn More
-
--   [TanStack Router Documentation](https://tanstack.com/router)
--   [Paraglide JS (i18n)](https://inlang.com/m/gerre34r/library-inlang-paraglideJs)
--   [Main Package README](../../packages/tanstack/README.md)
+Visit the demo to see these features in action!

@@ -1,90 +1,47 @@
-# Enhanced routing configuration for demo app
-# Global settings section for configuration
+# YAML Routes Configuration for TanStack Router
+# This demonstrates the yaml-routes package for TanStack Router (React Router v7 support coming soon)
+
+# Global settings
 settings:
     i18n:
         enabled: true
         defaultLocale: en
-        supportedLocales: [en, fr, es]
-    render: ssr
+        supportedLocales: [en, es]
 
-# URL routes - all other sections are treated as routes
+# Basic routes
 home:
     path: /
     component: pages/Home
 
-# Route without i18n variations
-neutral:
-    path: /neutral-url
-    component: pages/Neutral
+getting_started:
+    path: /getting-started
+    component: pages/GettingStarted
 
-# Route with localized paths and components
-about:
-    path:
-        en: /about
-        fr: /a-propos
-        es: /acerca-de
-    component: pages/About
+advanced_examples:
+    path: /advanced-examples
+    component: pages/AdvancedExamples
 
-# Special page with different components per language
-special_announcement:
-    path:
-        en: /special-announcement
-        fr: /annonce-speciale
-        es: /anuncio-especial
-    component:
-        en: pages/SpecialAnnouncementEN
-        fr: pages/SpecialAnnouncementFR
-        es: pages/SpecialAnnouncementES
-
-# User routes with parameters and localized paths
+# Route with parameters
 user_profile:
-    path:
-        en: /user/{id}
-        fr: /utilisateur/{id}
-        es: /usuario/{id}
+    path: /user/{id}
     component: pages/UserProfile
     parameters:
         id:
             type: string
             required: true
 
-user_posts:
+# Internationalized routes
+about:
     path:
-        en: /user/{userId}/posts
-        fr: /utilisateur/{userId}/articles
-        es: /usuario/{userId}/publicaciones
-    component: pages/UserPosts
-    parameters:
-        userId:
-            type: string
-            required: true
+        en: /about
+        es: /acerca-de
+    component: pages/About
 
-# Product routes with localized paths
-products:
+# Route with different components per locale (Demo page)
+demo:
     path:
-        en: /products
-        fr: /produits
-        es: /productos
-    component: pages/Products
-
-product_detail:
-    path:
-        en: /products/{id}
-        fr: /produits/{id}
-        es: /productos/{id}
-    component: pages/ProductDetail
-    parameters:
-        id:
-            type: string
-            required: true
-
-product_reviews:
-    path:
-        en: /products/{productId}/reviews
-        fr: /produits/{productId}/avis
-        es: /productos/{productId}/resenas
-    component: pages/ProductReviews
-    parameters:
-        productId:
-            type: string
-            required: true
+        en: /demo
+        es: /demo
+    component:
+        en: pages/DemoEN
+        es: pages/DemoES

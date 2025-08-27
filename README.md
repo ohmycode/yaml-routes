@@ -5,7 +5,7 @@ A monorepo for YAML-based routing configuration that generates type-safe routes 
 ## 📦 Packages
 
 -   **[@yaml-routes/tanstack](./packages/tanstack)** - TanStack Router integration with YAML route configuration
--   **[demo](./apps/demo)** - Demo application showcasing the features
+-   **[Interactive Demo & Guide](./apps/demo)** - Comprehensive developer guide and live examples
 
 ## 🚀 Quick Start
 
@@ -13,12 +13,22 @@ A monorepo for YAML-based routing configuration that generates type-safe routes 
 # Install dependencies
 pnpm install
 
-# Start development
+# Start development (includes demo app)
 pnpm dev
 
 # Build all packages
 pnpm build
 ```
+
+## 🎯 Live Demo
+
+Visit the interactive demo at `http://localhost:3000` after running `pnpm dev` to see:
+
+-   **Interactive examples** of all features
+-   **Copy-paste installation** commands
+-   **Live code samples** with syntax highlighting
+-   **Dark/light mode** support
+-   **Multi-language routing** demonstrations
 
 ## 🎯 Features
 
