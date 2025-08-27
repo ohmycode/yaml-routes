@@ -26,9 +26,6 @@ export function LanguageSwitchDemo() {
                         <li>
                             <strong>Products:</strong> {m["nav.products"]()}
                         </li>
-                        <li>
-                            <strong>Settings:</strong> {m["nav.settings"]()}
-                        </li>
                     </ul>
                 </div>
 

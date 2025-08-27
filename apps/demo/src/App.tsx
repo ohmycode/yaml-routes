@@ -16,20 +16,11 @@ export function RootComponent() {
                     <Link to={routeTo("about")} className="hover:underline">
                         {m["nav.about"]()}
                     </Link>
-                    <Link to={routeTo("demo")} className="hover:underline">
-                        Demo
-                    </Link>
                     <Link to={routeTo("special_announcement")} className="hover:underline">
                         Special
                     </Link>
-                    <Link to={routeTo("blog_index")} className="hover:underline">
-                        Blog
-                    </Link>
                     <Link to={routeTo("products")} className="hover:underline">
                         {m["nav.products"]()}
-                    </Link>
-                    <Link to={routeTo("user_settings")} className="hover:underline">
-                        {m["nav.settings"]()}
                     </Link>
 
                     {/* Language switcher with direct links to localized pages */}

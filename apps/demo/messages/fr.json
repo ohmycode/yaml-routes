@@ -7,7 +7,6 @@
     "nav.contact": "Contact",
     "nav.products": "Produits",
     "nav.users": "Utilisateurs",
-    "nav.settings": "Paramètres",
 
     "page.home.title": "Bienvenue dans YAML Routes",
     "page.home.description": "Cette démo présente la puissance du routage basé sur YAML avec TanStack Router",
@@ -26,12 +25,6 @@
     "users.title": "Profils utilisateurs",
     "users.description": "Gérer les profils utilisateurs",
     "users.view_profile": "Voir le profil",
-
-    "settings.title": "Paramètres",
-    "settings.general": "Général",
-    "settings.privacy": "Confidentialité",
-    "settings.account": "Compte",
-    "settings.description": "Configurez vos préférences",
 
     "profile.title": "Profil utilisateur",
     "profile.user_id": "ID utilisateur: {userId}",

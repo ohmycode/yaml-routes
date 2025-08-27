@@ -25,13 +25,6 @@ about:
         es: /acerca-de
     component: pages/About
 
-demo:
-    path:
-        en: /demo
-        fr: /demo
-        es: /demo
-    component: pages/Demo
-
 # Special page with different components per language
 special_announcement:
     path:
@@ -63,21 +56,6 @@ user_posts:
     component: pages/UserPosts
     parameters:
         userId:
-            type: string
-            required: true
-
-# Blog routes with different rendering strategy
-blog_index:
-    path: /blog
-    component: pages/Blog
-    settings:
-        render: ssg
-
-blog_post:
-    path: /blog/{slug}
-    component: pages/BlogPost
-    parameters:
-        slug:
             type: string
             required: true
 

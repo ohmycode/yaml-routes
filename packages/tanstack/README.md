@@ -61,21 +61,39 @@ user_profile:
 
 ### 2. Generate routes
 
-#### Using CLI (recommended)
+#### Using CLI (recommended) - Dead Simple! ⚡
 
 ```bash
-# Add to your package.json scripts
+# Option 1: Add to your package.json scripts (recommended)
 {
   "scripts": {
     "build:routes": "yaml-routes"
   }
 }
 
-# Run the generator
+# Then run it
 npm run build:routes
+# or
+pnpm run build:routes
+
+# Option 2: Run directly with npx (no setup needed!)
+npx yaml-routes
+
+# Option 3: Custom configuration
+npx yaml-routes --config my-routes.yml --output src/routes.generated.tsx
+
+# Get help
+npx yaml-routes --help
 ```
 
-#### Using the API
+**That's it!** The CLI automatically:
+
+-   📖 Reads your `routing.yml` file
+-   🔨 Generates type-safe TypeScript routes
+-   🌐 Handles i18n automatically
+-   ✅ Creates `src/routeCache.generated.tsx`
+
+#### Using the API (advanced)
 
 ```typescript
 import { generateTanStackRoutes } from "@yaml-routes/tanstack";

@@ -8,6 +8,7 @@
         "start": "node .output/server/index.mjs",
         "build": "pnpm run build:routes && vite build",
         "build:routes": "yaml-routes",
+        "routes": "yaml-routes",
         "serve": "vite preview",
         "test": "vitest run",
         "type-check": "tsc --noEmit",

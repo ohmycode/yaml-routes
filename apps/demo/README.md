@@ -17,15 +17,47 @@ This demo application showcases the capabilities of `@yaml-routes/tanstack` - a 
 # Install dependencies
 pnpm install
 
-# Generate routes from YAML configuration
+# Generate routes from YAML configuration - that's it!
 pnpm run build:routes
 
 # Start development server
 pnpm run dev
-
-# Build for production
-pnpm run build
 ```
+
+## ⚡ Dead Simple Integration
+
+The CLI is designed to be incredibly easy to use:
+
+### Option 1: Use the npm script (recommended)
+
+```bash
+pnpm run build:routes
+```
+
+### Option 2: Run directly with npx
+
+```bash
+npx yaml-routes
+```
+
+### Option 3: Custom configuration
+
+```bash
+npx yaml-routes --config my-routes.yml --output src/routes.generated.tsx
+```
+
+### Command Help
+
+```bash
+npx yaml-routes --help
+```
+
+That's it! The CLI automatically:
+
+-   📖 Reads your `routing.yml` file
+-   🔨 Generates type-safe TypeScript routes
+-   🌐 Handles i18n automatically
+-   ✅ Updates your route cache
 
 ## 📁 Project Structure
 

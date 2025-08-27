@@ -100,7 +100,9 @@ async function main() {
 }
 
 // Only run if this file is being executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isMainModule = import.meta.url === `file://${process.argv[1]}` || (import.meta.url.endsWith("/cli.js") && process.argv[1].endsWith("/cli.js"));
+
+if (isMainModule) {
     main().catch((error) => {
         console.error("Fatal error:", error);
         process.exit(1);
