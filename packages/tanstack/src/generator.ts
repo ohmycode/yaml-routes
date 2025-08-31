@@ -189,7 +189,7 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
     });
 
     const routeTreeContent = `// Auto-generated code-based routing cache
-// Generated from routing.yml configuration using @yaml-routes/tanstack
+// Generated from routes.yml configuration using @yaml-routes/tanstack
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { z } from 'zod';
 import { RootComponent } from './App';

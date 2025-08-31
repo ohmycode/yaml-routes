@@ -44,7 +44,7 @@ yaml-routes/
 ├── apps/
 │   └── demo/                  # Demo application
 │       ├── src/
-│       ├── routing.yml        # Route configuration
+│       ├── routes.yml        # Route configuration
 │       ├── package.json
 │       └── README.md
 ├── package.json               # Root package.json
@@ -160,7 +160,7 @@ describe("convertYamlPathToTanstackPath", () => {
 4. **Update Demo (if applicable)**
 
     - Add examples in `apps/demo/`
-    - Update `routing.yml` to showcase new features
+    - Update `routes.yml` to showcase new features
     - Test the demo application
 
 5. **Add Changeset**

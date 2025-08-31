@@ -33,7 +33,7 @@ export default function UserProfile() {
                 <section>
                     <h2 className="text-2xl font-semibold mb-4">⚙️ Configuration</h2>
                     <p className="text-gray-600 dark:text-gray-300 mb-4">
-                        This route is defined in <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">routing.yml</code> with the following
+                        This route is defined in <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">routes.yml</code> with the following
                         configuration:
                     </p>
                     <pre className="bg-gray-900 text-gray-100 p-4 rounded overflow-x-auto">

@@ -24,9 +24,9 @@ pnpm add @yaml-routes/tanstack`}
                     <h2 className="text-2xl font-semibold mb-4">⚙️ Setup</h2>
                     <div className="space-y-4">
                         <div>
-                            <h3 className="text-lg font-medium mb-2">1. Create a routing.yml file</h3>
+                            <h3 className="text-lg font-medium mb-2">1. Create a routes.yml file</h3>
                             <pre className="bg-gray-900 text-gray-100 p-4 rounded overflow-x-auto">
-                                {`# routing.yml
+                                {`# routes.yml
 settings:
     i18n:
         enabled: true

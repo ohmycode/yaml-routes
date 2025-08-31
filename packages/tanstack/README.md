@@ -24,7 +24,7 @@ yarn add @yaml-routes/tanstack
 
 ### 1. Create your routing configuration
 
-Create a `routing.yml` file in your project root:
+Create a `routes.yml` file in your project root:
 
 ```yaml
 # Global settings (optional)
@@ -98,7 +98,7 @@ npx yaml-routes --help
 
 **That's it!** The CLI automatically:
 
--   📖 Reads your `routing.yml` file
+-   📖 Reads your `routes.yml` file
 -   🔨 Generates type-safe TypeScript routes
 -   🌐 Handles i18n automatically
 -   ✅ Creates `src/routeCache.generated.tsx`
@@ -115,7 +115,7 @@ npx yaml-routes --watch
 npm run routes:watch
 ```
 
-When you modify your `routing.yml`:
+When you modify your `routes.yml`:
 
 -   👀 **Instant detection** - File changes are detected immediately
 -   ⚡ **Auto-regeneration** - Routes are rebuilt automatically
@@ -130,7 +130,7 @@ Perfect for rapid development! 🚀
 import { generateTanStackRoutes } from "@yaml-routes/tanstack";
 
 await generateTanStackRoutes({
-    configPath: "routing.yml",
+    configPath: "routes.yml",
     outputPath: "src/routeCache.generated.tsx",
 });
 ```
@@ -227,7 +227,7 @@ user_profile:
 yaml-routes [options]
 
 Options:
-  -c, --config <path>    Path to routing YAML file (default: routing.yml)
+  -c, --config <path>    Path to routing YAML file (default: routes.yml)
   -o, --output <path>    Output file path (default: src/routeCache.generated.tsx)
   -h, --help             Show help message
   -v, --version          Show version number

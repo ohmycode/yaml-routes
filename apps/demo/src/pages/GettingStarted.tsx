@@ -53,14 +53,14 @@ yarn add @yaml-routes/tanstack`}
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
                     <div className="flex items-center gap-4 mb-6">
                         <div className="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
-                        <h2 className="text-2xl font-bold">Create routing.yml</h2>
+                        <h2 className="text-2xl font-bold">Create routes.yml</h2>
                     </div>
 
                     <p className="text-gray-600 dark:text-gray-300 mb-4">
-                        Create a <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">routing.yml</code> file in your project root:
+                        Create a <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">routes.yml</code> file in your project root:
                     </p>
 
-                    <PrismCodeBlock language="yaml" title="routing.yml">
+                    <PrismCodeBlock language="yaml" title="routes.yml">
                         {`# Basic routes
 home:
     path: /

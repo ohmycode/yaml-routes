@@ -14,7 +14,7 @@ pnpm add @yaml-routes/tanstack
 
 ### 1. Create your routing configuration
 
-Create a `routing.yml` file in your project root:
+Create a `routes.yml` file in your project root:
 
 ```yaml
 # Global settings
@@ -58,7 +58,7 @@ Use watch mode for automatic route regeneration:
 
 ```bash
 # Option 1: Start watch mode and dev server separately
-npm run routes:watch    # Terminal 1 - watches routing.yml
+npm run routes:watch    # Terminal 1 - watches routes.yml
 npm run dev            # Terminal 2 - starts your app
 
 # Option 2: Combined command (starts both)
@@ -84,7 +84,7 @@ npm run build         # Build your app
 
 ## ✨ What Happens in Watch Mode
 
-When you save changes to `routing.yml`:
+When you save changes to `routes.yml`:
 
 1. 👀 **File change detected instantly**
 2. ⚡ **Routes regenerated automatically**
@@ -97,7 +97,7 @@ No manual intervention needed! 🚀
 
 ```
 my-app/
-├── routing.yml                    # Your route configuration
+├── routes.yml                    # Your route configuration
 ├── src/
 │   ├── routeCache.generated.tsx   # Auto-generated (don't edit!)
 │   ├── App.tsx
@@ -118,4 +118,4 @@ pnpm run routes:watch   # Start watching in one terminal
 pnpm run dev           # Start dev server in another
 ```
 
-Then edit `routing.yml` and watch the magic happen! ✨
+Then edit `routes.yml` and watch the magic happen! ✨

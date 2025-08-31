@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { load } from "js-yaml";
 import type { RoutingConfig, RouteConfig, SupportedLocale } from "./types";
 
-export async function loadRoutingConfig(configPath: string = "routing.yml"): Promise<RoutingConfig> {
+export async function loadRoutingConfig(configPath: string = "routes.yml"): Promise<RoutingConfig> {
     try {
         const yamlContent = await readFile(configPath, "utf-8");
         const config = load(yamlContent) as RoutingConfig;
