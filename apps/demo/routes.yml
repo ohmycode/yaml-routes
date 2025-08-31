@@ -67,9 +67,56 @@ about:
 
 # Route with different components per locale (Demo page)
 demo:
+    path: /demo
+    component: pages/demo/Demo
+
+pizza:
     path:
-        en: /demo
-        es: /demo
+        en: /demo/pizza-corner/{pizzaType}
+        es: /demo/pizzalandia/{pizzaType}
+    component: pages/demo/Pizza
+    parameters:
+        pizzaType:
+            type: string
+            required: true
+
+pizza_review_list:
+    path:
+        en: /demo/pizza-corner/{pizzaType}/reviews
+        es: /demo/pizzalandia/{pizzaType}/recomendaciones
+    component: pages/demo/PizzaReviewList
+    parameters:
+        pizzaType:
+            type: string
+            required: true
+
+pizza_review:
+    path:
+        en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}
+        es: /demo/pizza-corner/{pizzaType}/recomendaciones/{reviewId}
     component:
-        en: pages/DemoEN
-        es: pages/DemoES
+        en: pages/demo/PizzaReview
+        es: pages/demo/Recomendacion
+    parameters:
+        pizzaType:
+            type: string
+            required: true
+        reviewId:
+            type: string
+            required: true
+
+pizza_review_comments:
+    path:
+        en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}/comment/{commentId}
+        es: /demo/pizzalandia/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
+    component: pages/demo/PizzaReviewComment
+    parameters:
+        pizzaType:
+            type: string
+            required: true
+        reviewId:
+            type: string
+            required: true
+        commentId:
+            type: string
+            required: true
