@@ -20,12 +20,6 @@ This demo serves as both:
 -   **Parameter Handling**: Dynamic routes with type-safe parameters
 -   **TanStack Router Integration**: Full compatibility with TanStack Router v1.x
 
-### 🎨 UI Features
-
--   **Dark/Light Mode**: Theme toggle with system preference detection
--   **Responsive Design**: Mobile-friendly interface
--   **Interactive Examples**: Clickable demos for all features
-
 ## 📁 Key Files
 
 ```

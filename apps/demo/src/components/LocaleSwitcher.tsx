@@ -1,42 +1,47 @@
 import { useLocation, Link } from "@tanstack/react-router";
-import { getLocale } from "../paraglide/runtime.js";
 import { pathMappings, getLocalizedPath, globalSettings } from "../routeCache.generated";
 
 export function LocaleSwitcher() {
     const location = useLocation();
-    const currentLocale = getLocale();
     const supportedLocales = ["en", "es"];
 
-    // Debug logging
-    console.log("LocaleSwitcher Debug:", {
-        currentPath: location.pathname,
-        currentLocale,
-        basePath: globalSettings.basePath,
-        pathMappings,
-    });
+    // Determine current locale from URL path
+    const getCurrentLocaleFromPath = (): string => {
+        let currentPath = location.pathname;
+        if (globalSettings.basePath && currentPath.startsWith(globalSettings.basePath)) {
+            currentPath = currentPath.slice(globalSettings.basePath.length) || "/";
+        }
 
-    // Helper function to match a URL against a pattern and extract parameters
-    const matchUrlPattern = (url: string, pattern: string): { match: boolean; params: Record<string, string> } => {
+        // Check if path starts with Spanish locale
+        if (currentPath.startsWith("/es/") || currentPath === "/es" || currentPath === "/es/") {
+            return "es";
+        }
+
+        // Default to English
+        return "en";
+    };
+
+    const currentLocale = getCurrentLocaleFromPath();
+
+    // Extract parameters from a URL using a pattern template
+    const extractParams = (url: string, pattern: string): Record<string, string> | null => {
         const regexPattern = pattern.replace(/\{([^}]+)\}/g, "([^/]+)");
         const regex = new RegExp(`^${regexPattern}$`);
         const match = url.match(regex);
 
-        if (!match) {
-            return { match: false, params: {} };
-        }
+        if (!match) return null;
 
         const paramNames = [...pattern.matchAll(/\{([^}]+)\}/g)].map((m) => m[1]);
         const params: Record<string, string> = {};
-
         paramNames.forEach((name, index) => {
             params[name] = match[index + 1];
         });
 
-        return { match: true, params };
+        return params;
     };
 
-    // Helper function to fill a pattern with parameter values
-    const fillUrlPattern = (pattern: string, params: Record<string, string>): string => {
+    // Fill a pattern template with parameter values
+    const fillPattern = (pattern: string, params: Record<string, string>): string => {
         let result = pattern;
         for (const [key, value] of Object.entries(params)) {
             result = result.replace(`{${key}}`, value);
@@ -44,107 +49,47 @@ export function LocaleSwitcher() {
         return result;
     };
 
-    // Helper function to get current page URL in a specific locale
+    // Get current page URL in target locale
     const getCurrentPageInLocale = (targetLocale: string): string => {
-        const currentPath = location.pathname;
-        let basePath = "/";
-        let extractedParams: Record<string, string> = {};
-        let foundMatch = false;
-
-        console.log("=== Language Switcher Debug ===");
-        console.log("Current path:", currentPath);
-        console.log("Target locale:", targetLocale);
-
-        // Helper to normalize paths for comparison (remove trailing slash except for root)
-        const normalizePath = (path: string): string => {
-            if (path === "/" || path === "/es/") return path; // Keep root paths as-is
-            return path.replace(/\/$/, ""); // Remove trailing slash for others
-        };
-
-        // Try to match the current path against all possible patterns
-        for (const [base, mappings] of Object.entries(pathMappings)) {
-            const localePaths = mappings as Record<string, string>;
-            
-            // Try to match against each locale's path pattern
-            for (const [pathLocale, localizedPath] of Object.entries(localePaths)) {
-                // Try exact match first
-                if (currentPath === localizedPath) {
-                    basePath = base;
-                    extractedParams = {};
-                    foundMatch = true;
-                    console.log("✅ Found exact match:", { base, pathLocale, localizedPath, currentPath });
-                    break;
-                }
-                
-                // Try pattern match with parameters
-                const { match, params } = matchUrlPattern(currentPath, localizedPath);
-                if (match) {
-                    basePath = base;
-                    extractedParams = params;
-                    foundMatch = true;
-                    console.log("✅ Found pattern match:", { base, pathLocale, localizedPath, currentPath, params });
-                    break;
-                }
-            }
-            if (foundMatch) break;
+        // Remove base path to match against pathMappings
+        let currentPath = location.pathname;
+        if (globalSettings.basePath && currentPath.startsWith(globalSettings.basePath)) {
+            currentPath = currentPath.slice(globalSettings.basePath.length) || "/";
         }
 
-        // If no match found, try to find the closest match by removing locale prefixes
-        if (!foundMatch) {
-            console.log("❌ No exact match found, trying fallback...");
-            let pathWithoutLocale = currentPath;
-            
-            // Remove Spanish locale prefix
-            if (currentPath.startsWith('/es/')) {
-                pathWithoutLocale = currentPath.slice(3) || '/';
-            } else if (currentPath === '/es' || currentPath === '/es/') {
-                pathWithoutLocale = '/';
-            }
-            
-            console.log("Path without locale:", pathWithoutLocale);
-            
-            for (const [base, mappings] of Object.entries(pathMappings)) {
-                const localePaths = mappings as Record<string, string>;
-                const enPath = localePaths.en; // Try matching against English pattern
-                
-                if (enPath) {
-                    // Try exact match first
-                    if (pathWithoutLocale === enPath) {
-                        basePath = base;
-                        extractedParams = {};
-                        foundMatch = true;
-                        console.log("✅ Found exact fallback match:", { base, enPath, pathWithoutLocale });
-                        break;
-                    }
-                    
-                    // Try pattern match
-                    const { match, params } = matchUrlPattern(pathWithoutLocale, enPath);
-                    if (match) {
-                        basePath = base;
-                        extractedParams = params;
-                        foundMatch = true;
-                        console.log("✅ Found pattern fallback match:", { base, enPath, pathWithoutLocale, params });
-                        break;
-                    }
+        // Try to match current path against all route patterns
+        for (const [routeBase, localeMap] of Object.entries(pathMappings)) {
+            for (const localePath of Object.values(localeMap)) {
+                const params = extractParams(currentPath, localePath);
+                if (params !== null) {
+                    // Found a match - generate target locale path
+                    const targetPattern = getLocalizedPath(routeBase, targetLocale);
+                    return fillPattern(targetPattern, params);
                 }
             }
         }
 
-        // Generate the target path
-        const newPathTemplate = getLocalizedPath(basePath, targetLocale);
-        const finalPath = fillUrlPattern(newPathTemplate, extractedParams);
+        // Fallback: remove locale prefix and try matching against English patterns
+        let pathWithoutLocale = currentPath;
+        if (currentPath.startsWith("/es/")) {
+            pathWithoutLocale = currentPath.slice(3) || "/";
+        } else if (currentPath === "/es" || currentPath === "/es/") {
+            pathWithoutLocale = "/";
+        }
 
-        console.log("📍 Final path generation:", {
-            basePath,
-            extractedParams,
-            targetLocale,
-            newPathTemplate,
-            finalPath,
-            foundMatch
-        });
-        console.log("=== End Debug ===");
+        for (const [routeBase, localeMap] of Object.entries(pathMappings)) {
+            const enPattern = localeMap.en;
+            if (enPattern) {
+                const params = extractParams(pathWithoutLocale, enPattern);
+                if (params !== null) {
+                    const targetPattern = getLocalizedPath(routeBase, targetLocale);
+                    return fillPattern(targetPattern, params);
+                }
+            }
+        }
 
-        return finalPath;
+        // Ultimate fallback: go to home page of target locale
+        return getLocalizedPath("/", targetLocale);
     };
 
     return (
