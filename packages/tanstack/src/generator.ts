@@ -34,9 +34,13 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
     const i18nEnabled = globalSettings.i18n?.enabled ?? true;
     const defaultLocale = globalSettings.i18n?.defaultLocale || config.defaultLocale || "en";
     const supportedLocales: SupportedLocale[] = globalSettings.i18n?.supportedLocales || config.supportedLocales || ["en", "fr", "es"];
+    const forceLocaleUrl = globalSettings.i18n?.forceLocaleUrl ?? false;
     const basePath = globalSettings.basePath;
 
     console.log(`🌐 i18n ${i18nEnabled ? "enabled" : "disabled"}, default locale: ${defaultLocale}, supported: [${supportedLocales.join(", ")}]`);
+    if (i18nEnabled && forceLocaleUrl) {
+        console.log(`🔗 Force locale URL enabled - non-default locales will be preserved in navigation`);
+    }
 
     const routes: GeneratedRoute[] = [];
     const normalizedRouteNames = new Set<string>();
@@ -227,10 +231,30 @@ export function routeTo(
   
   ${
       i18nEnabled
-          ? `// Get current locale from Paraglide if not provided
+          ? `// Get current locale from URL if not provided
   if (!locale) {
     try {
-      locale = getLocale();
+      // Get current URL path
+      const currentPath = window.location.pathname;
+      let pathWithoutBase = currentPath;
+      
+      // Remove base path if present
+      const basePath = globalSettings.basePath;
+      if (basePath && currentPath.startsWith(basePath)) {
+        pathWithoutBase = currentPath.slice(basePath.length) || '/';
+      }
+      
+      // Detect locale from URL path
+      const supportedLocales = ['${supportedLocales.join("', '")}'];
+      const detectedLocale = supportedLocales.find(loc => 
+        loc !== '${defaultLocale}' && (
+          pathWithoutBase.startsWith('/' + loc + '/') || 
+          pathWithoutBase === '/' + loc || 
+          pathWithoutBase === '/' + loc + '/'
+        )
+      );
+      
+      locale = detectedLocale || '${defaultLocale}'; // default locale if no match
     } catch {
       locale = '${defaultLocale}'; // fallback to default locale
     }

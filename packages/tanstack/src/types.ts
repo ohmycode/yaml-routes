@@ -29,6 +29,7 @@ export interface GlobalSettings {
         enabled: boolean;
         defaultLocale: string;
         supportedLocales: string[];
+        forceLocaleUrl?: boolean;
     };
     render?: "ssg" | "ssr" | "spa";
     basePath?: string;
