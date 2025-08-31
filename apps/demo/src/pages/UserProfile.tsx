@@ -1,8 +1,9 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { routeTo } from "../routeCache.generated";
+import { useRouteTo } from "../routeCache.generated";
 
 export default function UserProfile() {
     const { id } = useParams({ strict: false });
+    const routeTo = useRouteTo();
 
     return (
         <div className="max-w-4xl mx-auto">

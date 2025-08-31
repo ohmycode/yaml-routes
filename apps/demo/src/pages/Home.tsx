@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { routeTo } from "../routeCache.generated";
+import { useRouteTo } from "../routeCache.generated";
 import { useState, useEffect } from "react";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
@@ -30,39 +30,136 @@ function CopyButton({ text, className = "" }: { text: string; className?: string
 
 function InstallBox() {
     const commands = [
-        { label: "npm", command: "npm install @yaml-routes/tanstack" },
-        { label: "pnpm", command: "pnpm add @yaml-routes/tanstack" },
-        { label: "yarn", command: "yarn add @yaml-routes/tanstack" },
+        { label: "npm", command: "npm install @yaml-routes/tanstack", icon: "📦" },
+        { label: "pnpm", command: "pnpm add @yaml-routes/tanstack", icon: "🚀" },
+        { label: "yarn", command: "yarn add @yaml-routes/tanstack", icon: "🧶" },
     ];
 
     const [activeTab, setActiveTab] = useState(0);
+    const [isHovered, setIsHovered] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(commands[activeTab].command);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error("Failed to copy text: ", err);
+            // Fallback for older browsers
+            const textArea = document.createElement("textarea");
+            textArea.value = commands[activeTab].command;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
 
     return (
-        <div className="bg-gray-900 rounded-xl p-6 max-w-3xl mx-auto shadow-2xl border border-gray-700">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <span className="text-2xl">⚡</span>
-                    Quick Install
-                </h3>
-                <div className="flex bg-gray-800 rounded-lg p-1">
-                    {commands.map((cmd, index) => (
-                        <button
-                            key={cmd.label}
-                            onClick={() => setActiveTab(index)}
-                            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                                activeTab === index ? "bg-blue-600 text-white shadow-lg" : "text-gray-300 hover:text-white hover:bg-gray-700"
-                            }`}
-                        >
-                            {cmd.label}
-                        </button>
-                    ))}
+        <div className="relative max-w-4xl mx-auto group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            {/* Animated background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-blue-600/20 rounded-2xl blur-xl transform transition-all duration-700 group-hover:scale-105 opacity-70"></div>
+
+            {/* Main container with glassmorphism effect */}
+            <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-gray-700/50 transform transition-all duration-500 hover:shadow-blue-500/10 hover:shadow-3xl">
+                {/* Header with enhanced styling */}
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <div className="relative">
+                            <span className={`text-3xl transition-transform duration-300 ${isHovered ? "animate-pulse scale-110" : ""}`}>⚡</span>
+                            <div className="absolute inset-0 bg-yellow-400/30 rounded-full blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-bold text-white mb-1">Quick Install</h3>
+                            <p className="text-gray-400 text-sm">Get started in seconds</p>
+                        </div>
+                    </div>
+
+                    {/* Enhanced tab selector */}
+                    <div className="flex bg-gray-800/80 backdrop-blur-sm rounded-xl p-1.5 border border-gray-600/30">
+                        {commands.map((cmd, index) => (
+                            <button
+                                key={cmd.label}
+                                onClick={() => {
+                                    setActiveTab(index);
+                                    setCopied(false); // Reset copy state when switching tabs
+                                }}
+                                className={`relative px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                                    activeTab === index
+                                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                                        : "text-gray-300 hover:text-white hover:bg-gray-700/50 hover:scale-105"
+                                }`}
+                            >
+                                <span className="text-base">{cmd.icon}</span>
+                                {cmd.label}
+                                {activeTab === index && (
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-purple-600/30 rounded-lg blur-sm"></div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
-            <div className="relative">
-                <pre className="bg-black p-4 rounded-lg text-green-400 font-mono text-sm overflow-x-auto border border-gray-800">
-                    <code>$ {commands[activeTab].command}</code>
-                </pre>
-                <CopyButton text={commands[activeTab].command} className="absolute top-2 right-2" />
+
+                {/* Enhanced code block */}
+                <div className="relative">
+                    {/* Terminal window decoration */}
+                    <div className="bg-gray-800/80 px-6 py-3 rounded-t-xl border-b border-gray-700/50 flex items-center gap-2">
+                        <div className="flex gap-2">
+                            <div className="w-3 h-3 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
+                            <div className="w-3 h-3 bg-yellow-500 rounded-full shadow-lg shadow-yellow-500/50"></div>
+                            <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
+                        </div>
+                        <span className="text-gray-400 text-sm font-mono ml-3">Terminal</span>
+                    </div>
+
+                    {/* Command display */}
+                    <div className="relative bg-black/80 backdrop-blur-sm rounded-b-xl border border-gray-800/50">
+                        <pre className="p-6 text-green-400 font-mono text-lg leading-relaxed overflow-x-auto">
+                            <code className="flex items-center gap-3">
+                                <span className="text-blue-400 select-none">$</span>
+                                <span className={`transition-all duration-500 ${isHovered ? "text-green-300" : "text-green-400"}`}>
+                                    {commands[activeTab].command}
+                                </span>
+                            </code>
+                        </pre>
+
+                        {/* Enhanced copy button */}
+                        <button
+                            onClick={handleCopy}
+                            disabled={copied}
+                            className={`absolute top-4 right-4 px-4 py-2 rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-sm border flex items-center gap-2 hover:scale-105 ${
+                                copied
+                                    ? "bg-green-600/80 text-white border-green-500/50 shadow-green-500/30"
+                                    : "bg-gray-700/80 hover:bg-gray-600 text-gray-300 hover:text-white border-gray-600/30 hover:border-gray-500/50"
+                            }`}
+                            title="Copy to clipboard"
+                        >
+                            {copied ? (
+                                <>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Copied!
+                                </>
+                            ) : (
+                                <>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                        />
+                                    </svg>
+                                    Copy
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -119,6 +216,8 @@ function FeatureCard({
 }
 
 export default function Home() {
+    const routeTo = useRouteTo();
+
     return (
         <div className="max-w-7xl mx-auto">
             {/* Hero Section */}

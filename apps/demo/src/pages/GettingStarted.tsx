@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { routeTo } from "../routeCache.generated";
+import { useRouteTo } from "../routeCache.generated";
 import { useEffect } from "react";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
@@ -23,6 +23,8 @@ function PrismCodeBlock({ language, children, title }: { language: string; child
 }
 
 export default function GettingStarted() {
+    const routeTo = useRouteTo();
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">

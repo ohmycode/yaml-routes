@@ -1,8 +1,9 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { routeTo } from "../routeCache.generated";
+import { useRouteTo } from "../routeCache.generated";
 
 export default function UserImages() {
     const { id } = useParams({ strict: false });
+    const routeTo = useRouteTo();
 
     // Demo image data
     const demoImages = [

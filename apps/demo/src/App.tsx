@@ -1,11 +1,12 @@
 import { StrictMode } from "react";
 import { RouterProvider, Outlet, Link } from "@tanstack/react-router";
-import { router, routeTo } from "./routeCache.generated";
+import { router, useRouteTo } from "./routeCache.generated";
 import { LocaleSwitcher } from "./components/LocaleSwitcher";
 import { ThemeToggle } from "./components/ThemeToggle";
 
 // Root component for TanStack Router
 export function RootComponent() {
+    const routeTo = useRouteTo();
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
             <nav className="bg-blue-600 dark:bg-blue-800 text-white p-4 shadow-lg">

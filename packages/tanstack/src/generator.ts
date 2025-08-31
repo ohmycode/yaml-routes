@@ -198,6 +198,52 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { z } from 'zod';
 import { RootComponent } from './App';
+${
+    i18nEnabled
+        ? `
+// React hook for reactive locale detection
+import { useState, useEffect } from 'react';
+
+export function useCurrentLocale(): string {
+  const [locale, setLocale] = useState(() => getCurrentLocale());
+  
+  useEffect(() => {
+    const updateLocale = () => {
+      const newLocale = getCurrentLocale();
+      setLocale(newLocale);
+    };
+    
+    // Listen for navigation changes
+    const handleNavigation = () => {
+      // Small delay to ensure URL is updated
+      setTimeout(updateLocale, 0);
+    };
+    
+    // Listen for both popstate (back/forward) and general navigation
+    window.addEventListener('popstate', handleNavigation);
+    
+    // Also check periodically as a fallback
+    const interval = setInterval(updateLocale, 100);
+    
+    return () => {
+      window.removeEventListener('popstate', handleNavigation);
+      clearInterval(interval);
+    };
+  }, []);
+  
+  return locale;
+}
+
+// React hook for reactive routing that updates when locale changes
+export function useRouteTo() {
+  const currentLocale = useCurrentLocale();
+  
+  return (routeId: string, params: Record<string, string | number> = {}, locale?: string) => {
+    return routeTo(routeId, params, locale || currentLocale);
+  };
+}`
+        : ""
+}
 ${i18nEnabled ? "import { getLocale } from './paraglide/runtime.js';" : ""}
 ${Array.from(imports).join("\n")}
 
@@ -220,6 +266,49 @@ export function getLocalizedPath(basePath: string, locale: string): string {
 // Route ID mappings for routeTo helper
 export const routeIdMappings = ${JSON.stringify(routeIdMappings, null, 2)} as const;
 
+// Global locale state for reactive updates
+let currentDetectedLocale: string = '${defaultLocale}';
+
+// Function to update the current locale (called by router on navigation)
+export function updateCurrentLocale(newLocale: string): void {
+  currentDetectedLocale = newLocale;
+}
+
+// Function to get current locale reactively
+export function getCurrentLocale(): string {
+  ${
+      i18nEnabled && forceLocaleUrl
+          ? `try {
+    // Get current URL path
+    const currentPath = window.location.pathname;
+    let pathWithoutBase = currentPath;
+    
+    // Remove base path if present
+    const basePath = globalSettings.basePath;
+    if (basePath && currentPath.startsWith(basePath)) {
+      pathWithoutBase = currentPath.slice(basePath.length) || '/';
+    }
+    
+    // Detect locale from URL path
+    const supportedLocales = ['${supportedLocales.join("', '")}'];
+    const detectedLocale = supportedLocales.find(loc => 
+      loc !== '${defaultLocale}' && (
+        pathWithoutBase.startsWith('/' + loc + '/') || 
+        pathWithoutBase === '/' + loc || 
+        pathWithoutBase === '/' + loc + '/'
+      )
+    );
+    
+    const locale = detectedLocale || '${defaultLocale}';
+    currentDetectedLocale = locale;
+    return locale;
+  } catch {
+    return '${defaultLocale}';
+  }`
+          : `return '${defaultLocale}';`
+  }
+}
+
 // Generic route helper - takes route ID and optional parameters
 export function routeTo(
   routeId: string, 
@@ -231,32 +320,14 @@ export function routeTo(
   
   ${
       i18nEnabled
-          ? `// Get current locale from URL if not provided
+          ? `// Handle locale based on forceLocaleUrl setting
   if (!locale) {
-    try {
-      // Get current URL path
-      const currentPath = window.location.pathname;
-      let pathWithoutBase = currentPath;
-      
-      // Remove base path if present
-      const basePath = globalSettings.basePath;
-      if (basePath && currentPath.startsWith(basePath)) {
-        pathWithoutBase = currentPath.slice(basePath.length) || '/';
-      }
-      
-      // Detect locale from URL path
-      const supportedLocales = ['${supportedLocales.join("', '")}'];
-      const detectedLocale = supportedLocales.find(loc => 
-        loc !== '${defaultLocale}' && (
-          pathWithoutBase.startsWith('/' + loc + '/') || 
-          pathWithoutBase === '/' + loc || 
-          pathWithoutBase === '/' + loc + '/'
-        )
-      );
-      
-      locale = detectedLocale || '${defaultLocale}'; // default locale if no match
-    } catch {
-      locale = '${defaultLocale}'; // fallback to default locale
+    ${
+        forceLocaleUrl
+            ? `// forceLocaleUrl is enabled - use current detected locale
+    locale = getCurrentLocale();`
+            : `// forceLocaleUrl is disabled - always use default locale
+    locale = '${defaultLocale}';`
     }
   }`
           : `// i18n is disabled, use default locale
