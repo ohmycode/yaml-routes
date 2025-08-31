@@ -1,27 +1,15 @@
-import { useLocation, Link } from "@tanstack/react-router";
-import { pathMappings, getLocalizedPath, globalSettings, routeTo } from "../routeCache.generated";
+import { Link, useLocation } from "@tanstack/react-router";
+import { globalSettings, pathMappings, routeIdMappings, useCurrentLocale, routeTo } from "../routeCache.generated";
 
 export function LocaleSwitcher() {
+    // Get supported locales from generated config (completely dynamic)
+    const supportedLocales = globalSettings.i18n?.supportedLocales || ["en"];
+
+    // Use TanStack Router's location state (reactive)
     const location = useLocation();
-    const supportedLocales = ["en", "es"];
 
-    // Determine current locale from URL path
-    const getCurrentLocaleFromPath = (): string => {
-        let currentPath = location.pathname;
-        if (globalSettings.basePath && currentPath.startsWith(globalSettings.basePath)) {
-            currentPath = currentPath.slice(globalSettings.basePath.length) || "/";
-        }
-
-        // Check if path starts with Spanish locale
-        if (currentPath.startsWith("/es/") || currentPath === "/es" || currentPath === "/es/") {
-            return "es";
-        }
-
-        // Default to English
-        return "en";
-    };
-
-    const currentLocale = getCurrentLocaleFromPath();
+    // Use the generated hook to get current locale
+    const currentLocale = useCurrentLocale();
 
     // Extract parameters from a URL using a pattern template
     const extractParams = (url: string, pattern: string): Record<string, string> | null => {
@@ -40,67 +28,45 @@ export function LocaleSwitcher() {
         return params;
     };
 
-    // Get current page URL in target locale
-    const getCurrentPageInLocale = (targetLocale: string): string => {
-        // Remove base path to match against pathMappings
-        let currentPath = location.pathname;
+    // Find route ID by matching current URL against all route patterns
+    const findCurrentRouteId = (): { routeId: string; params: Record<string, string> } | null => {
+        // Use TanStack Router's location instead of window.location
+        const currentPath = location.pathname;
+        let pathWithoutBase = currentPath;
+
+        // Remove base path if present
         if (globalSettings.basePath && currentPath.startsWith(globalSettings.basePath)) {
-            currentPath = currentPath.slice(globalSettings.basePath.length) || "/";
+            pathWithoutBase = currentPath.slice(globalSettings.basePath.length) || "/";
         }
 
-        // Try to match current path against all route patterns
-        for (const [routeBase, localeMap] of Object.entries(pathMappings)) {
-            for (const localePath of Object.values(localeMap)) {
-                const params = extractParams(currentPath, localePath);
+        // Try to match current path against all route patterns in pathMappings
+        for (const [routePattern, localeMap] of Object.entries(pathMappings)) {
+            for (const [locale, localizedPath] of Object.entries(localeMap)) {
+                const params = extractParams(pathWithoutBase, localizedPath);
                 if (params !== null) {
-                    // Found a match - try to find a route ID for this pattern
-                    // For now, let's use a simple mapping approach
-                    const routeId = getRouteIdFromPath(routeBase);
+                    // Found a match! Find the corresponding route ID
+                    const routeId = Object.keys(routeIdMappings).find((id) => routeIdMappings[id as keyof typeof routeIdMappings].path === routePattern);
                     if (routeId) {
-                        return routeTo(routeId, params, targetLocale);
+                        return { routeId, params };
                     }
                 }
             }
         }
 
-        // Fallback: remove locale prefix and try matching against English patterns
-        let pathWithoutLocale = currentPath;
-        if (currentPath.startsWith("/es/")) {
-            pathWithoutLocale = currentPath.slice(3) || "/";
-        } else if (currentPath === "/es" || currentPath === "/es/") {
-            pathWithoutLocale = "/";
-        }
-
-        for (const [routeBase, localeMap] of Object.entries(pathMappings)) {
-            const enPattern = localeMap.en;
-            if (enPattern) {
-                const params = extractParams(pathWithoutLocale, enPattern);
-                if (params !== null) {
-                    const routeId = getRouteIdFromPath(routeBase);
-                    if (routeId) {
-                        return routeTo(routeId, params, targetLocale);
-                    }
-                }
-            }
-        }
-
-        // Ultimate fallback: go to home page of target locale
-        return routeTo("home", {}, targetLocale);
+        return null;
     };
 
-    // Simple mapping from path pattern to route ID
-    const getRouteIdFromPath = (path: string): string | null => {
-        const pathToId: Record<string, string> = {
-            "/": "home",
-            "/getting-started": "getting_started",
-            "/advanced-examples": "advanced_examples",
-            "/user/{id}": "user_profile",
-            "/user/{id}/images": "user_images",
-            "/user/{id}/images/{imageId}": "user_image",
-            "/about": "about",
-            "/demo": "demo",
-        };
-        return pathToId[path] || null;
+    // Get current page URL in target locale
+    const getCurrentPageInLocale = (targetLocale: string): string => {
+        const currentRoute = findCurrentRouteId();
+
+        if (currentRoute) {
+            // Found the current route - generate URL for target locale
+            return routeTo(currentRoute.routeId, currentRoute.params, targetLocale);
+        }
+
+        // Fallback: go to home page of target locale
+        return routeTo("home", {}, targetLocale);
     };
 
     return (
