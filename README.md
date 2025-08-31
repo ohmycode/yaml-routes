@@ -2,12 +2,23 @@
 
 A monorepo for YAML-based routing configuration that generates type-safe routes for modern web frameworks.
 
-## 📦 Packages
+## � Live Demo
+
+**[View Interactive Demo →](https://ohmycode.github.io/yaml-routes)**
+
+Experience all features live with:
+
+-   **Interactive examples** of all features
+-   **Copy-paste** snippets
+-   **Live code samples** with syntax highlighting
+-   **Multi-language routing** demonstrations
+
+## �📦 Packages
 
 -   **[@yaml-routes/tanstack](./packages/tanstack)** - TanStack Router integration with YAML route configuration
 -   **[Interactive Demo & Guide](./apps/demo)** - Comprehensive developer guide and live examples
 
-## 🚀 Quick Start
+## 🎯 Local Development
 
 ```bash
 # Install dependencies
@@ -20,15 +31,7 @@ pnpm dev
 pnpm build
 ```
 
-## 🎯 Live Demo
-
-Visit the interactive demo at `http://localhost:3000` after running `pnpm dev` to see:
-
--   **Interactive examples** of all features
--   **Copy-paste installation** commands
--   **Live code samples** with syntax highlighting
--   **Dark/light mode** support
--   **Multi-language routing** demonstrations
+The demo will be available at `http://localhost:3000`
 
 ## 🎯 Features
 

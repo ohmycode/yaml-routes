@@ -41,12 +41,16 @@
         "typescript",
         "react"
     ],
-    "author": "Your Name",
+    "author": "ohmycode",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/your-username/yaml-routes.git",
+        "url": "https://github.com/ohmycode/yaml-routes.git",
         "directory": "packages/tanstack"
+    },
+    "homepage": "https://ohmycode.github.io/yaml-routes",
+    "bugs": {
+        "url": "https://github.com/ohmycode/yaml-routes/issues"
     },
     "peerDependencies": {
         "@tanstack/react-router": ">=1.130.0",

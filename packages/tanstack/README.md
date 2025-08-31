@@ -2,6 +2,12 @@
 
 YAML-based routing configuration for TanStack Router with built-in internationalization support.
 
+## 🚀 Live Demo
+
+**[Try it live →](https://ohmycode.github.io/yaml-routes)**
+
+See all features in action with interactive examples, copy-paste installation commands, and live code samples.
+
 ## 🚀 Features
 
 -   **📝 YAML Configuration** - Define routes in clean, readable YAML format

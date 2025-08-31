@@ -5,6 +5,8 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 
 const config = defineConfig({
+    // Set base path for GitHub Pages deployment
+    base: process.env.NODE_ENV === "production" ? "/yaml-routes/" : "/",
     plugins: [
         paraglideVitePlugin({
             project: "./project.inlang",
