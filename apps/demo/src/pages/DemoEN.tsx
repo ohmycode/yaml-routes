@@ -1,61 +1,102 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useRouteTo, useCurrentLocale } from "../routeCache.generated";
 import { useState, useEffect } from "react";
-import Prism from "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
-import "prismjs/components/prism-yaml";
+import { codeToHtml } from "shiki";
+
+// Add custom styles for line highlighting
+const lineHighlightStyles = `
+.highlighted-line {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
+    border-left: 4px solid rgb(96, 165, 250);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    animation: highlight-pulse 2s ease-in-out infinite;
+}
+
+@keyframes highlight-pulse {
+    0%, 100% { 
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    }
+    50% { 
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25));
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+}
+`;
 
 function YamlHighlight({ yamlContent, highlightedPaths = [] }: { yamlContent: string; highlightedPaths: string[] }) {
     const [highlightedHtml, setHighlightedHtml] = useState("");
 
     useEffect(() => {
-        // Apply Prism highlighting to the YAML content
-        const highlighted = Prism.highlight(yamlContent, Prism.languages.yaml, "yaml");
+        const highlightCode = async () => {
+            // Calculate which lines should be highlighted based on the current route
+            const lines = yamlContent.split("\n");
+            const highlightedLines: number[] = [];
 
-        // Split into lines and apply route highlighting
-        const lines = highlighted.split("\n");
-        const processedLines = lines.map((line, index) => {
-            const plainLine = yamlContent.split("\n")[index];
-            const isHighlighted = highlightedPaths.some((path) => {
-                // Check for exact path matches or parameter patterns
-                return (
-                    plainLine.includes(path) ||
-                    (path.includes("{") && plainLine.includes(path.replace(/\{[^}]+\}/g, "{"))) ||
-                    (path.includes(":") && plainLine.includes(path.split(":")[0]))
-                );
+            lines.forEach((line, index) => {
+                const isHighlighted = highlightedPaths.some((path: string) => {
+                    // Check for exact path matches or parameter patterns
+                    return (
+                        line.includes(path) ||
+                        (path.includes("{") && line.includes(path.replace(/\{[^}]+\}/g, "{"))) ||
+                        (path.includes(":") && line.includes(path.split(":")[0])) ||
+                        // Also highlight parent routes
+                        (line.trim().endsWith(":") && path.startsWith(line.trim().slice(0, -1)))
+                    );
+                });
+
+                if (isHighlighted) {
+                    highlightedLines.push(index + 1);
+                }
             });
 
-            return {
-                html: line,
-                highlighted: isHighlighted,
-                lineNumber: index + 1,
-            };
-        });
+            // Apply Shiki highlighting with built-in line highlighting
+            const highlighted = await codeToHtml(yamlContent, {
+                lang: "yaml",
+                theme: "github-dark",
+                transformers: [
+                    {
+                        pre(node) {
+                            // Add custom styling to match Home component
+                            node.properties.style =
+                                "background-color: transparent; padding: 1.5rem; margin: 0; font-size: 0.875rem; line-height: 1.6; overflow-x: auto;";
+                        },
+                        line(node, line) {
+                            // Add line highlighting with Shiki's built-in system
+                            if (highlightedLines.includes(line)) {
+                                this.addClassToHast(node, "highlighted-line");
+                            }
+                        },
+                    },
+                ],
+            });
 
-        const finalHtml = processedLines
-            .map(({ html, highlighted }) => {
-                if (highlighted) {
-                    return `<span class="bg-blue-600/30 border-l-4 border-blue-400 pl-2 -ml-2 block">${html}</span>`;
-                }
-                return html;
-            })
-            .join("\n");
+            setHighlightedHtml(highlighted);
+        };
 
-        setHighlightedHtml(finalHtml);
+        highlightCode();
     }, [yamlContent, highlightedPaths]);
 
     return (
-        <div className="relative">
-            <div className="bg-gray-800 px-4 py-3 text-sm text-gray-300 rounded-t-lg border-b border-gray-700 flex items-center gap-2">
-                <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-                <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                <span className="ml-3 font-medium">routes.yml - Live Demo</span>
+        <div className="relative group">
+            <style dangerouslySetInnerHTML={{ __html: lineHighlightStyles }} />
+            <div className="bg-gradient-to-r from-gray-800 to-gray-750 px-6 py-4 text-sm text-gray-300 rounded-t-xl border-b border-gray-700/50 flex items-center gap-3 shadow-lg">
+                <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-red-500 rounded-full shadow-sm animate-pulse"></span>
+                    <span className="w-3 h-3 bg-yellow-500 rounded-full shadow-sm"></span>
+                    <span className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></span>
+                </div>
+                <span className="ml-2 font-medium text-gray-200">routes.yml - Live Demo</span>
+                <div className="ml-auto flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span className="text-xs text-green-400 font-medium">Live</span>
+                </div>
             </div>
-            <div className="bg-gray-900 rounded-b-lg overflow-hidden">
-                <pre className="text-sm overflow-x-auto !bg-gray-900 !p-4">
-                    <code className="language-yaml" dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
-                </pre>
+            <div className="relative overflow-hidden">
+                <div className="!bg-gradient-to-br !from-gray-900 !to-gray-800 shadow-2xl border border-gray-700/50 rounded-b-xl relative overflow-x-auto group-hover:shadow-3xl transition-all duration-300">
+                    <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-b-xl"></div>
             </div>
         </div>
     );

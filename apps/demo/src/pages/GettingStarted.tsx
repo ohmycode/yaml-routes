@@ -1,11 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useRouteTo } from "../routeCache.generated";
 import { useEffect, useState } from "react";
-import Prism from "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
-import "prismjs/components/prism-yaml";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-bash";
+import { codeToHtml } from "shiki";
 
 function CopyButton({ text, className = "" }: { text: string; className?: string }) {
     const [copied, setCopied] = useState(false);
@@ -19,34 +15,76 @@ function CopyButton({ text, className = "" }: { text: string; className?: string
     return (
         <button
             onClick={handleCopy}
-            className={`px-3 py-1.5 text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 rounded transition-colors font-medium ${className}`}
+            className={`
+                px-4 py-2 text-xs bg-gray-800/90 hover:bg-gray-700/90 
+                text-gray-300 hover:text-white rounded-lg 
+                transition-all duration-200 font-medium 
+                backdrop-blur-sm border border-gray-600/50 hover:border-gray-500/50
+                shadow-lg hover:shadow-xl transform hover:scale-105
+                ${copied ? "bg-green-600/90 text-white border-green-500/50" : ""}
+                ${className}
+            `}
             title="Copy to clipboard"
         >
-            {copied ? "✓ Copied!" : "Copy"}
+            {copied ? "✓ Copied!" : "📋 Copy"}
         </button>
     );
 }
 
-function PrismCodeBlock({ language, children, title }: { language: string; children: string; title?: string }) {
+function ShikiCodeBlock({ language, children, title }: { language: string; children: string; title?: string }) {
+    const [highlightedHtml, setHighlightedHtml] = useState("");
+
     useEffect(() => {
-        Prism.highlightAll();
-    }, [children]);
+        const highlightCode = async () => {
+            const highlighted = await codeToHtml(children.trim(), {
+                lang: language as any,
+                theme: "github-dark",
+                transformers: [
+                    {
+                        pre(node) {
+                            this.addClassToHast(node, "overflow-x-auto");
+                            this.addClassToHast(node, "text-sm");
+                            this.addClassToHast(node, "leading-relaxed");
+                        },
+                        code(node) {
+                            this.addClassToHast(node, "block");
+                            this.addClassToHast(node, "p-6");
+                        },
+                    },
+                ],
+            });
+            setHighlightedHtml(highlighted);
+        };
+        highlightCode();
+    }, [children, language]);
 
     return (
-        <div className="relative">
+        <div className="relative group">
             {title && (
-                <div className="bg-gray-800 px-4 py-3 text-sm text-gray-300 rounded-t-lg border-b border-gray-700 flex items-center gap-2">
-                    <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-                    <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                    <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                    <span className="ml-3 font-medium">{title}</span>
+                <div className="bg-gradient-to-r from-gray-800 to-gray-750 px-6 py-4 text-sm text-gray-300 rounded-t-xl border-b border-gray-700/50 flex items-center gap-3 shadow-lg">
+                    <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 bg-red-500 rounded-full shadow-sm"></span>
+                        <span className="w-3 h-3 bg-yellow-500 rounded-full shadow-sm"></span>
+                        <span className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></span>
+                    </div>
+                    <span className="ml-2 font-medium text-gray-200">{title}</span>
                 </div>
             )}
-            <div className="relative">
-                <pre className={`${title ? "rounded-b-lg" : "rounded-lg"} text-sm overflow-x-auto !bg-gray-900 !p-4`}>
-                    <code className={`language-${language}`}>{children.trim()}</code>
-                </pre>
-                <CopyButton text={children.trim()} className="absolute top-3 right-3" />
+            <div className="relative overflow-hidden">
+                <div
+                    className={`
+                        ${title ? "rounded-b-xl" : "rounded-xl"} 
+                        !bg-gradient-to-br !from-gray-900 !to-gray-800 
+                        shadow-2xl border border-gray-700/50
+                        relative overflow-x-auto
+                        group-hover:shadow-3xl transition-all duration-300
+                        [&>pre]:!bg-transparent [&>pre]:!p-6 [&>pre]:!m-0
+                        [&>pre>code]:!bg-transparent
+                    `}
+                    dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
+                <CopyButton text={children.trim()} className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-200" />
             </div>
         </div>
     );
@@ -102,13 +140,13 @@ export default function GettingStarted() {
                                 </div>
                                 <p className="text-green-700 dark:text-green-300 mb-6">Perfect for most projects. Just run and generate!</p>
 
-                                <PrismCodeBlock language="bash">
+                                <ShikiCodeBlock language="bash">
                                     {`# Generate routes directly (no installation needed)
 npx yaml-routes
 
 # Watch for changes during development  
 npx yaml-routes --watch`}
-                                </PrismCodeBlock>
+                                </ShikiCodeBlock>
 
                                 <div className="mt-6 p-4 bg-green-100 dark:bg-green-800/50 rounded-lg">
                                     <p className="font-bold text-green-800 dark:text-green-300 mb-3 flex items-center gap-2">
@@ -143,13 +181,13 @@ npx yaml-routes --watch`}
                                 </div>
                                 <p className="text-blue-700 dark:text-blue-300 mb-6">For programmatic usage or custom build scripts.</p>
 
-                                <PrismCodeBlock language="bash">
+                                <ShikiCodeBlock language="bash">
                                     {`npm install @yaml-routes/tanstack
 # or
 pnpm add @yaml-routes/tanstack
 # or  
 yarn add @yaml-routes/tanstack`}
-                                </PrismCodeBlock>
+                                </ShikiCodeBlock>
 
                                 <div className="mt-6 p-4 bg-blue-100 dark:bg-blue-800/50 rounded-lg">
                                     <p className="font-bold text-blue-800 dark:text-blue-300 mb-3 flex items-center gap-2">
@@ -207,7 +245,7 @@ yarn add @yaml-routes/tanstack`}
                             </div>
                         </div>
 
-                        <PrismCodeBlock language="yaml" title="routes.yml">
+                        <ShikiCodeBlock language="yaml" title="routes.yml">
                             {`# Basic routes
 home:
     path: /
@@ -225,7 +263,7 @@ user_profile:
         id:
             type: string
             required: true`}
-                        </PrismCodeBlock>
+                        </ShikiCodeBlock>
                     </div>
                 </div>
 
@@ -244,7 +282,7 @@ user_profile:
                             </div>
                         </div>
 
-                        <PrismCodeBlock language="bash">
+                        <ShikiCodeBlock language="bash">
                             {`# 🚀 NPX method (recommended)
 npx yaml-routes
 
@@ -254,7 +292,7 @@ npx yaml-routes --watch
 # 📦 If you installed the package
 yarn yaml-routes
 # or node_modules/.bin/yaml-routes`}
-                        </PrismCodeBlock>
+                        </ShikiCodeBlock>
 
                         <div className="mt-6 p-6 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border border-green-200 dark:border-green-700">
                             <p className="text-green-700 dark:text-green-300 text-lg">
@@ -283,7 +321,7 @@ yarn yaml-routes
                             </div>
                         </div>
 
-                        <PrismCodeBlock language="typescript" title="App.tsx">
+                        <ShikiCodeBlock language="typescript" title="App.tsx">
                             {`import { Link } from "@tanstack/react-router";
 import { useRouteTo } from "./routeCache.generated"; // ← Your generated file
 
@@ -300,7 +338,7 @@ function App() {
         </nav>
     );
 }`}
-                        </PrismCodeBlock>
+                        </ShikiCodeBlock>
 
                         <div className="mt-6 p-6 bg-gradient-to-r from-orange-100 to-amber-100 dark:from-orange-900/20 dark:to-amber-900/20 rounded-2xl border border-orange-200 dark:border-orange-700">
                             <p className="text-orange-700 dark:text-orange-300 text-lg">
