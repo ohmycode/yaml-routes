@@ -51,19 +51,38 @@ export function LocaleSwitcher() {
         let extractedParams: Record<string, string> = {};
         let foundMatch = false;
 
-        // TanStack Router location.pathname should already be without basePath
+        console.log("=== Language Switcher Debug ===");
+        console.log("Current path:", currentPath);
+        console.log("Target locale:", targetLocale);
+
+        // Helper to normalize paths for comparison (remove trailing slash except for root)
+        const normalizePath = (path: string): string => {
+            if (path === "/" || path === "/es/") return path; // Keep root paths as-is
+            return path.replace(/\/$/, ""); // Remove trailing slash for others
+        };
+
         // Try to match the current path against all possible patterns
         for (const [base, mappings] of Object.entries(pathMappings)) {
             const localePaths = mappings as Record<string, string>;
             
             // Try to match against each locale's path pattern
             for (const [pathLocale, localizedPath] of Object.entries(localePaths)) {
+                // Try exact match first
+                if (currentPath === localizedPath) {
+                    basePath = base;
+                    extractedParams = {};
+                    foundMatch = true;
+                    console.log("✅ Found exact match:", { base, pathLocale, localizedPath, currentPath });
+                    break;
+                }
+                
+                // Try pattern match with parameters
                 const { match, params } = matchUrlPattern(currentPath, localizedPath);
                 if (match) {
                     basePath = base;
                     extractedParams = params;
                     foundMatch = true;
-                    console.log("Found match:", { base, pathLocale, localizedPath, currentPath, params });
+                    console.log("✅ Found pattern match:", { base, pathLocale, localizedPath, currentPath, params });
                     break;
                 }
             }
@@ -72,23 +91,39 @@ export function LocaleSwitcher() {
 
         // If no match found, try to find the closest match by removing locale prefixes
         if (!foundMatch) {
-            // Remove locale prefixes and try matching again
+            console.log("❌ No exact match found, trying fallback...");
             let pathWithoutLocale = currentPath;
+            
+            // Remove Spanish locale prefix
             if (currentPath.startsWith('/es/')) {
                 pathWithoutLocale = currentPath.slice(3) || '/';
+            } else if (currentPath === '/es' || currentPath === '/es/') {
+                pathWithoutLocale = '/';
             }
+            
+            console.log("Path without locale:", pathWithoutLocale);
             
             for (const [base, mappings] of Object.entries(pathMappings)) {
                 const localePaths = mappings as Record<string, string>;
                 const enPath = localePaths.en; // Try matching against English pattern
                 
                 if (enPath) {
+                    // Try exact match first
+                    if (pathWithoutLocale === enPath) {
+                        basePath = base;
+                        extractedParams = {};
+                        foundMatch = true;
+                        console.log("✅ Found exact fallback match:", { base, enPath, pathWithoutLocale });
+                        break;
+                    }
+                    
+                    // Try pattern match
                     const { match, params } = matchUrlPattern(pathWithoutLocale, enPath);
                     if (match) {
                         basePath = base;
                         extractedParams = params;
                         foundMatch = true;
-                        console.log("Found fallback match:", { base, enPath, pathWithoutLocale, params });
+                        console.log("✅ Found pattern fallback match:", { base, enPath, pathWithoutLocale, params });
                         break;
                     }
                 }
@@ -99,8 +134,7 @@ export function LocaleSwitcher() {
         const newPathTemplate = getLocalizedPath(basePath, targetLocale);
         const finalPath = fillUrlPattern(newPathTemplate, extractedParams);
 
-        console.log("LocaleSwitcher path generation:", {
-            currentPath,
+        console.log("📍 Final path generation:", {
             basePath,
             extractedParams,
             targetLocale,
@@ -108,6 +142,7 @@ export function LocaleSwitcher() {
             finalPath,
             foundMatch
         });
+        console.log("=== End Debug ===");
 
         return finalPath;
     };
