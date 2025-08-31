@@ -134,16 +134,13 @@ export function useRouteTo() {
   return finalPath;
 }`,
 
-    router: (routes: string[], basePath?: string) => {
-        // Extract all route names from the definitions
-        const routeNames = routes.map((def) => def.match(/const (\w+Route) = createRoute/)?.[1]).filter(Boolean);
-
+    router: (definitions: string[], routeVariables: string[], basePath?: string) => {
         return `const rootRoute = createRootRoute({ component: RootComponent });
 
-${routes.join("\n\n")}
+${definitions.join("\n\n")}
 
 export const router = createRouter({
-  routeTree: rootRoute${routeNames.length ? `.addChildren([${routeNames.join(", ")}])` : ""},
+  routeTree: rootRoute.addChildren([${routeVariables.join(", ")}]),
   defaultPreload: 'intent'${basePath ? `,\n  basepath: '${basePath}'` : ""}
 });
 
@@ -156,74 +153,110 @@ declare module '@tanstack/react-router' {
 // 🎨 Route processor with zero waste
 function processRoutes(routes: GeneratedRoute[], config: any) {
     const { hasI18n, locales, default: defaultLocale } = config;
-    const components = new Set<string>();
-    const definitions: string[] = [];
+    const imports = new Set<string>();
+    const componentNameMap = new Map<string, string>();
+    const routeDefinitions: string[] = [];
+    const routeVariables: string[] = [];
+    const localizedRouteDefinitions: string[] = [];
+    const localizedRouteVariables: string[] = [];
     const pathMappings: Record<string, Record<string, string>> = {};
     const routeIdMappings: Record<string, any> = {};
 
+    // Generate imports (collect all unique component paths)
     routes.forEach((route) => {
-        if (hasI18n && locales.length > 1) {
-            // Create separate route definitions for each locale
-            locales.forEach((locale: string) => {
-                const localePath = route.i18nPaths[locale];
-                const localeComponent = route.i18nComponents[locale];
-                const componentName = localeComponent
+        const allComponents = hasI18n ? Object.values(route.i18nComponents) : [route.component];
+
+        allComponents.forEach((componentPath) => {
+            const importPath = generateComponentImportPath(componentPath);
+            const componentName =
+                componentPath
                     .split("/")
                     .pop()
-                    ?.replace(/\.(tsx?|jsx?)$/, "");
-                const routeName = locale === defaultLocale ? `${route.id}Route` : `${route.id}${locale.toUpperCase()}Route`;
+                    ?.replace(/[^a-zA-Z0-9]/g, "") || "Component";
 
-                components.add(`import ${componentName} from './${localeComponent}';`);
-
-                // Create route with locale prefix
-                const routePath = locale === defaultLocale ? localePath : `/${locale}${localePath === "/" ? "" : localePath}`;
-
-                definitions.push(`const ${routeName} = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '${routePath.replace(/\{(\w+)\}/g, (_, param) => `\\$${param}`)}',
-  component: ${componentName}
-});`);
-            });
-        } else {
-            // Single locale or no i18n
-            const name = `${route.id}Route`;
-            const componentName = route.component
-                .split("/")
-                .pop()
-                ?.replace(/\.(tsx?|jsx?)$/, "");
-
-            components.add(`import ${componentName} from './${route.component}';`);
-
-            definitions.push(`const ${name} = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '${route.path.replace(/\{(\w+)\}/g, (_, param) => `\\$${param}`)}',
-  component: ${componentName}
-});`);
-        }
-
-        // Mappings (same for all locales)
-        routeIdMappings[route.id.toLowerCase()] = {
-            path: route.path,
-            parameters: Object.keys(route.parameters || {}),
-        };
-
-        if (hasI18n) {
-            // Generate path mappings in the old format with locale prefixes
-            pathMappings[route.path] = {};
-            locales.forEach((locale: string) => {
-                if (locale === defaultLocale) {
-                    pathMappings[route.path][locale] = route.i18nPaths[locale];
-                } else {
-                    const localizedPath = route.i18nPaths[locale];
-                    pathMappings[route.path][locale] = `/${locale}${localizedPath === "/" ? "" : localizedPath}`;
-                }
-            });
-        }
+            imports.add(`import ${componentName} from '${importPath}';`);
+            componentNameMap.set(componentPath, componentName);
+        });
     });
 
+    // Generate route definitions for default locale
+    routes.forEach((route) => {
+        const componentName = componentNameMap.get(route.component) || "Component";
+        const routeVarName = `${generateRouteId(route.id)}Route`; // Use camelCase for variable names
+        const routePath = convertYamlPathToTanstackPath(route.path);
+
+        routeDefinitions.push(`const ${routeVarName} = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '${routePath}',
+  component: ${componentName}
+});`);
+
+        routeVariables.push(routeVarName);
+    });
+
+    // Generate localized route definitions with locale prefix (only if i18n is enabled)
+    if (hasI18n) {
+        (locales as string[]).forEach((locale: string) => {
+            if (locale === defaultLocale) return; // Skip default locale as it has no prefix
+
+            routes.forEach((route) => {
+                const componentPath = route.i18nComponents[locale] || route.component;
+                const componentName = componentNameMap.get(componentPath) || "Component";
+                const routeVarName = `${generateRouteId(route.id)}${locale.charAt(0).toUpperCase() + locale.slice(1)}Route`;
+
+                // Use the localized path from i18n config if available, otherwise use the base path
+                const localizedPath = route.i18nPaths[locale] || route.path;
+                const convertedPath = convertYamlPathToTanstackPath(localizedPath);
+
+                // Add locale prefix to the localized path
+                const finalPath = `/${locale}${convertedPath}`;
+
+                localizedRouteDefinitions.push(`const ${routeVarName} = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '${finalPath}',
+  component: ${componentName}
+});`);
+
+                localizedRouteVariables.push(routeVarName);
+            });
+        });
+    }
+
+    // Generate path mapping for navigation (only if i18n is enabled)
+    if (hasI18n) {
+        routes.forEach((route) => {
+            const basePath = route.path;
+            pathMappings[basePath] = {};
+            (locales as string[]).forEach((locale: string) => {
+                if (locale === defaultLocale) {
+                    pathMappings[basePath][locale] = basePath;
+                } else {
+                    const localizedPath = route.i18nPaths[locale] || route.path;
+                    pathMappings[basePath][locale] = `/${locale}${localizedPath}`;
+                }
+            });
+        });
+    }
+
+    // Generate route ID mapping for the routeTo helper
+    routes.forEach((route) => {
+        const paramNames = Object.keys(route.parameters);
+
+        // Only use the original YAML key - developers should use the same convention
+        routeIdMappings[route.id] = {
+            path: route.path,
+            parameters: paramNames,
+        };
+    });
+
+    // Build the route tree
+    const allRouteVariables = [...routeVariables, ...localizedRouteVariables];
+    const allDefinitions = [...routeDefinitions, ...localizedRouteDefinitions];
+
     return {
-        components: Array.from(components),
-        definitions,
+        components: Array.from(imports),
+        definitions: allDefinitions,
+        routeVariables: allRouteVariables,
         pathMappings,
         routeIdMappings,
         config: { hasI18n, forceUrl: config.forceUrl, default: defaultLocale, locales, basePath: config.basePath },
@@ -300,7 +333,7 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
         .section($.i18nCode(processed.config, processed.pathMappings), i18nEnabled)
         .section($.routeIdMappings(processed.routeIdMappings))
         .section($.routeTo(processed.config))
-        .section($.router(processed.definitions, globalSettings.basePath))
+        .section($.router(processed.definitions, processed.routeVariables, globalSettings.basePath))
         .render();
 
     await writeFile(config.outputPath, code);
