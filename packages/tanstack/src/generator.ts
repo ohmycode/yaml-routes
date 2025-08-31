@@ -1,4 +1,6 @@
-import { writeFile } from "fs/promises";
+import { writeFile, readFile } from "fs/promises";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import type { RoutingConfig, GeneratedRoute, Settings, SupportedLocale, BuildConfig } from "./types";
 import {
     loadRoutingConfig,
@@ -41,7 +43,7 @@ import { RootComponent } from './App';${
         hasI18n
             ? `
 import { useState, useEffect } from 'react';
-import { useLocation } from '@tanstack/react-router';`
+import { useLocation, useMatchRoute } from '@tanstack/react-router';`
             : ""
     }
 ${components.join("\n")}`,
@@ -50,42 +52,6 @@ ${components.join("\n")}`,
 
     i18nCode: (config: { default: string; locales: string[]; forceUrl: boolean; basePath?: string }, mappings: any = {}) => `// 🌍 Smart i18n system
 export const pathMappings: Record<string, Record<string, string>> = ${JSON.stringify(mappings, null, 2)};
-
-export function getCurrentLocale(): string {
-  ${
-      config.forceUrl
-          ? `try {
-    // Get current URL path
-    const currentPath = window.location.pathname;
-    let pathWithoutBase = currentPath;
-    
-    // Remove base path if present
-    ${
-        config.basePath
-            ? `const basePath = '${config.basePath}';
-    if (currentPath.startsWith(basePath)) {
-      pathWithoutBase = currentPath.slice(basePath.length) || '/';
-    }`
-            : ""
-    }
-    
-    // Detect locale from URL path
-    const supportedLocales = ${JSON.stringify(config.locales)};
-    const detectedLocale = supportedLocales.find(loc => 
-      loc !== settings.i18n.defaultLocale && (
-        pathWithoutBase.startsWith('/' + loc + '/') || 
-        pathWithoutBase === '/' + loc || 
-        pathWithoutBase === '/' + loc + '/'
-      )
-    );
-    
-    return detectedLocale || settings.i18n.defaultLocale;
-  } catch {
-    return settings.i18n.defaultLocale;
-  }`
-          : `return settings.i18n.defaultLocale;`
-  }
-}
 
 export function getLocalizedPath(path: string, locale: string): string {
   return pathMappings[path]?.[locale] || path;
@@ -120,43 +86,102 @@ export function useCurrentLocale(): string {
 
 export function useRouteTo() {
   const locale = useCurrentLocale();
-  return (id: string, params = {}) => routeTo(id, params, locale);
+  return (id: string, params = {}) => {
+    const route = routeIdMappings[id.toLowerCase()];
+    if (!route) return '/';
+    
+    // Get the localized path template
+    const localizedTemplate = getLocalizedPath(route.path, locale);
+    
+    // Fill in parameters
+    let finalPath = localizedTemplate;
+    Object.entries(params).forEach(([k, v]) => finalPath = finalPath.replace(\`{\${k}}\`, String(v)));
+    return finalPath;
+  };
 }`,
 
     routeIdMappings: (mappings: any) =>
         `export const routeIdMappings: Record<string, { path: string; parameters: string[] }> = ${JSON.stringify(mappings, null, 2)};`,
 
-    routeTo: (config: {
-        hasI18n: boolean;
-        forceUrl: boolean;
-        default: string;
-    }) => `export function routeTo(id: string, params: Record<string, any> = {}, locale?: string): string {
-  const route = routeIdMappings[id.toLowerCase()];
-  if (!route) return '/';
-  
-  ${
-      config.hasI18n
-          ? `// Handle locale based on forceLocaleUrl setting
-  if (!locale) {
-    ${
-        config.forceUrl
-            ? `// forceLocaleUrl is enabled - use current detected locale
-    locale = getCurrentLocale();`
-            : `// forceLocaleUrl is disabled - always use default locale
-    locale = settings.i18n.defaultLocale;`
+    localeSwitcherHelpers: () => {
+        // Directly embed the locale switcher helper functions for React-only environments
+        return `
+// 🔧 Helper functions for locale switching (React hooks only)
+// Required imports: useLocation from '@tanstack/react-router'
+// These functions depend on: settings, pathMappings, routeIdMappings, useRouteTo
+
+export function extractRouteParameters(url: string, pattern: string): Record<string, string> | null {
+    const regexPattern = pattern.replace(/\\{([^}]+)\\}/g, "([^/]+)");
+    const regex = new RegExp(\`^\${regexPattern}$\`);
+    const match = url.match(regex);
+
+    if (!match) return null;
+
+    const paramNames = [...pattern.matchAll(/\\{([^}]+)\\}/g)].map((m) => m[1]);
+    const params: Record<string, string> = {};
+    paramNames.forEach((name, index) => {
+        params[name] = match[index + 1];
+    });
+
+    return params;
+}
+
+// 🔧 React hooks for locale switching (using TanStack Router)
+export function useCurrentRoute(): { routeId: string; params: Record<string, string> } | null {
+    const location = useLocation();
+
+    // Get current URL path from TanStack Router location (reactive)
+    const currentPath = location.pathname;
+    let pathWithoutBase = currentPath;
+
+    // Remove base path if present
+    if (settings.basePath && currentPath.startsWith(settings.basePath)) {
+        pathWithoutBase = currentPath.slice(settings.basePath.length) || "/";
     }
-  }
-  
-  // Get the localized path template
-  const localizedTemplate = getLocalizedPath(route.path, locale);`
-          : `let localizedTemplate = route.path;`
-  }
-  
-  // Fill in parameters
-  let finalPath = localizedTemplate;
-  Object.entries(params).forEach(([k, v]) => finalPath = finalPath.replace(\`{\${k}}\`, String(v)));
-  return finalPath;
-}`,
+
+    // Try to match current path against all route patterns in pathMappings
+    for (const [routePattern, localeMap] of Object.entries(pathMappings)) {
+        for (const [locale, localizedPath] of Object.entries(localeMap)) {
+            const params = extractRouteParameters(pathWithoutBase, localizedPath);
+            if (params !== null) {
+                // Found a match! Find the corresponding route ID
+                const routeId = Object.keys(routeIdMappings).find((id) => routeIdMappings[id].path === routePattern);
+                if (routeId) {
+                    return { routeId, params };
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+export function useLocalePath(targetLocale: string): string {
+    const currentRoute = useCurrentRoute();
+
+    if (currentRoute) {
+        // Found the current route - generate URL for target locale
+        const routePattern = routeIdMappings[currentRoute.routeId]?.path;
+        if (routePattern && pathMappings[routePattern]?.[targetLocale]) {
+            const targetPath = pathMappings[routePattern][targetLocale];
+            // Replace parameters in the target path
+            let finalPath = targetPath;
+            for (const [key, value] of Object.entries(currentRoute.params)) {
+                finalPath = finalPath.replace('{' + key + '}', value);
+            }
+            return finalPath;
+        }
+    }
+
+    // Fallback: go to home page of target locale
+    const homePattern = routeIdMappings["home"]?.path;
+    if (homePattern && pathMappings[homePattern]?.[targetLocale]) {
+        return pathMappings[homePattern][targetLocale];
+    }
+    
+    return "/";
+}`.trim();
+    },
 
     router: (definitions: string[], routeVariables: string[], basePath?: string, routerConfig?: any) => {
         const configOptions = [];
@@ -394,7 +419,7 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
         .section($.settings(settings))
         .section($.i18nCode(processed.config, processed.pathMappings), i18nEnabled)
         .section($.routeIdMappings(processed.routeIdMappings))
-        .section($.routeTo(processed.config))
+        .section($.localeSwitcherHelpers(), i18nEnabled)
         .section($.router(processed.definitions, processed.routeVariables, settings.basePath, routerConfig))
         .render();
 
