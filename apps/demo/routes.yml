@@ -7,6 +7,7 @@ settings:
         enabled: true
         defaultLocale: en
         supportedLocales: [en, es]
+    basePath: /yaml-routes
 
 # Basic routes
 home:
