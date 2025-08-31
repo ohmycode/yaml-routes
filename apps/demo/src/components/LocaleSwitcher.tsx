@@ -1,5 +1,5 @@
 import { useLocation, Link } from "@tanstack/react-router";
-import { pathMappings, getLocalizedPath, globalSettings } from "../routeCache.generated";
+import { pathMappings, getLocalizedPath, globalSettings, routeTo } from "../routeCache.generated";
 
 export function LocaleSwitcher() {
     const location = useLocation();
@@ -40,15 +40,6 @@ export function LocaleSwitcher() {
         return params;
     };
 
-    // Fill a pattern template with parameter values
-    const fillPattern = (pattern: string, params: Record<string, string>): string => {
-        let result = pattern;
-        for (const [key, value] of Object.entries(params)) {
-            result = result.replace(`{${key}}`, value);
-        }
-        return result;
-    };
-
     // Get current page URL in target locale
     const getCurrentPageInLocale = (targetLocale: string): string => {
         // Remove base path to match against pathMappings
@@ -62,9 +53,12 @@ export function LocaleSwitcher() {
             for (const localePath of Object.values(localeMap)) {
                 const params = extractParams(currentPath, localePath);
                 if (params !== null) {
-                    // Found a match - generate target locale path
-                    const targetPattern = getLocalizedPath(routeBase, targetLocale);
-                    return fillPattern(targetPattern, params);
+                    // Found a match - try to find a route ID for this pattern
+                    // For now, let's use a simple mapping approach
+                    const routeId = getRouteIdFromPath(routeBase);
+                    if (routeId) {
+                        return routeTo(routeId, params, targetLocale);
+                    }
                 }
             }
         }
@@ -82,14 +76,31 @@ export function LocaleSwitcher() {
             if (enPattern) {
                 const params = extractParams(pathWithoutLocale, enPattern);
                 if (params !== null) {
-                    const targetPattern = getLocalizedPath(routeBase, targetLocale);
-                    return fillPattern(targetPattern, params);
+                    const routeId = getRouteIdFromPath(routeBase);
+                    if (routeId) {
+                        return routeTo(routeId, params, targetLocale);
+                    }
                 }
             }
         }
 
         // Ultimate fallback: go to home page of target locale
-        return getLocalizedPath("/", targetLocale);
+        return routeTo("home", {}, targetLocale);
+    };
+
+    // Simple mapping from path pattern to route ID
+    const getRouteIdFromPath = (path: string): string | null => {
+        const pathToId: Record<string, string> = {
+            "/": "home",
+            "/getting-started": "getting_started",
+            "/advanced-examples": "advanced_examples",
+            "/user/{id}": "user_profile",
+            "/user/{id}/images": "user_images",
+            "/user/{id}/images/{imageId}": "user_image",
+            "/about": "about",
+            "/demo": "demo",
+        };
+        return pathToId[path] || null;
     };
 
     return (
