@@ -1,45 +1,86 @@
-name: Deploy Demo to GitHub Pages
+name: Deploy Demo to GitHub Pagesname: Deploy Demo to GitHub Pages
 
-on:
-    push:
-        branches: [main]
-    workflow_dispatch: # Allow manual triggers
+
+
+on:on:
+
+  push:    push:
+
+    branches:        branches: [main]
+
+      - main    workflow_dispatch: # Allow manual triggers
+
+  workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-    contents: read
-    pages: write
-    id-token: write
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pagespermissions:
+
+permissions:    contents: read
+
+  contents: read    pages: write
+
+  pages: write    id-token: write
+
+  id-token: write
 
 # Allow only one concurrent deployment
-concurrency:
-    group: "pages"
-    cancel-in-progress: false
 
-jobs:
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.concurrency:
+
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.    group: "pages"
+
+concurrency:    cancel-in-progress: false
+
+  group: "pages"
+
+  cancel-in-progress: falsejobs:
+
     # Build job - just validate and upload pre-built files
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
 
-            - name: Check if demo dist exists
-              run: |
-                if [ -d "apps/demo/dist" ]; then
-                  echo "✅ Demo dist folder found"
-                  ls -la apps/demo/dist/
-                else
-                  echo "❌ Demo dist folder not found - need to build locally first"
-                  echo "Run: pnpm install && pnpm run package:build && pnpm run demo:build"
-                  exit 1
-                fi
+jobs:    build:
 
-            - name: Setup Pages
+  deploy:        runs-on: ubuntu-latest
+
+    environment:        steps:
+
+      name: github-pages            - name: Checkout
+
+      url: ${{ steps.deployment.outputs.page_url }}              uses: actions/checkout@v3
+
+    runs-on: ubuntu-latest
+
+    steps:            - name: Check if demo dist exists
+
+      - name: Checkout              run: |
+
+        uses: actions/checkout@v5                  if [ -d "apps/demo/dist" ]; then
+
+                    echo "✅ Demo dist folder found"
+
+      - name: Setup Pages                    ls -la apps/demo/dist/
+
+        uses: actions/configure-pages@v5                  else
+
+                    echo "❌ Demo dist folder not found - need to build locally first"
+
+      - name: Upload artifact                    echo "Run: pnpm install && pnpm run package:build && pnpm run demo:build"
+
+        uses: actions/upload-pages-artifact@v3                    exit 1
+
+        with:                  fi
+
+          # Upload the pre-built demo dist folder
+
+          path: './apps/demo/dist'            - name: Setup Pages
+
               uses: actions/configure-pages@v3
 
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages
+
+        id: deployment            - name: Upload artifact
+
+        uses: actions/deploy-pages@v4              uses: actions/upload-pages-artifact@v3
               with:
                   path: ./apps/demo/dist
 
