@@ -7,6 +7,7 @@ settings:
         enabled: true
         defaultLocale: en
         supportedLocales: [en, es]
+        forceLocaleUrl: true # if true, locales will always be preserved in URLs, even if there is no locale path segment (recommended). If false, locale will be lost when navigating to a route without a locale segment.
     basePath: /yaml-routes
 
 # Basic routes
