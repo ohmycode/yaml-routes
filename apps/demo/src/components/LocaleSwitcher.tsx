@@ -1,4 +1,4 @@
-import { useLocation } from "@tanstack/react-router";
+import { useLocation, Link } from "@tanstack/react-router";
 import { getLocale } from "../paraglide/runtime.js";
 import { pathMappings, getLocalizedPath, globalSettings } from "../routeCache.generated";
 
@@ -6,6 +6,14 @@ export function LocaleSwitcher() {
     const location = useLocation();
     const currentLocale = getLocale();
     const supportedLocales = ["en", "es"];
+
+    // Debug logging
+    console.log("LocaleSwitcher Debug:", {
+        currentPath: location.pathname,
+        currentLocale,
+        basePath: globalSettings.basePath,
+        pathMappings,
+    });
 
     // Helper function to match a URL against a pattern and extract parameters
     const matchUrlPattern = (url: string, pattern: string): { match: boolean; params: Record<string, string> } => {
@@ -42,30 +50,34 @@ export function LocaleSwitcher() {
         let basePath = "/";
         let extractedParams: Record<string, string> = {};
 
-        // Remove the base path from the current path for pattern matching
-        const basePathPrefix = globalSettings.basePath || "";
-        const pathWithoutBase = currentPath.startsWith(basePathPrefix) 
-            ? currentPath.slice(basePathPrefix.length) || "/"
-            : currentPath;
-
+        // TanStack Router location.pathname should already be without basePath
+        // So we can directly match against pathMappings
         for (const [base, mappings] of Object.entries(pathMappings)) {
             const localePaths = mappings as Record<string, string>;
             for (const localizedPath of Object.values(localePaths)) {
-                const { match, params } = matchUrlPattern(pathWithoutBase, localizedPath);
+                const { match, params } = matchUrlPattern(currentPath, localizedPath);
                 if (match) {
                     basePath = base;
                     extractedParams = params;
                     break;
                 }
             }
-            if (basePath !== "/" || pathWithoutBase === "/") break;
+            if (basePath !== "/" || currentPath === "/") break;
         }
 
         const newPathTemplate = getLocalizedPath(basePath, targetLocale);
         const finalPath = fillUrlPattern(newPathTemplate, extractedParams);
-        
-        // Add the base path back to the final URL
-        return basePathPrefix + finalPath;
+
+        console.log("LocaleSwitcher path generation:", {
+            currentPath,
+            basePath,
+            extractedParams,
+            targetLocale,
+            newPathTemplate,
+            finalPath,
+        });
+
+        return finalPath;
     };
 
     return (
@@ -75,13 +87,13 @@ export function LocaleSwitcher() {
                 const localizedPath = getCurrentPageInLocale(locale);
 
                 return (
-                    <a
+                    <Link
                         key={locale}
-                        href={localizedPath}
+                        to={localizedPath}
                         className={`px-2 py-1 text-sm rounded transition-colors ${isActive ? "bg-white/20 text-white" : "text-blue-200 hover:text-white"}`}
                     >
                         {locale.toUpperCase()}
-                    </a>
+                    </Link>
                 );
             })}
         </div>
