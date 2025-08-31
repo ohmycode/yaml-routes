@@ -49,22 +49,53 @@ export function LocaleSwitcher() {
         const currentPath = location.pathname;
         let basePath = "/";
         let extractedParams: Record<string, string> = {};
+        let foundMatch = false;
 
         // TanStack Router location.pathname should already be without basePath
-        // So we can directly match against pathMappings
+        // Try to match the current path against all possible patterns
         for (const [base, mappings] of Object.entries(pathMappings)) {
             const localePaths = mappings as Record<string, string>;
-            for (const localizedPath of Object.values(localePaths)) {
+            
+            // Try to match against each locale's path pattern
+            for (const [pathLocale, localizedPath] of Object.entries(localePaths)) {
                 const { match, params } = matchUrlPattern(currentPath, localizedPath);
                 if (match) {
                     basePath = base;
                     extractedParams = params;
+                    foundMatch = true;
+                    console.log("Found match:", { base, pathLocale, localizedPath, currentPath, params });
                     break;
                 }
             }
-            if (basePath !== "/" || currentPath === "/") break;
+            if (foundMatch) break;
         }
 
+        // If no match found, try to find the closest match by removing locale prefixes
+        if (!foundMatch) {
+            // Remove locale prefixes and try matching again
+            let pathWithoutLocale = currentPath;
+            if (currentPath.startsWith('/es/')) {
+                pathWithoutLocale = currentPath.slice(3) || '/';
+            }
+            
+            for (const [base, mappings] of Object.entries(pathMappings)) {
+                const localePaths = mappings as Record<string, string>;
+                const enPath = localePaths.en; // Try matching against English pattern
+                
+                if (enPath) {
+                    const { match, params } = matchUrlPattern(pathWithoutLocale, enPath);
+                    if (match) {
+                        basePath = base;
+                        extractedParams = params;
+                        foundMatch = true;
+                        console.log("Found fallback match:", { base, enPath, pathWithoutLocale, params });
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Generate the target path
         const newPathTemplate = getLocalizedPath(basePath, targetLocale);
         const finalPath = fillUrlPattern(newPathTemplate, extractedParams);
 
@@ -75,6 +106,7 @@ export function LocaleSwitcher() {
             targetLocale,
             newPathTemplate,
             finalPath,
+            foundMatch
         });
 
         return finalPath;
