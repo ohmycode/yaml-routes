@@ -39,7 +39,10 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Build demo app only
+            - name: Build tanstack package (needed for demo build)
+              run: pnpm --filter @yaml-routes/tanstack build
+
+            - name: Build demo app
               run: pnpm --filter demo build
               env:
                   NODE_ENV: production
