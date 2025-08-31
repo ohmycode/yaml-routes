@@ -11,6 +11,15 @@ settings:
         forceLocaleUrl: true
     basePath: /yaml-routes
 
+    # Performance optimizations
+    lazyComponents: true # Enable lazy loading for better code splitting (false by default)
+
+    # TanStack Router configuration
+    router:
+        defaultPreload: intent # Preload strategy: 'intent' | 'render' | false
+        defaultPreloadStaleTime: 30000 # 30 seconds - how long preloaded data stays fresh
+        defaultGcTime: 300000 # 5 minutes - garbage collection time for unused data
+
 # Basic routes
 home:
     path: /
