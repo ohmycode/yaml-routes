@@ -164,7 +164,7 @@ export const pathMappings = {
 ### 4. Global Settings Export
 
 ```typescript
-export const globalSettings = {
+export const settings = {
     i18n: {
         enabled: true,
         defaultLocale: "en",

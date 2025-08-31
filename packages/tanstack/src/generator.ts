@@ -1,5 +1,5 @@
 import { writeFile } from "fs/promises";
-import type { RoutingConfig, GeneratedRoute, GlobalSettings, SupportedLocale, BuildConfig } from "./types";
+import type { RoutingConfig, GeneratedRoute, Settings, SupportedLocale, BuildConfig } from "./types";
 import {
     loadRoutingConfig,
     isRouteConfig,
@@ -46,10 +46,10 @@ import { useLocation } from '@tanstack/react-router';`
     }
 ${components.join("\n")}`,
 
-    settings: (config: any) => `export const globalSettings = ${JSON.stringify(config, null, 2)};`,
+    settings: (config: any) => `export const settings = ${JSON.stringify(config, null, 2)};`,
 
     i18nCode: (config: { default: string; locales: string[]; forceUrl: boolean; basePath?: string }, mappings: any = {}) => `// 🌍 Smart i18n system
-export const pathMappings = ${JSON.stringify(mappings, null, 2)};
+export const pathMappings: Record<string, Record<string, string>> = ${JSON.stringify(mappings, null, 2)};
 
 export function getCurrentLocale(): string {
   ${
@@ -72,18 +72,18 @@ export function getCurrentLocale(): string {
     // Detect locale from URL path
     const supportedLocales = ${JSON.stringify(config.locales)};
     const detectedLocale = supportedLocales.find(loc => 
-      loc !== '${config.default}' && (
+      loc !== settings.i18n.defaultLocale && (
         pathWithoutBase.startsWith('/' + loc + '/') || 
         pathWithoutBase === '/' + loc || 
         pathWithoutBase === '/' + loc + '/'
       )
     );
     
-    return detectedLocale || '${config.default}';
+    return detectedLocale || settings.i18n.defaultLocale;
   } catch {
-    return '${config.default}';
+    return settings.i18n.defaultLocale;
   }`
-          : `return '${config.default}';`
+          : `return settings.i18n.defaultLocale;`
   }
 }
 
@@ -108,14 +108,14 @@ export function useCurrentLocale(): string {
   // Detect locale from URL path
   const supportedLocales = ${JSON.stringify(config.locales)};
   const detectedLocale = supportedLocales.find(loc => 
-    loc !== '${config.default}' && (
+    loc !== settings.i18n.defaultLocale && (
       currentPath.startsWith('/' + loc + '/') || 
       currentPath === '/' + loc || 
       currentPath === '/' + loc + '/'
     )
   );
   
-  return detectedLocale || '${config.default}';
+  return detectedLocale || settings.i18n.defaultLocale;
 }
 
 export function useRouteTo() {
@@ -123,7 +123,8 @@ export function useRouteTo() {
   return (id: string, params = {}) => routeTo(id, params, locale);
 }`,
 
-    routeIdMappings: (mappings: any) => `export const routeIdMappings = ${JSON.stringify(mappings, null, 2)};`,
+    routeIdMappings: (mappings: any) =>
+        `export const routeIdMappings: Record<string, { path: string; parameters: string[] }> = ${JSON.stringify(mappings, null, 2)};`,
 
     routeTo: (config: {
         hasI18n: boolean;
@@ -142,7 +143,7 @@ export function useRouteTo() {
             ? `// forceLocaleUrl is enabled - use current detected locale
     locale = getCurrentLocale();`
             : `// forceLocaleUrl is disabled - always use default locale
-    locale = '${config.default}';`
+    locale = settings.i18n.defaultLocale;`
     }
   }
   
@@ -329,13 +330,13 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
     console.log("🚀 Processing routes...");
 
     // Extract settings
-    const globalSettings = routingConfig.settings || {};
-    const i18nEnabled = globalSettings.i18n?.enabled ?? true;
-    const defaultLocale = globalSettings.i18n?.defaultLocale || config.defaultLocale || "en";
-    const supportedLocales = globalSettings.i18n?.supportedLocales || config.supportedLocales || ["en", "fr", "es"];
-    const forceLocaleUrl = globalSettings.i18n?.forceLocaleUrl ?? false;
-    const lazyComponents = globalSettings.lazyComponents ?? false;
-    const routerConfig = globalSettings.router || {};
+    const settings = routingConfig.settings || {};
+    const i18nEnabled = settings.i18n?.enabled ?? true;
+    const defaultLocale = settings.i18n?.defaultLocale || config.defaultLocale || "en";
+    const supportedLocales = settings.i18n?.supportedLocales || config.supportedLocales || ["en", "fr", "es"];
+    const forceLocaleUrl = settings.i18n?.forceLocaleUrl ?? false;
+    const lazyComponents = settings.lazyComponents ?? false;
+    const routerConfig = settings.router || {};
 
     console.log(`🌐 i18n: ${i18nEnabled ? "enabled" : "disabled"}, locale: ${defaultLocale}, force: ${forceLocaleUrl}`);
     console.log(`⚡ Lazy components: ${lazyComponents ? "enabled" : "disabled"}`);
@@ -382,7 +383,7 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
         locales: supportedLocales,
         default: defaultLocale,
         forceUrl: forceLocaleUrl,
-        basePath: globalSettings.basePath,
+        basePath: settings.basePath,
         lazyComponents,
     };
     const processed = processRoutes(routes, routeConfig);
@@ -390,11 +391,11 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
     // Build final code
     const code = new CodeBuilder()
         .section($.imports(processed.components, i18nEnabled, lazyComponents))
-        .section($.settings(globalSettings))
+        .section($.settings(settings))
         .section($.i18nCode(processed.config, processed.pathMappings), i18nEnabled)
         .section($.routeIdMappings(processed.routeIdMappings))
         .section($.routeTo(processed.config))
-        .section($.router(processed.definitions, processed.routeVariables, globalSettings.basePath, routerConfig))
+        .section($.router(processed.definitions, processed.routeVariables, settings.basePath, routerConfig))
         .render();
 
     await writeFile(config.outputPath, code);

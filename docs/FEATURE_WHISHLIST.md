@@ -26,17 +26,7 @@ Missing TanStack Router capabilities:
 ### DX
 
 -   **Route Tree Optimization**: ⭐️ Use object syntax for better TypeScript performance
--   **Link Type Safety**: Generate type-safe navigation helpers
--   **Development Tools**: Add route validation and debugging
-
-Let me implement some of these optimizations. Should I start with the **type safety enhancements** (Zod validation schemas) or the **performance optimizations** (preloading, code splitting)?
-
-What specific optimization would you like me to focus on first? The most impactful ones would be:
-
-1. **Type Safety**: Add Zod schema generation for route parameters and search params
-2. **Performance**: Add intelligent preloading and caching strategies
-3. **Features**: Add loader and guard support to YAML configuration
-4. **DX**: Improve TypeScript performance with optimized route tree generation
+-   **Link Type Safety**: ⭐️ Generate type-safe navigation helpers
 
 ### EXample Route Tree Optimization
 
@@ -50,9 +40,9 @@ const routeTree = {
 };
 ```
 
-### Typesafe
+### Typesafe navigation helpers
 
 ```js
-// Type-safe helper with autocomplete
+// Type-safe helper with autocomplete for parameters
 <Link to={routes.routeTo("user_settings", { id: "123", tab: "settings" })} />
 ```

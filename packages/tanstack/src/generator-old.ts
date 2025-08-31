@@ -1,7 +1,7 @@
 import { writeFile, readFile } from "fs/promises";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import type { RoutingConfig, GeneratedRoute, GlobalSettings, SupportedLocale, BuildConfig } from "./types";
+import type { RoutingConfig, GeneratedRoute, Settings, SupportedLocale, BuildConfig } from "./types";
 import {
     loadRoutingConfig,
     isRouteConfig,
@@ -172,33 +172,27 @@ function buildImports(imports: Set<string>, i18nEnabled: boolean, snippets: any)
     const parts = [
         "import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';",
         "import { z } from 'zod';",
-        "import { RootComponent } from './App';"
+        "import { RootComponent } from './App';",
     ];
 
     if (i18nEnabled) {
-        parts.push(
-            "",
-            "// React hooks for reactive locale detection",
-            "import { useState, useEffect } from 'react';",
-            "",
-            snippets.reactHooks
-        );
+        parts.push("", "// React hooks for reactive locale detection", "import { useState, useEffect } from 'react';", "", snippets.reactHooks);
         parts.push("import { getLocale } from './paraglide/runtime.js';");
     }
 
     parts.push(...Array.from(imports));
-    
+
     return parts.join("\n");
 }
 
-function buildGlobalSettings(globalSettings: GlobalSettings): string {
+function buildSettings(settings: Settings): string {
     return `// Global settings
-export const globalSettings = ${JSON.stringify(globalSettings, null, 2)} as const;`;
+export const settings = ${JSON.stringify(settings, null, 2)} as const;`;
 }
 
 function buildPathMappings(i18nEnabled: boolean, pathMappings: any, snippets: any): string {
     if (!i18nEnabled) return "";
-    
+
     return `// Path mappings for localized navigation
 export const pathMappings = ${JSON.stringify(pathMappings, null, 2)} as const;
 
@@ -221,21 +215,16 @@ export function updateCurrentLocale(newLocale: string): void {
 }`;
 }
 
-function buildGetCurrentLocale(
-    snippets: any,
-    i18nEnabled: boolean,
-    forceLocaleUrl: boolean,
-    defaultLocale: string,
-    supportedLocales: string[]
-): string {
-    const localeDetectionLogic = i18nEnabled && forceLocaleUrl
-        ? `try {
+function buildGetCurrentLocale(snippets: any, i18nEnabled: boolean, forceLocaleUrl: boolean, defaultLocale: string, supportedLocales: string[]): string {
+    const localeDetectionLogic =
+        i18nEnabled && forceLocaleUrl
+            ? `try {
     // Get current URL path
     const currentPath = window.location.pathname;
     let pathWithoutBase = currentPath;
     
     // Remove base path if present
-    const basePath = globalSettings.basePath;
+    const basePath = settings.basePath;
     if (basePath && currentPath.startsWith(basePath)) {
       pathWithoutBase = currentPath.slice(basePath.length) || '/';
     }
@@ -256,18 +245,13 @@ function buildGetCurrentLocale(
   } catch {
     return '${defaultLocale}';
   }`
-        : `return '${defaultLocale}';`;
+            : `return '${defaultLocale}';`;
 
     return `// Function to get current locale reactively
 ${snippets.localeDetection.replace('return "en";', localeDetectionLogic)}`;
 }
 
-function buildRouteTo(
-    snippets: any,
-    i18nEnabled: boolean,
-    forceLocaleUrl: boolean,
-    defaultLocale: string
-): string {
+function buildRouteTo(snippets: any, i18nEnabled: boolean, forceLocaleUrl: boolean, defaultLocale: string): string {
     const localeLogic = i18nEnabled
         ? forceLocaleUrl
             ? `// forceLocaleUrl is enabled - use current detected locale
@@ -281,12 +265,7 @@ function buildRouteTo(
 ${snippets.routeTo.replace("locale = getCurrentLocale();", localeLogic)}`;
 }
 
-function buildRouteDefinitions(
-    routeDefinitions: any,
-    localizedRouteDefinitions: any,
-    i18nEnabled: boolean,
-    defaultLocale: string
-): string {
+function buildRouteDefinitions(routeDefinitions: any, localizedRouteDefinitions: any, i18nEnabled: boolean, defaultLocale: string): string {
     const parts = [
         "// Root route",
         "const rootRoute = createRootRoute({",
@@ -294,15 +273,11 @@ function buildRouteDefinitions(
         "});",
         "",
         `// Default locale routes${i18nEnabled ? ` (${defaultLocale} - no prefix)` : ""}`,
-        routeDefinitions.definitions.join("\n\n")
+        routeDefinitions.definitions.join("\n\n"),
     ];
 
     if (localizedRouteDefinitions.definitions.length > 0) {
-        parts.push(
-            "",
-            "// Localized routes with locale prefix",
-            localizedRouteDefinitions.definitions.join("\n\n")
-        );
+        parts.push("", "// Localized routes with locale prefix", localizedRouteDefinitions.definitions.join("\n\n"));
     }
 
     return parts.join("\n");
@@ -330,7 +305,7 @@ declare module '@tanstack/react-router' {
 
 // Helper to build the complete route cache file
 function buildRouteCache(params: {
-    globalSettings: GlobalSettings;
+    settings: Settings;
     i18nEnabled: boolean;
     forceLocaleUrl: boolean;
     defaultLocale: string;
@@ -349,7 +324,7 @@ function buildRouteCache(params: {
     };
 }): string {
     const {
-        globalSettings,
+        settings,
         i18nEnabled,
         forceLocaleUrl,
         defaultLocale,
@@ -369,7 +344,7 @@ function buildRouteCache(params: {
         buildFileHeader(),
         buildImports(imports, i18nEnabled, snippets),
         "",
-        buildGlobalSettings(globalSettings),
+        buildSettings(settings),
         "",
         buildPathMappings(i18nEnabled, pathMappings, snippets),
         "",
@@ -383,10 +358,10 @@ function buildRouteCache(params: {
         "",
         buildRouteDefinitions(routeDefinitions, localizedRouteDefinitions, i18nEnabled, defaultLocale),
         "",
-        buildRouterExport(allRouteVariables, basePath)
+        buildRouterExport(allRouteVariables, basePath),
     ];
 
-    return sections.filter(section => section.trim().length > 0).join("\n");
+    return sections.filter((section) => section.trim().length > 0).join("\n");
 }
 
 function generateParameterValidation(_parameters: Record<string, any>): string {
@@ -407,12 +382,12 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
     console.log("🚀 Generating TanStack Router code-based routes cache...");
 
     // Extract global settings
-    const globalSettings: GlobalSettings = routingConfig.settings || {};
-    const i18nEnabled = globalSettings.i18n?.enabled ?? true;
-    const defaultLocale = globalSettings.i18n?.defaultLocale || config.defaultLocale || "en";
-    const supportedLocales: SupportedLocale[] = globalSettings.i18n?.supportedLocales || config.supportedLocales || ["en", "fr", "es"];
-    const forceLocaleUrl = globalSettings.i18n?.forceLocaleUrl ?? false;
-    const basePath = globalSettings.basePath;
+    const settings: Settings = routingConfig.settings || {};
+    const i18nEnabled = settings.i18n?.enabled ?? true;
+    const defaultLocale = settings.i18n?.defaultLocale || config.defaultLocale || "en";
+    const supportedLocales: SupportedLocale[] = settings.i18n?.supportedLocales || config.supportedLocales || ["en", "fr", "es"];
+    const forceLocaleUrl = settings.i18n?.forceLocaleUrl ?? false;
+    const basePath = settings.basePath;
 
     console.log(`🌐 i18n ${i18nEnabled ? "enabled" : "disabled"}, default locale: ${defaultLocale}, supported: [${supportedLocales.join(", ")}]`);
     if (i18nEnabled && forceLocaleUrl) {
@@ -485,7 +460,7 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
 
     // Build the final file using a clean composition pattern
     const fileContent = buildRouteCache({
-        globalSettings,
+        settings,
         i18nEnabled,
         forceLocaleUrl,
         defaultLocale,

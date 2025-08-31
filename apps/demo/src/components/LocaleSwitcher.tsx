@@ -1,11 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { globalSettings, pathMappings, routeIdMappings, useCurrentLocale, routeTo } from "../routeCache.generated";
+import { settings, pathMappings, routeIdMappings, useCurrentLocale, routeTo } from "../routeCache.generated";
 
 export function LocaleSwitcher() {
     // Get supported locales from generated config (completely dynamic)
-    const supportedLocales = globalSettings.i18n?.supportedLocales || ["en"];
-
-    // Use TanStack Router's location state (reactive)
+    const supportedLocales = settings.i18n?.supportedLocales || ["en"];
     const location = useLocation();
 
     // Use the generated hook to get current locale
@@ -35,8 +33,8 @@ export function LocaleSwitcher() {
         let pathWithoutBase = currentPath;
 
         // Remove base path if present
-        if (globalSettings.basePath && currentPath.startsWith(globalSettings.basePath)) {
-            pathWithoutBase = currentPath.slice(globalSettings.basePath.length) || "/";
+        if (settings.basePath && currentPath.startsWith(settings.basePath)) {
+            pathWithoutBase = currentPath.slice(settings.basePath.length) || "/";
         }
 
         // Try to match current path against all route patterns in pathMappings

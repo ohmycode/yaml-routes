@@ -24,7 +24,7 @@ export interface RouteConfig {
     settings?: RouteSettings;
 }
 
-export interface GlobalSettings {
+export interface Settings {
     i18n?: {
         enabled: boolean;
         defaultLocale: string;
@@ -37,8 +37,8 @@ export interface GlobalSettings {
 }
 
 export interface RoutingConfig {
-    settings?: GlobalSettings;
-    [routeName: string]: RouteConfig | GlobalSettings | undefined;
+    settings?: Settings;
+    [routeName: string]: RouteConfig | Settings | undefined;
 }
 
 export interface GeneratedRoute {

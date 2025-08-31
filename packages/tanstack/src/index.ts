@@ -19,7 +19,7 @@ export type {
     LocalizedComponent,
     RouteSettings,
     RouteConfig,
-    GlobalSettings,
+    Settings,
     RoutingConfig,
     GeneratedRoute,
     SupportedLocale,

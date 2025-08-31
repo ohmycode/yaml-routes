@@ -289,14 +289,14 @@ Get localized version of a path:
 getLocalizedPath("/about", "fr"); // → '/fr/a-propos'
 ```
 
-#### `globalSettings`
+#### `settings`
 
 Access global configuration:
 
 ```typescript
-import { globalSettings } from "./routeCache.generated";
+import { settings } from "./routeCache.generated";
 
-console.log(globalSettings.i18n?.defaultLocale); // → 'en'
+console.log(settings.i18n?.defaultLocale); // → 'en'
 ```
 
 ## 🌍 Internationalization
