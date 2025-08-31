@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy Demo to GitHub Pages
 
 on:
     push:
@@ -39,11 +39,8 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Build packages
-              run: pnpm run package:build
-
-            - name: Build demo
-              run: pnpm run demo:build
+            - name: Build demo app only
+              run: pnpm --filter demo build
               env:
                   NODE_ENV: production
 
