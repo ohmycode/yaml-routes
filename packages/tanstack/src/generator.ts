@@ -34,6 +34,7 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
     const i18nEnabled = globalSettings.i18n?.enabled ?? true;
     const defaultLocale = globalSettings.i18n?.defaultLocale || config.defaultLocale || "en";
     const supportedLocales: SupportedLocale[] = globalSettings.i18n?.supportedLocales || config.supportedLocales || ["en", "fr", "es"];
+    const basePath = globalSettings.basePath;
 
     console.log(`🌐 i18n ${i18nEnabled ? "enabled" : "disabled"}, default locale: ${defaultLocale}, supported: [${supportedLocales.join(", ")}]`);
 
@@ -283,7 +284,7 @@ const routeTree = rootRoute.addChildren([
 // Create and export router
 export const router = createRouter({
   routeTree,
-  defaultPreload: 'intent',
+  defaultPreload: 'intent',${basePath ? `\n  basepath: '${basePath}',` : ""}
 });
 
 // Type registration

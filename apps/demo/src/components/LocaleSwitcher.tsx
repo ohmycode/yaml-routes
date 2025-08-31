@@ -1,6 +1,6 @@
 import { useLocation } from "@tanstack/react-router";
 import { getLocale } from "../paraglide/runtime.js";
-import { pathMappings, getLocalizedPath } from "../routeCache.generated";
+import { pathMappings, getLocalizedPath, globalSettings } from "../routeCache.generated";
 
 export function LocaleSwitcher() {
     const location = useLocation();
@@ -42,21 +42,30 @@ export function LocaleSwitcher() {
         let basePath = "/";
         let extractedParams: Record<string, string> = {};
 
+        // Remove the base path from the current path for pattern matching
+        const basePathPrefix = globalSettings.basePath || "";
+        const pathWithoutBase = currentPath.startsWith(basePathPrefix) 
+            ? currentPath.slice(basePathPrefix.length) || "/"
+            : currentPath;
+
         for (const [base, mappings] of Object.entries(pathMappings)) {
             const localePaths = mappings as Record<string, string>;
             for (const localizedPath of Object.values(localePaths)) {
-                const { match, params } = matchUrlPattern(currentPath, localizedPath);
+                const { match, params } = matchUrlPattern(pathWithoutBase, localizedPath);
                 if (match) {
                     basePath = base;
                     extractedParams = params;
                     break;
                 }
             }
-            if (basePath !== "/" || currentPath === "/") break;
+            if (basePath !== "/" || pathWithoutBase === "/") break;
         }
 
         const newPathTemplate = getLocalizedPath(basePath, targetLocale);
-        return fillUrlPattern(newPathTemplate, extractedParams);
+        const finalPath = fillUrlPattern(newPathTemplate, extractedParams);
+        
+        // Add the base path back to the final URL
+        return basePathPrefix + finalPath;
     };
 
     return (

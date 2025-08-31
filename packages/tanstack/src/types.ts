@@ -31,6 +31,7 @@ export interface GlobalSettings {
         supportedLocales: string[];
     };
     render?: "ssg" | "ssr" | "spa";
+    basePath?: string;
     [key: string]: any;
 }
 

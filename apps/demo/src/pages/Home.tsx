@@ -131,7 +131,7 @@ export default function Home() {
                 </div>
 
                 <p className="text-2xl md:text-3xl text-gray-700 dark:text-gray-200 mb-4 max-w-4xl mx-auto leading-relaxed font-light">
-                    The most <strong className="font-bold text-blue-600">elegant way</strong> to define type-safe routes for TanStack Router
+                    The most <strong className="font-bold text-blue-600">intuitive way</strong> to define multi language routes for TanStack Router
                 </p>
                 <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
                     Write routes in YAML • Get TypeScript types • Ship with confidence
@@ -316,37 +316,6 @@ export function UserCard({ userId }: { userId: string }) {
 }`}
                         </PrismCodeBlock>
                     </div>
-                </div>
-            </div>
-
-            {/* Performance & Benefits */}
-            <div className="grid md:grid-cols-3 gap-8 mb-20">
-                <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-                    <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span className="text-3xl text-white">⚡</span>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4">Lightning Fast</h3>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Zero runtime overhead. Routes are generated at build time for maximum performance.
-                    </p>
-                </div>
-
-                <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span className="text-3xl text-white">🛡️</span>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4">Type Safe</h3>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Catch routing errors at compile time, not runtime. Full TypeScript integration.
-                    </p>
-                </div>
-
-                <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-                    <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span className="text-3xl text-white">🔧</span>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4">Developer Friendly</h3>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Intuitive YAML syntax, watch mode, and comprehensive error messages.</p>
                 </div>
             </div>
 
