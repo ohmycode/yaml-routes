@@ -11,6 +11,9 @@ build/
 .vercel/
 .netlify/
 
+# Exception: Allow demo dist for GitHub Pages
+!apps/demo/dist/
+
 # Environment files
 .env
 .env.local

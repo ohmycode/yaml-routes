@@ -11,39 +11,24 @@ permissions:
     pages: write
     id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-    group: "pages"
-    cancel-in-progress: false
-
 jobs:
-    # Build job
-    build:
+    # Simple deployment job - no building
+    deploy:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
               uses: actions/checkout@v3
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "20"
-
-            - name: Setup pnpm
+            - name: Check if demo dist exists
               run: |
-                  npm install -g pnpm@8.15.0
-
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
-
-            - name: Build tanstack package (needed for demo build)
-              run: pnpm --filter @yaml-routes/tanstack build
-
-            - name: Build demo app
-              run: pnpm --filter demo build
-              env:
-                  NODE_ENV: production
+                if [ -d "apps/demo/dist" ]; then
+                  echo "✅ Demo dist folder found"
+                  ls -la apps/demo/dist/
+                else
+                  echo "❌ Demo dist folder not found - need to build locally first"
+                  echo "Run: pnpm install && pnpm run package:build && pnpm run demo:build"
+                  exit 1
+                fi
 
             - name: Setup Pages
               uses: actions/configure-pages@v3
@@ -53,14 +38,8 @@ jobs:
               with:
                   path: ./apps/demo/dist
 
-    # Deployment job
-    deploy:
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: ubuntu-latest
-        needs: build
-        steps:
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v3
+              with:
+                  artifact_name: github-pages

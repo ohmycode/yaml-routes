@@ -1,0 +1,40 @@
+name: Test Basic Setup
+
+on:
+  workflow_dispatch: # Manual trigger only
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          
+      - name: Install pnpm
+        run: npm install -g pnpm@8.15.0
+        
+      - name: Check workspace structure
+        run: |
+          echo "=== Root directory ==="
+          ls -la
+          echo "=== Package.json ==="
+          cat package.json
+          echo "=== Workspace files ==="
+          ls -la packages/ apps/
+          
+      - name: Install dependencies (debug output)
+        run: |
+          echo "Installing dependencies..."
+          pnpm install --frozen-lockfile --verbose
+          
+      - name: Check installed packages
+        run: |
+          echo "=== Checking tanstack package ==="
+          ls -la packages/tanstack/
+          echo "=== Checking demo app ==="
+          ls -la apps/demo/
