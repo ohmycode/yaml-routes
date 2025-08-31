@@ -35,7 +35,8 @@ import { createRootRoute, createRoute, createRouter } from '@tanstack/react-rout
 import { RootComponent } from './App';${
         hasI18n
             ? `
-import { useState, useEffect } from 'react';`
+import { useState, useEffect } from 'react';
+import { useLocation } from '@tanstack/react-router';`
             : ""
     }
 ${components.join("\n")}`,
@@ -86,13 +87,30 @@ export function getLocalizedPath(path: string, locale: string): string {
 }
 
 export function useCurrentLocale(): string {
-  const [locale, setLocale] = useState(getCurrentLocale);
-  useEffect(() => {
-    const update = () => setLocale(getCurrentLocale());
-    window.addEventListener('popstate', update);
-    return () => window.removeEventListener('popstate', update);
-  }, []);
-  return locale;
+  const location = useLocation();
+  
+  // Get current locale from TanStack Router location (reactive)
+  let currentPath = location.pathname;
+  ${
+      config.basePath
+          ? `const basePath = '${config.basePath}';
+  if (currentPath.startsWith(basePath)) {
+    currentPath = currentPath.slice(basePath.length) || '/';
+  }`
+          : ""
+  }
+  
+  // Detect locale from URL path
+  const supportedLocales = ${JSON.stringify(config.locales)};
+  const detectedLocale = supportedLocales.find(loc => 
+    loc !== '${config.default}' && (
+      currentPath.startsWith('/' + loc + '/') || 
+      currentPath === '/' + loc || 
+      currentPath === '/' + loc + '/'
+    )
+  );
+  
+  return detectedLocale || '${config.default}';
 }
 
 export function useRouteTo() {
