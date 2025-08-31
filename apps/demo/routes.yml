@@ -30,6 +30,22 @@ user_profile:
             type: string
             required: true
 
+user_images:
+    path: /user/{id}/images
+    component: pages/UserImages
+    parameters:
+        id:
+            type: string
+            required: true
+
+user_image:
+    path: /user/{id}/images/{imageId}
+    component: pages/UserImage
+    parameters:
+        imageId:
+            type: string
+            required: true
+
 # Internationalized routes
 about:
     path:

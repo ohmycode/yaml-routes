@@ -19,6 +19,9 @@ export function RootComponent() {
                     <Link to={routeTo("advanced_examples")} className="hover:text-blue-200 transition-colors">
                         Advanced Examples
                     </Link>
+                    <Link to={routeTo("user_profile", { id: "demo" })} className="hover:text-blue-200 transition-colors">
+                        User Demo
+                    </Link>
                     <Link to={routeTo("about")} className="hover:text-blue-200 transition-colors">
                         About
                     </Link>

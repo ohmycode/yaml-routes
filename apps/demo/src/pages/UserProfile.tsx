@@ -76,6 +76,17 @@ const userUrl = routeTo("user_profile", { id: "123" });
                             ))}
                         </div>
                     </div>
+
+                    <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <h3 className="font-semibold text-green-800 dark:text-green-200 mb-2">🖼️ User Gallery</h3>
+                        <p className="text-green-700 dark:text-green-300 mb-3">View this user's image gallery with nested route parameters:</p>
+                        <Link
+                            to={routeTo("user_images", { id: id || "demo" })}
+                            className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                        >
+                            📸 View {id || "demo"}'s Images
+                        </Link>
+                    </div>
                 </section>
 
                 <section className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
