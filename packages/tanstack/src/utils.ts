@@ -13,7 +13,7 @@ export async function loadRoutingConfig(configPath: string = "routes.yml"): Prom
 }
 
 export function isRouteConfig(value: any): value is RouteConfig {
-    return value && typeof value === "object" && (value.path || value.component);
+    return !!value && typeof value === "object" && !!(value.path || value.component);
 }
 
 export function convertYamlPathToTanstackPath(yamlPath: string): string {

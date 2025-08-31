@@ -16,7 +16,8 @@
         "package:test": "pnpm --filter @yaml-routes/tanstack test",
         "changeset": "changeset",
         "version-packages": "changeset version",
-        "release": "pnpm build && changeset publish"
+        "release": "pnpm build && changeset publish",
+        "publish:prepare": "pnpm package:build && pnpm package:test && echo '✅ Package ready for publishing! Run: pnpm changeset && pnpm version-packages && pnpm release'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
