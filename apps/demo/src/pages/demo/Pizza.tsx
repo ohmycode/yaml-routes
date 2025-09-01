@@ -106,121 +106,213 @@ function Pizza() {
                         </div>
                     </div>
 
-                    {/* Right Side - Pizza Content (Dark Mode) */}
-                    <div className="space-y-6">
-                        {/* Pizza Details Card */}
-                        <div className="bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-700">
-                            <div className="text-center mb-8">
-                                <div className="text-8xl mb-4">{pizza.emoji}</div>
-                                <h2 className="text-3xl font-semibold text-red-400 mb-4">{pizza.name}</h2>
-                                <p className="text-lg text-gray-300 mb-6">{pizza.description}</p>
+                    {/* Right Side - Browser Mockup */}
+                    <div className="space-y-4">
+                        {/* Browser Window */}
+                        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden">
+                            {/* Browser Header */}
+                            <div className="bg-gray-700 px-4 py-3 flex items-center gap-3 border-b border-gray-600">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+                                    <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+                                    <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                                </div>
+                                <div className="flex-1 bg-gray-600 rounded px-3 py-1 text-sm text-gray-300 flex items-center gap-2">
+                                    <span className="text-gray-400">🔒</span>
+                                    <span className="font-mono text-xs">
+                                        {currentLocale === "es" ? "pizzalandia.demo" : "pizza-corner.demo"}/pizza/{pizzaType}
+                                    </span>
+                                </div>
+                                <button className="text-gray-400 hover:text-white text-sm">⟳</button>
+                            </div>
 
-                                <div className="flex items-center justify-center gap-6 mb-6">
-                                    <span className="text-4xl font-bold text-green-400">{pizza.price}</span>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-yellow-400">★</span>
-                                        <span className="font-semibold text-white">{pizza.rating}</span>
-                                        <span className="text-gray-400">
-                                            ({pizza.reviews} {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
-                                        </span>
+                            {/* Browser Content - Pizza Review Platform */}
+                            <div className="bg-white text-gray-900 min-h-[600px]">
+                                {/* Site Header */}
+                                <div className="bg-red-600 text-white px-6 py-4">
+                                    <div className="flex items-center justify-between">
+                                        <h1 className="text-2xl font-bold flex items-center gap-2">
+                                            🍕 {currentLocale === "es" ? "Pizzalandia" : currentLocale === "fr" ? "Pizza Corner" : "Pizza Corner"}
+                                        </h1>
+                                        <div className="flex items-center gap-4 text-sm">
+                                            <span>{currentLocale === "es" ? "Inicio" : currentLocale === "fr" ? "Accueil" : "Home"}</span>
+                                            <span className="font-semibold border-b-2 border-white">
+                                                {currentLocale === "es" ? "Menú" : currentLocale === "fr" ? "Menu" : "Menu"}
+                                            </span>
+                                            <span>{currentLocale === "es" ? "Contacto" : currentLocale === "fr" ? "Contact" : "Contact"}</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="flex gap-4 justify-center mb-8">
-                                    <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                                        🛒 {currentLocale === "es" ? "Agregar al Carrito" : currentLocale === "fr" ? "Ajouter au Panier" : "Add to Cart"}
-                                    </button>
-                                    <Link
-                                        to={routeTo("pizza_review_list", { pizzaType: pizzaType || "margherita" })}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-block"
-                                    >
-                                        📝 {currentLocale === "es" ? "Leer Reseñas" : currentLocale === "fr" ? "Lire les Avis" : "Read Reviews"}
+                                {/* Breadcrumb Navigation */}
+                                <div className="bg-gray-100 px-6 py-3 text-sm flex items-center gap-2 border-b">
+                                    <Link to={routeTo("demo")} className="text-blue-600 hover:underline">
+                                        {currentLocale === "es" ? "Inicio" : currentLocale === "fr" ? "Accueil" : "Home"}
                                     </Link>
-                                </div>
-                            </div>
-
-                            {/* Chef's Quote */}
-                            <div className="bg-gray-700/50 rounded-xl p-6 mb-8 border border-gray-600">
-                                <p className="text-gray-300 italic text-center text-lg">
-                                    "
-                                    {currentLocale === "es"
-                                        ? `¡Mama mia! ¡Esta es la mejor pizza de ${String(pizzaType) || "pizza"} de la ciudad!`
-                                        : currentLocale === "fr"
-                                        ? `Mama mia! C'est la meilleure pizza ${String(pizzaType) || "pizza"} de la ville!`
-                                        : `Mama mia! This is the best ${String(pizzaType) || "pizza"} pizza in town!`}
-                                    "
-                                    <br />
-                                    <span className="text-sm text-gray-400 mt-2 block">
-                                        - {currentLocale === "es" ? "Chef Mario" : currentLocale === "fr" ? "Chef Mario" : "Chef Mario"}
+                                    <span className="text-gray-400">›</span>
+                                    <span className="font-medium">
+                                        {currentLocale === "es" ? "Menú de Pizzas" : currentLocale === "fr" ? "Menu Pizza" : "Pizza Menu"}
                                     </span>
-                                </p>
-                            </div>
+                                    <span className="text-gray-400">›</span>
+                                    <span className="text-gray-600">{pizza.name}</span>
+                                </div>
 
-                            {/* Features */}
-                            <div className="grid md:grid-cols-3 gap-6 mb-8">
-                                <div className="bg-gray-700/30 rounded-xl p-6 text-center border border-gray-600">
-                                    <div className="text-3xl mb-3">🔥</div>
-                                    <h4 className="font-bold text-white mb-2">
-                                        {currentLocale === "es" ? "Horno de Leña" : currentLocale === "fr" ? "Four à Bois" : "Wood Fired"}
-                                    </h4>
-                                    <p className="text-gray-400 text-sm">
-                                        {currentLocale === "es"
-                                            ? "Cocinada en nuestro auténtico horno italiano de leña"
-                                            : currentLocale === "fr"
-                                            ? "Cuite dans notre authentique four italien à bois"
-                                            : "Cooked in our authentic Italian wood-fired oven"}
-                                    </p>
-                                </div>
-                                <div className="bg-gray-700/30 rounded-xl p-6 text-center border border-gray-600">
-                                    <div className="text-3xl mb-3">🧀</div>
-                                    <h4 className="font-bold text-white mb-2">
-                                        {currentLocale === "es" ? "Ingredientes Frescos" : currentLocale === "fr" ? "Ingrédients Frais" : "Fresh Ingredients"}
-                                    </h4>
-                                    <p className="text-gray-400 text-sm">
-                                        {currentLocale === "es"
-                                            ? "Hecha con los mejores ingredientes italianos importados"
-                                            : currentLocale === "fr"
-                                            ? "Faite avec les meilleurs ingrédients italiens importés"
-                                            : "Made with the finest imported Italian ingredients"}
-                                    </p>
-                                </div>
-                                <div className="bg-gray-700/30 rounded-xl p-6 text-center border border-gray-600">
-                                    <div className="text-3xl mb-3">⚡</div>
-                                    <h4 className="font-bold text-white mb-2">
-                                        {currentLocale === "es" ? "Entrega Rápida" : currentLocale === "fr" ? "Livraison Rapide" : "Fast Delivery"}
-                                    </h4>
-                                    <p className="text-gray-400 text-sm">
-                                        {currentLocale === "es"
-                                            ? "Caliente y fresca a tu puerta en 30 minutos o menos"
-                                            : currentLocale === "fr"
-                                            ? "Chaude et fraîche à votre porte en 30 minutes ou moins"
-                                            : "Hot and fresh to your door in 30 minutes or less"}
-                                    </p>
+                                {/* Main Pizza Content */}
+                                <div className="p-6">
+                                    <div className="max-w-4xl mx-auto">
+                                        {/* Pizza Header */}
+                                        <div className="flex items-start gap-8 mb-8">
+                                            <div className="text-8xl">{pizza.emoji}</div>
+                                            <div className="flex-1">
+                                                <h1 className="text-3xl font-bold text-gray-900 mb-2">{pizza.name}</h1>
+                                                <p className="text-gray-600 text-lg mb-4">{pizza.description}</p>
+                                                <div className="flex items-center gap-6">
+                                                    <span className="text-3xl font-bold text-green-600">{pizza.price}</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex text-yellow-500">
+                                                            {"★".repeat(Math.floor(pizza.rating))}
+                                                            {"☆".repeat(5 - Math.floor(pizza.rating))}
+                                                        </div>
+                                                        <span className="text-gray-600">
+                                                            {pizza.rating} ({pizza.reviews}{" "}
+                                                            {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Action Buttons */}
+                                        <div className="flex gap-4 mb-8">
+                                            <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                                                🛒{" "}
+                                                {currentLocale === "es" ? "Agregar al Carrito" : currentLocale === "fr" ? "Ajouter au Panier" : "Add to Cart"}
+                                            </button>
+                                            <Link
+                                                to={routeTo("pizza_review_list", { pizzaType: pizzaType || "margherita" })}
+                                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-block"
+                                            >
+                                                📝{" "}
+                                                {currentLocale === "es"
+                                                    ? "Ver Todas las Reseñas"
+                                                    : currentLocale === "fr"
+                                                    ? "Voir Tous les Avis"
+                                                    : "View All Reviews"}
+                                            </Link>
+                                        </div>
+
+                                        {/* Pizza Selection Navigation */}
+                                        <div className="bg-gray-50 rounded-lg p-6 mb-8">
+                                            <h3 className="text-lg font-semibold mb-4 text-gray-900">
+                                                {currentLocale === "es"
+                                                    ? "Otras Pizzas Populares"
+                                                    : currentLocale === "fr"
+                                                    ? "Autres Pizzas Populaires"
+                                                    : "Other Popular Pizzas"}
+                                            </h3>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                {Object.entries(pizzaData).map(([type, data]) => (
+                                                    <Link
+                                                        key={type}
+                                                        to={routeTo("pizza", { pizzaType: type })}
+                                                        className={`p-3 rounded-lg border-2 transition-all text-center ${
+                                                            type === pizzaType
+                                                                ? "border-red-500 bg-red-50"
+                                                                : "border-gray-200 bg-white hover:border-red-300 hover:bg-red-25"
+                                                        }`}
+                                                    >
+                                                        <div className="text-2xl mb-1">{data.emoji}</div>
+                                                        <div className="text-sm font-medium text-gray-800">{data.name}</div>
+                                                        <div className="text-xs text-green-600 font-semibold">{data.price}</div>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Quick Reviews Preview */}
+                                        <div className="bg-gray-50 rounded-lg p-6">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <h3 className="text-lg font-semibold text-gray-900">
+                                                    {currentLocale === "es" ? "Reseñas Recientes" : currentLocale === "fr" ? "Avis Récents" : "Recent Reviews"}
+                                                </h3>
+                                                <Link
+                                                    to={routeTo("pizza_review_list", { pizzaType: pizzaType || "margherita" })}
+                                                    className="text-blue-600 hover:underline text-sm font-medium"
+                                                >
+                                                    {currentLocale === "es" ? "Ver todas →" : currentLocale === "fr" ? "Voir tout →" : "View all →"}
+                                                </Link>
+                                            </div>
+                                            <div className="space-y-4">
+                                                <div className="bg-white p-4 rounded border">
+                                                    <div className="flex items-start justify-between mb-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-medium text-gray-900">Maria Rodriguez</span>
+                                                            <div className="flex text-yellow-500 text-sm">★★★★★</div>
+                                                        </div>
+                                                        <span className="text-xs text-gray-500">2 days ago</span>
+                                                    </div>
+                                                    <p className="text-gray-700 text-sm">
+                                                        {currentLocale === "es"
+                                                            ? "¡Increíble! La mejor pizza que he probado en años."
+                                                            : currentLocale === "fr"
+                                                            ? "Incroyable! La meilleure pizza que j'ai goûtée depuis des années."
+                                                            : "Amazing! The best pizza I've had in years."}
+                                                    </p>
+                                                    <Link
+                                                        to={routeTo("pizza_review", { pizzaType: pizzaType || "margherita", reviewId: "amazing-flavor" })}
+                                                        className="text-blue-600 hover:underline text-xs mt-2 inline-block"
+                                                    >
+                                                        {currentLocale === "es" ? "Leer más →" : currentLocale === "fr" ? "Lire plus →" : "Read more →"}
+                                                    </Link>
+                                                </div>
+                                                <div className="bg-white p-4 rounded border">
+                                                    <div className="flex items-start justify-between mb-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-medium text-gray-900">John Smith</span>
+                                                            <div className="flex text-yellow-500 text-sm">★★★★☆</div>
+                                                        </div>
+                                                        <span className="text-xs text-gray-500">1 week ago</span>
+                                                    </div>
+                                                    <p className="text-gray-700 text-sm">
+                                                        {currentLocale === "es"
+                                                            ? "Muy buena pizza, entrega rápida. Lo recomiendo."
+                                                            : currentLocale === "fr"
+                                                            ? "Très bonne pizza, livraison rapide. Je le recommande."
+                                                            : "Great pizza, fast delivery. Highly recommend."}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Navigation */}
-                            <div className="bg-gray-700/30 rounded-xl p-6 border border-gray-600">
-                                <h4 className="font-bold text-white mb-4">
-                                    🍕{" "}
-                                    {currentLocale === "es"
-                                        ? "Explorar Más Pizzas"
-                                        : currentLocale === "fr"
-                                        ? "Explorer Plus de Pizzas"
-                                        : "Explore More Pizzas"}
-                                </h4>
-                                <div className="flex flex-wrap gap-3">
-                                    {Object.keys(pizzaData).map((type) => (
-                                        <Link
-                                            key={type}
-                                            to={routeTo("pizza", { pizzaType: type })}
-                                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                                type === pizzaType ? "bg-red-600 text-white" : "bg-gray-600 hover:bg-gray-500 text-gray-200"
-                                            }`}
-                                        >
-                                            🍕 {pizzaData[type].name}
-                                        </Link>
-                                    ))}
+                        {/* Route Information Panel */}
+                        <div className="bg-blue-900/20 rounded-xl p-6 border border-blue-700">
+                            <h3 className="text-lg font-bold mb-3 text-blue-300">🔗 Current Route Information</h3>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                    <span className="font-medium text-gray-300">Route Name:</span>
+                                    <code className="bg-blue-800 px-2 py-1 rounded text-blue-300">pizza</code>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="font-medium text-gray-300">Component:</span>
+                                    <code className="bg-blue-800 px-2 py-1 rounded text-blue-300">pages/demo/Pizza</code>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="font-medium text-gray-300">Pizza Type:</span>
+                                    <code className="bg-blue-800 px-2 py-1 rounded text-blue-300">{pizzaType}</code>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="font-medium text-gray-300">Locale:</span>
+                                    <code className="bg-blue-800 px-2 py-1 rounded text-blue-300">{currentLocale}</code>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="font-medium text-gray-300">URL Pattern:</span>
+                                    <code className="bg-gray-800 px-2 py-1 rounded text-xs text-gray-400">
+                                        {currentLocale === "es" ? "/demo/pizzalandia/{pizzaType}" : "/demo/pizza-corner/{pizzaType}"}
+                                    </code>
                                 </div>
                             </div>
                         </div>
