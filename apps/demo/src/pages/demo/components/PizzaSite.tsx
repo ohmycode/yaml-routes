@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { useCurrentLocale } from "../../../routeCache.generated";
+import { useCurrentLocale, useLocalePath } from "../../../routeCache.generated";
 
 interface BreadcrumbItem {
     label: string;
@@ -14,6 +14,8 @@ interface PizzaSiteProps {
 
 export function PizzaSite({ breadcrumbs = [], children }: PizzaSiteProps) {
     const currentLocale = useCurrentLocale();
+    const currentPathEN = useLocalePath("en");
+    const currentPathES = useLocalePath("es");
 
     return (
         <>
@@ -30,6 +32,27 @@ export function PizzaSite({ breadcrumbs = [], children }: PizzaSiteProps) {
                         </span>
                         <span>{currentLocale === "es" ? "Contacto" : currentLocale === "fr" ? "Contact" : "Contact"}</span>
                     </div>
+                    {/* language switcher */}
+                    <div className="flex items-center gap-2">
+                        <Link
+                            to={currentPathEN}
+                            className={`px-2 py-1 text-sm rounded transition-colors ${
+                                currentLocale === "en" ? "bg-white/20 text-white" : "text-blue-200 hover:text-white"
+                            }`}
+                        >
+                            🇺🇸
+                        </Link>
+                        <Link
+                            to={currentPathES}
+                            className={`px-2 py-1 text-sm rounded transition-colors ${
+                                currentLocale === "es" ? "bg-white/20 text-white" : "text-blue-200 hover:text-white"
+                            }`}
+                        >
+                            🇪🇸
+                        </Link>
+                    </div>
+
+                    {/* <Link to= className={`px-2 py-1 rounded ${currentLocale === "en" ? "bg-white text-red-700 font-bold" : "bg-red-600 text-white hover:bg-red-500"}`}> */}
                 </div>
             </div>
 

@@ -13,50 +13,7 @@ export default function Demo() {
     const currentLocale = useCurrentLocale();
     const routeName = useRouteName();
     const params = useRouteParams();
-    const pizzaTypes = getPizzaData(currentLocale);
-
-    // Demo data for our pizza restaurant
-    const pizzaData = {
-        pizzas: {
-            margherita: {
-                name: "🍅 Classic Margherita",
-                description: "Fresh basil, mozzarella, and tomato sauce on wood-fired crust",
-                price: "$18",
-                chef: "Mario",
-                reviews: {
-                    "amazing-flavor": {
-                        author: "Sofia K.",
-                        rating: 5,
-                        text: "The most authentic Italian taste in the city!",
-                        replies: {
-                            "chef-thanks": { author: "Chef Mario", text: "Grazie mille! Made with love 💚" },
-                            "agree-completely": { author: "Luigi M.", text: "Couldn't agree more! My favorite too 🍕" },
-                        },
-                    },
-                    "perfect-crust": {
-                        author: "James R.",
-                        rating: 5,
-                        text: "The wood-fired crust is perfection!",
-                        replies: {
-                            "secret-technique": { author: "Chef Mario", text: "24-hour fermented dough is the secret! 👨‍🍳" },
-                        },
-                    },
-                },
-            },
-            "meat-lovers": {
-                name: "🥩 Carnivore Supreme",
-                description: "Pepperoni, sausage, bacon, and ham with extra mozzarella",
-                price: "$24",
-                chef: "Luigi",
-            },
-            "vegan-delight": {
-                name: "🌱 Garden Paradise",
-                description: "Cashew cheese, roasted vegetables, and herb oil on whole wheat crust",
-                price: "$22",
-                chef: "Sofia",
-            },
-        },
-    };
+    const pizzaData = getPizzaData(currentLocale);
 
     const routeInfo = {
         type: "pizza-details",
@@ -82,7 +39,79 @@ export default function Demo() {
                             },
                         ]}
                     >
-                        TO DO
+                        {/* Pizza Grid */}
+                        <div className="p-6 bg-gray-900 space-y-4">
+                            {Object.entries(pizzaData).map(([pizzaId, pizza]: [string, any]) => {
+                                return (
+                                    <div
+                                        key={pizzaId}
+                                        className="bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] border-l-4 border-red-500"
+                                    >
+                                        <div className="p-5">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div className="flex-1">
+                                                    <h3 className="text-xl font-bold text-white mb-1">{pizza.name}</h3>
+                                                    <p className="text-gray-300 text-sm leading-relaxed mb-3">{pizza.description}</p>
+                                                    <div className="flex items-center gap-4 text-sm">
+                                                        <span className="flex items-center gap-1 text-gray-300">
+                                                            ⭐ <strong className="text-white">{pizza.rating}</strong> ({pizza.reviews}{" "}
+                                                            {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right ml-4">
+                                                    <div className="text-2xl font-bold text-green-400">{pizza.price}</div>
+                                                    <div className="text-xs text-gray-400">
+                                                        {currentLocale === "es" ? "por pizza" : currentLocale === "fr" ? "par pizza" : "per pizza"}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Action Buttons */}
+                                            <div className="flex gap-3 mt-4">
+                                                <Link
+                                                    to={routeTo("pizza_detail", { pizzaType: pizzaId })}
+                                                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-200 text-center font-medium text-sm shadow-md hover:shadow-lg"
+                                                >
+                                                    🍕 {currentLocale === "es" ? "Ver Detalles" : currentLocale === "fr" ? "Voir Détails" : "View Details"}
+                                                </Link>
+                                                <Link
+                                                    to={routeTo("pizza_review_list", { pizzaType: pizzaId })}
+                                                    className="bg-orange-900 text-orange-200 px-4 py-2 rounded-lg hover:bg-orange-800 transition-colors text-sm font-medium shadow-sm hover:shadow-md"
+                                                >
+                                                    💬 {pizza.reviews} {currentLocale === "es" ? "Reseñas" : currentLocale === "fr" ? "Avis" : "Reviews"}
+                                                </Link>
+                                                <button className="bg-green-900 text-green-200 px-4 py-2 rounded-lg hover:bg-green-800 transition-colors text-sm font-medium shadow-sm hover:shadow-md">
+                                                    🛒 {currentLocale === "es" ? "Ordenar" : currentLocale === "fr" ? "Commander" : "Order"}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                            {/* Call to Action Footer */}
+                            <div className="mt-8 p-6 bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg text-center border border-gray-600">
+                                <h3 className="text-xl font-bold text-white mb-2">
+                                    🎉{" "}
+                                    {currentLocale === "es"
+                                        ? "¿No encuentras tu pizza favorita?"
+                                        : currentLocale === "fr"
+                                        ? "Vous ne trouvez pas votre pizza préférée?"
+                                        : "Can't find your favorite pizza?"}
+                                </h3>
+                                <p className="text-gray-300 mb-4">
+                                    {currentLocale === "es"
+                                        ? "¡Nuestros chefs pueden crear algo especial solo para ti!"
+                                        : currentLocale === "fr"
+                                        ? "Nos chefs peuvent créer quelque chose de spécial juste pour vous!"
+                                        : "Our chefs can create something special just for you!"}
+                                </p>
+                                <button className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium shadow-lg">
+                                    📞 {currentLocale === "es" ? "Contactar Chef" : currentLocale === "fr" ? "Contacter le Chef" : "Contact Chef"}
+                                </button>
+                            </div>
+                        </div>
                     </PizzaSite>
                 </Browser>
 

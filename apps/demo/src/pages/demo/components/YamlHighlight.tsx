@@ -132,7 +132,7 @@ export function YamlHighlight({
 
 // YAML content for pizza routes
 export const pizzaYamlContent = `# 🍕 Pizzalandia.com - Routes Configuration
-# settings is a reserved word for global configuration
+# settings is a reserved keyword for configuration parameters
 settings:
     i18n:
         enabled: true
@@ -141,7 +141,7 @@ settings:
         forceLocaleUrl: true
     basePath: /yaml-routes
 
-# all other sections are routes
+# all other entries are treated as routes
 home:
     path: /
     component: pages/Home
