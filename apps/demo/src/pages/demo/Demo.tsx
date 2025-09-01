@@ -1,19 +1,14 @@
-import { Link, useLocation, useParams } from "@tanstack/react-router";
-import { useRouteTo, useCurrentLocale, useRouteName, extractRouteParameters, useRouteParams } from "../../routeCache.generated";
+import { Link, useLocation } from "@tanstack/react-router";
+import { useRouteTo, useCurrentLocale } from "../../routeCache.generated";
 import { Browser } from "./components/Browser";
 import { RouteInfoPanel } from "./components/RouteInfoPanel";
 import { YamlHighlight, getPizzaHighlightedPaths, pizzaYamlContent } from "./components/highlightedRoutes";
 import { PizzaSite } from "./components/PizzaSite";
-import { getPizzaData } from "./PizzaType";
-import { Layout } from "./components/Layout";
 
 export default function Demo() {
     const routeTo = useRouteTo();
     const location = useLocation();
     const currentLocale = useCurrentLocale();
-    const routeName = useRouteName();
-    const params = useRouteParams();
-    const pizzaTypes = getPizzaData(currentLocale);
 
     // Demo data for our pizza restaurant
     const pizzaData = {
@@ -64,30 +59,41 @@ export default function Demo() {
     };
 
     return (
-        <Layout>
-            {/* Left Side - Browser Mockup */}
-            <YamlHighlight referenceLine={"home:"} highLightedLineNumbers={[0, 1, 2]} />
+        <>
+            <div className="min-h-screen bg-gray-900 text-white">
+                <div className="max-w-7xl mx-auto p-8">
+                    <div className="text-center mb-12">
+                        <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-red-500 via-yellow-500 to-red-600 bg-clip-text text-transparent">
+                            YAML Routes Demo
+                        </h1>
+                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">An Interactive i18n routing demonstration with deeply nested URLs</p>
+                    </div>
 
-            {/* Right Side - Browser Mockup */}
-            <div className="space-y-4">
-                <Browser>
-                    <PizzaSite
-                        breadcrumbs={[
-                            {
-                                label: currentLocale === "es" ? "Inicio" : currentLocale === "fr" ? "Accueil" : "Home",
-                                to: routeTo("demo"),
-                            },
-                            {
-                                label: currentLocale === "es" ? "Menú de Pizzas" : currentLocale === "fr" ? "Menu Pizza" : "Pizza Menu",
-                            },
-                        ]}
-                    >
-                        TO DO
-                    </PizzaSite>
-                </Browser>
+                    <div className="grid lg:grid-cols-2 gap-8">
+                        {/* Left Side - YAML Configuration */}
+                        <YamlHighlight />
 
-                <RouteInfoPanel />
+                        {/* Right Side - Browser Mockup */}
+                        <div className="space-y-4">
+                            <Browser path={`/pizza/`} theme="dark">
+                                <PizzaSite
+                                    breadcrumbs={[
+                                        {
+                                            label: currentLocale === "es" ? "Inicio" : currentLocale === "fr" ? "Accueil" : "Home",
+                                            to: routeTo("demo"),
+                                        },
+                                        {
+                                            label: currentLocale === "es" ? "Menú de Pizzas" : currentLocale === "fr" ? "Menu Pizza" : "Pizza Menu",
+                                        },
+                                    ]}
+                                ></PizzaSite>
+                            </Browser>
+
+                            <RouteInfoPanel />
+                        </div>
+                    </div>
+                </div>
             </div>
-        </Layout>
+        </>
     );
 }

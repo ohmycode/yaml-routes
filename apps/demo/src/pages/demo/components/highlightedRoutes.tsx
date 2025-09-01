@@ -5,37 +5,37 @@ import { codeToHtml } from "shiki";
 const lineHighlightStyles = `
 .highlighted {
     background-color: rgba(59, 130, 246, 0.15);
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25));
     border-left: 4px solid rgb(96, 165, 250);
     padding-left: calc(1.5rem - 4px);
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     padding-right: 1.5rem;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
     animation: highlight-pulse 2s ease-in-out infinite;
 }
 
 @keyframes highlight-pulse {
     0%, 100% { 
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
-        box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        opacity: 1;
+
     }
     50% { 
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25));
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        opacity: 0.6;
     }
 }
 `;
 
 interface YamlHighlightProps {
-    highLightedLineNumbers?: string[];
-    highLightedLines?: number[];
+    highLightedLineNumbers?: number[];
+    highLightedLines?: string[];
     title?: string;
-    referenceLine?: string | number | undefined;
+    referenceLine?: string | number;
     yamlContent?: string;
 }
 
 export function YamlHighlight({
-    referenceLine,
+    referenceLine = 0,
     highLightedLineNumbers = [],
     highLightedLines = [],
     title = "routes.yml - Live Demo",
@@ -45,23 +45,28 @@ export function YamlHighlight({
 
     useEffect(() => {
         const highlightCode = async () => {
-            // Find the "pizza:" line and calculate relative line numbers
+            // Find the reference line and calculate relative line numbers
             const lines = yamlContent.split("\n");
+            let referenceLineIndex: number;
+
             if (typeof referenceLine === "string") {
-                referenceLine = lines.findIndex((line) => line.trim() === referenceLine);
-            } else if (typeof referenceLine === "undefined") {
-                referenceLine = 0; // Default to start of file if not provided
+                referenceLineIndex = lines.findIndex((line) => line.trim() === referenceLine);
+                referenceLineIndex = referenceLineIndex === -1 ? 0 : referenceLineIndex + 1; // Default to 0 if not found
+            } else {
+                referenceLineIndex = referenceLine + 1; // Convert to 1-based index
             }
 
             // add highLightedLines to highLightedLineNumbers: lines.findIndex((line) => line.trim() === highLightedLine )
-            highLightedLineNumbers.push(...highLightedLines.map((line) => lines.findIndex((l) => l.trim() === line.toString())));
+            const additionalLineNumbers = highLightedLines.map((lineText) => lines.findIndex((l) => l.trim() === lineText)).filter((index) => index !== -1);
+
+            const allHighlightedNumbers = [...highLightedLineNumbers, ...additionalLineNumbers];
 
             // Convert relative line numbers to absolute line numbers
-            const absolute: number[] = highLightedLineNumbers.map((number) => {
-                if (referenceLine === 0) {
-                    return referenceLine + 1; // "pizza:" line itself (1-indexed)
+            const absoluteLines: number[] = allHighlightedNumbers.map((number) => {
+                if (referenceLineIndex === 0) {
+                    return number + 1; // Add offset (1-indexed)
                 }
-                return referenceLine + 1 + number; // Add relative offset
+                return referenceLineIndex + number; // Add relative offset
             });
 
             // Apply Shiki highlighting with built-in line highlighting
@@ -77,7 +82,7 @@ export function YamlHighlight({
                         },
                         line(node, line) {
                             // Add line highlighting with Shiki's built-in system
-                            if (absolute.includes(line)) {
+                            if (absoluteLines.includes(line)) {
                                 this.addClassToHast(node, "highlighted");
                             }
                         },
@@ -89,7 +94,7 @@ export function YamlHighlight({
         };
 
         highlightCode();
-    }, [yamlContent, highlightedPaths]);
+    }, [yamlContent, highLightedLineNumbers, highLightedLines, referenceLine]);
 
     return (
         <div className="space-y-4">
@@ -129,12 +134,12 @@ export function YamlHighlight({
 export const pizzaYamlContent = `# 🍕 Pizzalandia.com - Routes Configuration
 # settings is a reserved word for global configuration
 settings:
-  i18n:
-    enabled: true
-    defaultLocale: en
-    supportedLocales: [en, es, fr]
-    forceLocaleUrl: true
-  basePath: /yaml-routes
+    i18n:
+        enabled: true
+        defaultLocale: en
+        supportedLocales: [en, es, fr]
+        forceLocaleUrl: true
+    basePath: /yaml-routes
 
 # all other sections are routes
 home:

@@ -66,7 +66,7 @@ import { RootComponent } from './App';${
             hasI18n
                 ? `
 import { useState, useEffect } from 'react';
-import { useLocation, useMatchRoute } from '@tanstack/react-router';`
+import { useLocation, useMatchRoute, useParams } from '@tanstack/react-router';`
                 : ""
         }
 ${components.join("\n")}${routerComponentImports}`;
@@ -174,6 +174,20 @@ export function useRouteName(): string {
   }
   
   return normalizedPath === '/' ? 'home' : 'unknown';
+}
+
+export function useRouteParams(includeLocale: boolean = true): Record<string, string> {
+  const params = useParams({ strict: false });
+  const locale = useCurrentLocale();
+  
+  if (includeLocale) {
+    return {
+      ...params,
+      locale
+    };
+  }
+  
+  return params;
 }`,
 
     routeIdMappings: (mappings: any) =>
