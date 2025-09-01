@@ -5,6 +5,7 @@ import { RouteInfoPanel } from "./components/RouteInfoPanel";
 import { Browser } from "./components/Browser";
 import { PizzaSite } from "./components/PizzaSite";
 import { Layout } from "./components/Layout";
+import { Pizza } from "./components/Pizza";
 
 // Pizza data generation function moved outside component
 export const getPizzaData = (currentLocale: string): Record<string, any> => ({
@@ -62,7 +63,7 @@ export const getPizzaData = (currentLocale: string): Record<string, any> => ({
     },
 });
 
-function Pizza() {
+const PizzaType = function () {
     const params = useParams({ strict: false });
     const pizzaType = typeof params.pizzaType === "string" ? params.pizzaType : String(params.pizzaType || "");
     const routeTo = useRouteTo();
@@ -109,9 +110,11 @@ function Pizza() {
                     >
                         {/* Pizza Header */}
                         <div className="flex items-start gap-8 mb-8">
-                            <div className="text-8xl">{pizza.emoji}</div>
+                            <Pizza pizzaType={pizzaType} emoji={pizza.emoji} size="lg" animated={true} />
                             <div className="flex-1">
-                                <h1 className="text-3xl font-bold text-gray-100 mb-2">{pizza.name}</h1>
+                                <h1 className="text-3xl font-bold text-gray-100 mb-2">
+                                    {pizza.name} {pizza.emoji}
+                                </h1>
                                 <p className="text-gray-300 text-lg mb-4">{pizza.description}</p>
                                 <div className="flex items-center gap-6">
                                     <span className="text-3xl font-bold text-green-400">{pizza.price}</span>
@@ -151,7 +154,7 @@ function Pizza() {
                                 {Object.entries(pizzaData).map(([type, data]) => (
                                     <Link
                                         key={type}
-                                        to={routeTo("pizza", { pizzaType: type })}
+                                        to={routeTo("pizza_detail", { pizzaType: type })}
                                         className={`p-3 rounded-lg border-2 transition-all text-center ${
                                             type === pizzaType
                                                 ? "border-red-500 bg-red-900/50"
@@ -227,6 +230,6 @@ function Pizza() {
             </div>
         </Layout>
     );
-}
+};
 
-export default Pizza;
+export default PizzaType;

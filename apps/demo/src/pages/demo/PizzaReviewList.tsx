@@ -1,6 +1,65 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { useRouteTo, useCurrentLocale } from "../../routeCache.generated";
 
+// Mock reviews data
+export const reviews = [
+    {
+        id: "1",
+        author: "Giuseppe Romano",
+        rating: 5,
+        title: "Perfetto! 🤌",
+        content: "This is exactly how my nonna used to make it! The crust is crispy, the sauce is perfect, and the cheese... mama mia!",
+        date: "2024-08-28",
+        avatar: "👨‍🍳",
+        verified: true,
+        helpful: 23,
+    },
+    {
+        id: "2",
+        author: "Sarah Chen",
+        rating: 4,
+        title: "Almost perfect",
+        content: "Really great pizza! The only thing missing was a bit more basil, but overall fantastic. Will definitely order again!",
+        date: "2024-08-25",
+        avatar: "👩‍💼",
+        verified: true,
+        helpful: 18,
+    },
+    {
+        id: "3",
+        author: "Mike Johnson",
+        rating: 5,
+        title: "Best pizza in town! 🍕",
+        content: "I've tried every pizza place in the city, and this is hands down the best. The delivery was super fast too!",
+        date: "2024-08-22",
+        avatar: "🧔",
+        verified: false,
+        helpful: 31,
+    },
+    {
+        id: "4",
+        author: "Isabella Rodriguez",
+        rating: 4,
+        title: "Muy deliciosa!",
+        content: "Amazing flavor combinations! The wood-fired taste really comes through. My kids loved it too!",
+        date: "2024-08-20",
+        avatar: "👩‍👧‍👦",
+        verified: true,
+        helpful: 15,
+    },
+    {
+        id: "5",
+        author: "David Kim",
+        rating: 3,
+        title: "Good but pricey",
+        content: "The pizza was good quality, but I think it's a bit overpriced for what you get. Taste was solid though.",
+        date: "2024-08-18",
+        avatar: "👨‍💻",
+        verified: true,
+        helpful: 8,
+    },
+];
+
 export function PizzaReviewList() {
     const params = useParams({ strict: false });
     const pizzaType = typeof params.pizzaType === "string" ? params.pizzaType : String(params.pizzaType || "");
@@ -13,65 +72,6 @@ export function PizzaReviewList() {
         const str = String(type);
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
-
-    // Mock reviews data
-    const reviews = [
-        {
-            id: "1",
-            author: "Giuseppe Romano",
-            rating: 5,
-            title: "Perfetto! 🤌",
-            content: "This is exactly how my nonna used to make it! The crust is crispy, the sauce is perfect, and the cheese... mama mia!",
-            date: "2024-08-28",
-            avatar: "👨‍🍳",
-            verified: true,
-            helpful: 23,
-        },
-        {
-            id: "2",
-            author: "Sarah Chen",
-            rating: 4,
-            title: "Almost perfect",
-            content: "Really great pizza! The only thing missing was a bit more basil, but overall fantastic. Will definitely order again!",
-            date: "2024-08-25",
-            avatar: "👩‍💼",
-            verified: true,
-            helpful: 18,
-        },
-        {
-            id: "3",
-            author: "Mike Johnson",
-            rating: 5,
-            title: "Best pizza in town! 🍕",
-            content: "I've tried every pizza place in the city, and this is hands down the best. The delivery was super fast too!",
-            date: "2024-08-22",
-            avatar: "🧔",
-            verified: false,
-            helpful: 31,
-        },
-        {
-            id: "4",
-            author: "Isabella Rodriguez",
-            rating: 4,
-            title: "Muy deliciosa!",
-            content: "Amazing flavor combinations! The wood-fired taste really comes through. My kids loved it too!",
-            date: "2024-08-20",
-            avatar: "👩‍👧‍👦",
-            verified: true,
-            helpful: 15,
-        },
-        {
-            id: "5",
-            author: "David Kim",
-            rating: 3,
-            title: "Good but pricey",
-            content: "The pizza was good quality, but I think it's a bit overpriced for what you get. Taste was solid though.",
-            date: "2024-08-18",
-            avatar: "👨‍💻",
-            verified: true,
-            helpful: 8,
-        },
-    ];
 
     const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
 

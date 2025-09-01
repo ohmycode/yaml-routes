@@ -12,22 +12,52 @@ export const Pizza: React.FC<PizzaProps> = ({ pizzaType, emoji = "🍕", size = 
     const sizes = {
         sm: "scale-75",
         md: "scale-100",
-        lg: "scale-125",
+        lg: "scale-200",
     };
 
-    // Pizza-specific toppings based on type
+    // Pizza-specific sophisticated toppings based on type
     const getToppings = (type: string) => {
         switch (type) {
             case "pepperoni":
-                return { color: "#DC644A", count: 3, name: "pepperoni" };
+                return {
+                    primary: { color: "#DC644A", size: "w-3 h-3", shape: "rounded-full" },
+                    secondary: { color: "#A0352B", size: "w-2 h-2", shape: "rounded-full" },
+                    count: 4,
+                    name: "pepperoni",
+                    pattern: "scattered",
+                };
             case "margherita":
-                return { color: "#228B22", count: 2, name: "basil" };
+                return {
+                    primary: { color: "#228B22", size: "w-4 h-2", shape: "rounded-full transform rotate-12" },
+                    secondary: { color: "#32CD32", size: "w-3 h-1", shape: "rounded-full transform -rotate-6" },
+                    count: 2,
+                    name: "basil",
+                    pattern: "organic",
+                };
             case "hawaiian":
-                return { color: "#FFD700", count: 3, name: "pineapple" };
+                return {
+                    primary: { color: "#FFD700", size: "w-3 h-3", shape: "rounded-sm transform rotate-45" },
+                    secondary: { color: "#FF69B4", size: "w-2 h-2", shape: "rounded-full" },
+                    count: 3,
+                    name: "pineapple & ham",
+                    pattern: "paired",
+                };
             case "quattro":
-                return { color: "#8B4513", count: 4, name: "mushroom" };
+                return {
+                    primary: { color: "#8B4513", size: "w-3 h-2", shape: "rounded-full" },
+                    secondary: { color: "#654321", size: "w-2 h-3", shape: "rounded-sm" },
+                    count: 5,
+                    name: "mushroom medley",
+                    pattern: "dense",
+                };
             default:
-                return { color: "#DC644A", count: 3, name: "pepperoni" };
+                return {
+                    primary: { color: "#DC644A", size: "w-3 h-3", shape: "rounded-full" },
+                    secondary: { color: "#A0352B", size: "w-2 h-2", shape: "rounded-full" },
+                    count: 4,
+                    name: "pepperoni",
+                    pattern: "scattered",
+                };
         }
     };
 
@@ -36,7 +66,7 @@ export const Pizza: React.FC<PizzaProps> = ({ pizzaType, emoji = "🍕", size = 
     return (
         <div className={`relative ${sizes[size]} transform-gpu`}>
             {/* Container for the pizza slice */}
-            <div className="relative w-16 h-20 transform rotate-180">
+            <div className="relative w-16 h-20 transform rotate-180 z-10">
                 {/* Pizza Crust (Main Triangle) */}
                 <div className="absolute inset-0">
                     {/* Outer crust */}
@@ -84,48 +114,68 @@ export const Pizza: React.FC<PizzaProps> = ({ pizzaType, emoji = "🍕", size = 
                     />
                 </div>
 
-                {/* Toppings */}
+                {/* Sophisticated Toppings */}
                 <div className="absolute inset-0 z-20">
-                    {/* Main topping */}
+                    {/* Primary toppings with sophisticated patterns */}
                     <div
-                        className="absolute w-3 h-3 rounded-full"
+                        className={`absolute ${toppings.primary.size} ${toppings.primary.shape}`}
                         style={{
-                            backgroundColor: toppings.color,
-                            top: "10px",
-                            left: "19px",
+                            backgroundColor: toppings.primary.color,
+                            top: "15px",
+                            left: "26px",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
                         }}
                     />
 
-                    {/* Additional toppings based on type */}
+                    {/* Secondary and additional toppings based on pattern */}
                     {toppings.count > 1 && (
                         <div
-                            className="absolute w-3 h-3 rounded-full"
+                            className={`absolute ${toppings.secondary.size} ${toppings.secondary.shape}`}
                             style={{
-                                backgroundColor: toppings.color,
-                                top: "25px",
-                                left: "10px",
+                                backgroundColor: toppings.secondary.color,
+                                top: toppings.pattern === "paired" ? "29px" : "30px",
+                                left: toppings.pattern === "organic" ? "19px" : "17px",
+                                boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
                             }}
                         />
                     )}
 
                     {toppings.count > 2 && (
                         <div
-                            className="absolute w-3 h-3 rounded-full"
+                            className={`absolute ${toppings.primary.size} ${toppings.primary.shape}`}
                             style={{
-                                backgroundColor: toppings.color,
-                                top: "22px",
-                                left: "28px",
+                                backgroundColor: toppings.primary.color,
+                                top: toppings.pattern === "dense" ? "25px" : "27px",
+                                left: toppings.pattern === "organic" ? "33px" : "35px",
+                                opacity: 0.9,
+                                boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
                             }}
                         />
                     )}
 
                     {toppings.count > 3 && (
                         <div
-                            className="absolute w-2 h-2 rounded-full"
+                            className={`absolute ${toppings.secondary.size} ${toppings.secondary.shape}`}
                             style={{
-                                backgroundColor: toppings.color,
+                                backgroundColor: toppings.secondary.color,
+                                top: "40px",
+                                left: "27px",
+                                opacity: 0.8,
+                                boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                            }}
+                        />
+                    )}
+
+                    {toppings.count > 4 && (
+                        <div
+                            className={`absolute ${toppings.primary.size} ${toppings.primary.shape}`}
+                            style={{
+                                backgroundColor: toppings.primary.color,
                                 top: "35px",
-                                left: "20px",
+                                left: "22px",
+                                opacity: 0.7,
+                                transform: "scale(0.8)",
+                                boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
                             }}
                         />
                     )}
@@ -168,9 +218,6 @@ export const Pizza: React.FC<PizzaProps> = ({ pizzaType, emoji = "🍕", size = 
                         />
                     </div>
                 )}
-
-                {/* Pizza Type Emoji */}
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-xs z-40 rotate-180">{emoji}</div>
             </div>
         </div>
     );

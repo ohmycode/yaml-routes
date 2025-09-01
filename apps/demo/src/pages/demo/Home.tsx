@@ -52,7 +52,7 @@ export default function Demo() {
                                             <div className="flex items-start gap-4 mb-3">
                                                 {/* Custom Pizza Slice */}
                                                 <div className="flex-shrink-0">
-                                                    <Pizza pizzaType={pizzaId} emoji={pizza.emoji} size="md" animated={true} />
+                                                    <Pizza pizzaType={pizzaId} emoji={pizza.emoji} size="md" animated={false} />
                                                 </div>
 
                                                 <div className="flex-1">
@@ -89,9 +89,6 @@ export default function Demo() {
                                                 >
                                                     💬 {pizza.reviews} {currentLocale === "es" ? "Reseñas" : currentLocale === "fr" ? "Avis" : "Reviews"}
                                                 </Link>
-                                                <button className="bg-green-900 text-green-200 px-4 py-2 rounded-lg hover:bg-green-800 transition-colors text-sm font-medium shadow-sm hover:shadow-md">
-                                                    🛒 {currentLocale === "es" ? "Ordenar" : currentLocale === "fr" ? "Commander" : "Order"}
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
