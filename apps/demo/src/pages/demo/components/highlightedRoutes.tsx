@@ -1,0 +1,182 @@
+import { useState, useEffect } from "react";
+import { codeToHtml } from "shiki";
+
+// Add custom styles for line highlighting following Shiki standards
+const lineHighlightStyles = `
+.highlighted {
+    background-color: rgba(59, 130, 246, 0.15);
+    border-left: 4px solid rgb(96, 165, 250);
+    padding-left: calc(1.5rem - 4px);
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-right: 1.5rem;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    animation: highlight-pulse 2s ease-in-out infinite;
+}
+
+@keyframes highlight-pulse {
+    0%, 100% { 
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    }
+    50% { 
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25));
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+}
+`;
+
+interface YamlHighlightProps {
+    yamlContent: string;
+    highlightedPaths?: number[];
+    title?: string;
+}
+
+export function YamlHighlight({ yamlContent, highlightedPaths = [], title = "routes.yml - Live Demo" }: YamlHighlightProps) {
+    const [highlightedHtml, setHighlightedHtml] = useState("");
+
+    useEffect(() => {
+        const highlightCode = async () => {
+            // Find the "pizza:" line and calculate relative line numbers
+            const lines = yamlContent.split("\n");
+            const pizzaLineIndex = lines.findIndex((line) => line.trim() === "pizza:");
+
+            // Convert relative line numbers to absolute line numbers
+            const highlightedLines: number[] = highlightedPaths.map((relativeLine) => {
+                if (relativeLine === 0) {
+                    return pizzaLineIndex + 1; // "pizza:" line itself (1-indexed)
+                }
+                return pizzaLineIndex + 1 + relativeLine; // Add relative offset
+            });
+
+            // Apply Shiki highlighting with built-in line highlighting
+            const highlighted = await codeToHtml(yamlContent, {
+                lang: "yaml",
+                theme: "github-dark",
+                transformers: [
+                    {
+                        pre(node) {
+                            // Add custom styling to match Home component
+                            node.properties.style =
+                                "background-color: transparent; padding: 1.5rem; margin: 0; font-size: 0.875rem; line-height: 1.6; overflow-x: auto;";
+                        },
+                        line(node, line) {
+                            // Add line highlighting with Shiki's built-in system
+                            if (highlightedLines.includes(line)) {
+                                this.addClassToHast(node, "highlighted");
+                            }
+                        },
+                    },
+                ],
+            });
+
+            setHighlightedHtml(highlighted);
+        };
+
+        highlightCode();
+    }, [yamlContent, highlightedPaths]);
+
+    return (
+        <div className="relative group">
+            <style dangerouslySetInnerHTML={{ __html: lineHighlightStyles }} />
+            <div className="bg-gradient-to-r from-gray-800 to-gray-750 px-6 py-4 text-sm text-gray-300 rounded-t-xl border-b border-gray-700/50 flex items-center gap-3 shadow-lg">
+                <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-red-500 rounded-full shadow-sm animate-pulse"></span>
+                    <span className="w-3 h-3 bg-yellow-500 rounded-full shadow-sm"></span>
+                    <span className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></span>
+                </div>
+                <span className="ml-2 font-medium text-gray-200">{title}</span>
+                <div className="ml-auto flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span className="text-xs text-green-400 font-medium">Live</span>
+                </div>
+            </div>
+            <div className="relative overflow-hidden">
+                <div className="!bg-gradient-to-br !from-gray-900 !to-gray-800 shadow-2xl border border-gray-700/50 rounded-b-xl relative overflow-x-auto group-hover:shadow-3xl transition-all duration-300">
+                    <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-b-xl"></div>
+            </div>
+        </div>
+    );
+}
+
+// YAML content for pizza routes
+export const pizzaYamlContent = `# 🍕 Mario's Legendary Pizza Palace - Routes Configuration
+settings:
+  i18n:
+    enabled: true
+    defaultLocale: en
+    supportedLocales: [en, es, fr]
+    forceLocaleUrl: true
+  basePath: /yaml-routes
+
+# 🍕 Pizza menu and details
+pizza:
+  path:
+    en: /demo/pizza-corner/{pizzaType}
+    es: /demo/pizzalandia/{pizzaType}
+  component: pages/demo/Pizza
+  parameters:
+    pizzaType:
+      required: true
+
+pizza_review_list:
+  path:
+    en: /demo/pizza-corner/{pizzaType}/reviews
+    es: /demo/pizzalandia/{pizzaType}/recomendaciones
+  component: pages/demo/PizzaReviewList
+  parameters:
+    pizzaType:
+      required: true
+
+pizza_review:
+  path:
+    en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}
+    es: /demo/pizza-corner/{pizzaType}/recomendaciones/{reviewId}
+  component:
+    en: pages/demo/PizzaReview
+    es: pages/demo/Recomendacion
+  parameters:
+    pizzaType:
+      required: true
+    reviewId:
+      required: true
+
+pizza_review_comments:
+  path:
+    en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}/comment/{commentId}
+    es: /demo/pizzalandia/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
+  component: pages/demo/PizzaReviewComment
+  parameters:
+    pizzaType:
+      required: true
+    reviewId:
+      required: true
+    commentId:
+      required: true`;
+
+// Helper function to get highlighted paths for pizza routes
+export function getPizzaHighlightedPaths(routeType: string, params: Record<string, string> = {}, currentLocale: string = "en"): number[] {
+    switch (routeType) {
+        case "pizza":
+            // Line numbers relative to "pizza:" line (0 = pizza: line itself)
+            // 0: "pizza:"
+            // 2: "    en: /demo/pizza-corner/{pizzaType}"
+            // 3: "    es: /demo/pizzalandia/{pizzaType}"
+            // 4: "  component: pages/demo/Pizza"
+            const lines = [0]; // "pizza:" line
+
+            if (currentLocale === "en") {
+                lines.push(2); // "en: /demo/pizza-corner/{pizzaType}"
+            } else if (currentLocale === "es") {
+                lines.push(3); // "es: /demo/pizzalandia/{pizzaType}"
+            }
+
+            lines.push(4); // "component: pages/demo/Pizza"
+
+            return lines;
+        default:
+            return [0]; // Just "pizza:" line
+    }
+}
