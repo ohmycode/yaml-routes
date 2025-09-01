@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { useRouteTo, useCurrentLocale } from "../../routeCache.generated";
+import { useRouteTo, useCurrentLocale, useRouteName } from "../../routeCache.generated";
 import { Browser } from "./components/Browser";
 import { RouteInfoPanel } from "./components/RouteInfoPanel";
 import { YamlHighlight, getPizzaHighlightedPaths, pizzaYamlContent } from "./components/highlightedRoutes";
@@ -9,6 +9,8 @@ export default function Demo() {
     const routeTo = useRouteTo();
     const location = useLocation();
     const currentLocale = useCurrentLocale();
+    const routeName = useRouteName();
+    debugger;
 
     // Demo data for our pizza restaurant
     const pizzaData = {

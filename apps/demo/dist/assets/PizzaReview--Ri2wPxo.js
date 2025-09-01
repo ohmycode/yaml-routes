@@ -1,4 +1,4 @@
-import{a as d,u as h,j as e,L as l}from"./index-CO-_ZL5r.js";function p(){const a=d({strict:!1}),i=typeof a.pizzaType=="string"?a.pizzaType:String(a.pizzaType||""),o=typeof a.reviewId=="string"?a.reviewId:String(a.reviewId||""),n=h(),s={1:{author:"Giuseppe Romano",rating:5,title:"Perfetto! 🤌",content:`This is exactly how my nonna used to make it! The crust is crispy, the sauce is perfect, and the cheese... mama mia!
+import{a as d,u as h,j as e,L as l}from"./index-DmSVspG3.js";function p(){const a=d({strict:!1}),i=typeof a.pizzaType=="string"?a.pizzaType:String(a.pizzaType||""),o=typeof a.reviewId=="string"?a.reviewId:String(a.reviewId||""),n=h(),s={1:{author:"Giuseppe Romano",rating:5,title:"Perfetto! 🤌",content:`This is exactly how my nonna used to make it! The crust is crispy, the sauce is perfect, and the cheese... mama mia!
             
 I've been making pizzas for 30 years, and I can tell when someone really knows what they're doing. This place gets it right. The dough has that perfect chew, the sauce isn't too sweet (a common mistake!), and they don't go overboard with toppings.
 

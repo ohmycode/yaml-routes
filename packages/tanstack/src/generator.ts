@@ -122,6 +122,58 @@ export function useRouteTo() {
     Object.entries(params).forEach(([k, v]) => finalPath = finalPath.replace(\`{\${k}}\`, String(v)));
     return finalPath;
   };
+}
+
+export function useRouteName(): string {
+  const location = useLocation();
+  
+  // Use TanStack Router's built-in route matching
+  // The pathname already contains the matched route information
+  const pathname = location.pathname;
+  
+  // Quick path normalization
+  let normalizedPath = pathname;
+  ${
+      config.basePath
+          ? `if (normalizedPath.startsWith('${config.basePath}')) {
+    normalizedPath = normalizedPath.slice(${config.basePath.length}) || '/';
+  }`
+          : ""
+  }
+  
+  // Remove locale prefix for route matching
+  const supportedLocales = ${JSON.stringify(config.locales)};
+  for (const locale of supportedLocales) {
+    if (locale !== settings.i18n.defaultLocale) {
+      const localePrefix = '/' + locale;
+      if (normalizedPath === localePrefix || normalizedPath === localePrefix + '/') {
+        normalizedPath = '/';
+        break;
+      } else if (normalizedPath.startsWith(localePrefix + '/')) {
+        normalizedPath = normalizedPath.slice(localePrefix.length);
+        break;
+      }
+    }
+  }
+  
+  // Direct lookup in route mappings (most efficient)
+  for (const [routeId, routeData] of Object.entries(routeIdMappings)) {
+    // Check exact match first (fastest)
+    if (routeData.path === normalizedPath) {
+      return routeId;
+    }
+    
+    // Check pattern match only if needed
+    if (routeData.path.includes('{')) {
+      const pathPattern = routeData.path.replace(/{[^}]+}/g, '[^/]+');
+      const regex = new RegExp('^' + pathPattern.replace(/\\//g, '\\\\/') + '$');
+      if (regex.test(normalizedPath)) {
+        return routeId;
+      }
+    }
+  }
+  
+  return normalizedPath === '/' ? 'home' : 'unknown';
 }`,
 
     routeIdMappings: (mappings: any) =>
