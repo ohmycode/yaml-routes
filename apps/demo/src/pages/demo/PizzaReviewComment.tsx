@@ -1,10 +1,11 @@
 import React from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
-import * as m from "../../paraglide/messages.js";
+import { useCurrentLocale } from "../../routeCache.generated";
 
 export const PizzaReviewComment: React.FC = () => {
     const { pizzaType, reviewId, commentId } = useParams({ strict: false });
     const navigate = useNavigate();
+    const currentLocale = useCurrentLocale();
 
     // Simple locale detection from current URL
     const currentPath = window.location.pathname;
@@ -51,7 +52,9 @@ export const PizzaReviewComment: React.FC = () => {
         return (
             <div className="max-w-4xl mx-auto p-6">
                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4">
-                    <p className="text-red-700 dark:text-red-300">{m.error_not_found()}</p>
+                    <p className="text-red-700 dark:text-red-300">
+                        {currentLocale === "es" ? "Página no encontrada" : currentLocale === "fr" ? "Page non trouvée" : "Page not found"}
+                    </p>
                 </div>
             </div>
         );

@@ -1,10 +1,10 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { useRouteTo } from "../../routeCache.generated";
-import * as m from "../../paraglide/messages.js";
+import { useRouteTo, useCurrentLocale } from "../../routeCache.generated";
 
 export function PizzaReviewList() {
     const { pizzaType } = useParams({ strict: false });
     const routeTo = useRouteTo();
+    const currentLocale = useCurrentLocale();
 
     // Mock reviews data
     const reviews = [
@@ -76,11 +76,21 @@ export function PizzaReviewList() {
                         to={routeTo("pizza", { pizzaType: pizzaType as string })}
                         className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4"
                     >
-                        ← {m.reviews_back_to_pizza({ pizzaType: (pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "") })}
+                        ←{" "}
+                        {currentLocale === "es"
+                            ? `Volver a Pizza de ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
+                            : currentLocale === "fr"
+                            ? `Retour à Pizza ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
+                            : `Back to ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")} Pizza`}
                     </Link>
 
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                        📝 {m.reviews_title({ pizzaType: (pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "") })}
+                        📝{" "}
+                        {currentLocale === "es"
+                            ? `Reseñas para Pizza de ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
+                            : currentLocale === "fr"
+                            ? `Avis pour Pizza ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
+                            : `Reviews for ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")} Pizza`}
                     </h1>
 
                     <div className="flex items-center gap-4 mb-6">
@@ -88,11 +98,11 @@ export function PizzaReviewList() {
                             <span className="text-2xl">⭐</span>
                             <span className="text-2xl font-bold">{averageRating.toFixed(1)}</span>
                             <span className="text-gray-600">
-                                ({reviews.length} {m.pizza_reviews()})
+                                ({reviews.length} {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
                             </span>
                         </div>
                         <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            ✍️ {m.reviews_write_review()}
+                            ✍️ {currentLocale === "es" ? "Escribir una Reseña" : currentLocale === "fr" ? "Écrire un Avis" : "Write a Review"}
                         </button>
                     </div>
                 </div>
@@ -108,7 +118,9 @@ export function PizzaReviewList() {
                                         <div className="flex items-center gap-2">
                                             <h3 className="font-bold text-gray-800">{review.author}</h3>
                                             {review.verified && (
-                                                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">✓ {m.reviews_verified()}</span>
+                                                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                                    ✓ {currentLocale === "es" ? "Verificado" : currentLocale === "fr" ? "Vérifié" : "Verified"}
+                                                </span>
                                             )}
                                         </div>
                                         <div className="flex items-center gap-2 mt-1">
@@ -130,7 +142,7 @@ export function PizzaReviewList() {
                                     })}
                                     className="text-blue-600 hover:text-blue-800 font-medium"
                                 >
-                                    {m.reviews_view_details()} →
+                                    {currentLocale === "es" ? "Ver Detalles" : currentLocale === "fr" ? "Voir les Détails" : "View Details"} →
                                 </Link>
                             </div>
 
@@ -141,12 +153,21 @@ export function PizzaReviewList() {
                                 <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
                                     <span>👍</span>
                                     <span>
-                                        {review.helpful} {m.reviews_found_helpful()}
+                                        {review.helpful}{" "}
+                                        {currentLocale === "es"
+                                            ? "encontraron esto útil"
+                                            : currentLocale === "fr"
+                                            ? "ont trouvé cela utile"
+                                            : "found this helpful"}
                                     </span>
                                 </button>
                                 <div className="flex gap-2">
-                                    <button className="text-gray-500 hover:text-gray-700">💬 {m.reviews_reply()}</button>
-                                    <button className="text-gray-500 hover:text-gray-700">🚩 {m.reviews_report()}</button>
+                                    <button className="text-gray-500 hover:text-gray-700">
+                                        💬 {currentLocale === "es" ? "Responder" : currentLocale === "fr" ? "Répondre" : "Reply"}
+                                    </button>
+                                    <button className="text-gray-500 hover:text-gray-700">
+                                        🚩 {currentLocale === "es" ? "Reportar" : currentLocale === "fr" ? "Signaler" : "Report"}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -156,13 +177,15 @@ export function PizzaReviewList() {
                 {/* Load More */}
                 <div className="text-center mt-8">
                     <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        📜 {m.reviews_load_more()}
+                        📜 {currentLocale === "es" ? "Cargar Más Reseñas" : currentLocale === "fr" ? "Charger Plus d'Avis" : "Load More Reviews"}
                     </button>
                 </div>
 
                 {/* Quick Stats */}
                 <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 mt-8">
-                    <h4 className="font-bold text-gray-800 mb-4">📊 {m.reviews_summary()}</h4>
+                    <h4 className="font-bold text-gray-800 mb-4">
+                        📊 {currentLocale === "es" ? "Resumen de Reseñas" : currentLocale === "fr" ? "Résumé des Avis" : "Review Summary"}
+                    </h4>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
                         {[5, 4, 3, 2, 1].map((stars) => {
                             const count = reviews.filter((r) => r.rating === stars).length;

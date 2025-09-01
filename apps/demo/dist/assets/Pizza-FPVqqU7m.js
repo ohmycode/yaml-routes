@@ -1,0 +1,1 @@
+import{a as e,u as s,j as a}from"./index-DmC5lz2F.js";function o(){const{pizzaType:r}=e({strict:!1});return s(),a.jsx("div",{className:"min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 p-8",children:a.jsx("div",{className:"max-w-4xl mx-auto",children:"Hi"})})}export{o as Pizza};
