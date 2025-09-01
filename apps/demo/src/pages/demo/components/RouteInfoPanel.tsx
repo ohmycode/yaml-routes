@@ -1,5 +1,5 @@
 import { useLocation } from "@tanstack/react-router";
-import { useCurrentLocale } from "../../../routeCache.generated";
+import { useCurrentLocale, useRouteParams } from "../../../routeCache.generated";
 
 interface RouteInfoPanelProps {
     routeName: string;
@@ -10,7 +10,10 @@ interface RouteInfoPanelProps {
 
 export function RouteInfoPanel({ routeName, component, params = {}, urlPattern }: RouteInfoPanelProps) {
     const currentLocale = useCurrentLocale();
+    const routeParams = useRouteParams(false);
     const location = useLocation();
+
+    params = params || routeParams || {};
 
     return (
         <div className="bg-blue-900/20 rounded-xl p-6 border border-blue-700">

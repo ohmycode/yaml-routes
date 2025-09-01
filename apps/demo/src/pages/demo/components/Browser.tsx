@@ -9,11 +9,17 @@ interface BrowserProps {
     children: ReactNode;
 }
 
-export function Browser({ domain, path = "", title = "Demo Site", theme = "light", children }: BrowserProps) {
+export function Browser({ domain = "pizzalandia.com", path = "", title = "Demo Site", theme = "dark", children }: BrowserProps) {
     const currentLocale = useCurrentLocale();
+    // strip 'yaml-routes/' and 'demo/' from pathname
+    const browserLocation = location.pathname
+        .replace(/^\/yaml-routes/, "")
+        .replace(/demo\//, "")
+        .replace(/\/$/, "");
+    path = path || browserLocation;
 
     // Auto-generate domain based on locale if not provided
-    const autoGenDomain = domain || (currentLocale === "es" ? "pizzalandia.es" : "pizzacorner.com");
+    domain = domain || (currentLocale === "es" ? "pizzalandia.es" : "pizzacorner.com");
 
     const isDark = theme === "dark";
     const bgClass = isDark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900";
@@ -30,7 +36,7 @@ export function Browser({ domain, path = "", title = "Demo Site", theme = "light
                 <div className="flex-1 bg-gray-600 rounded px-3 py-1 text-sm text-gray-300 flex items-center gap-2">
                     <span className="text-gray-400">🔒</span>
                     <span className="font-mono text-xs">
-                        {autoGenDomain}
+                        {domain}
                         {path}
                     </span>
                 </div>

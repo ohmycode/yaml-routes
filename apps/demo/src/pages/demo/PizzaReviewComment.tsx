@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
-import { useCurrentLocale } from "../../routeCache.generated";
+import { useCurrentLocale, useRouteParams } from "../../routeCache.generated";
 
 export const PizzaReviewComment: React.FC = () => {
     const params = useParams({ strict: false });

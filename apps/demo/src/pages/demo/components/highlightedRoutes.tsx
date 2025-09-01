@@ -27,26 +27,41 @@ const lineHighlightStyles = `
 `;
 
 interface YamlHighlightProps {
-    highlightedPaths?: number[];
+    highLightedLineNumbers?: string[];
+    highLightedLines?: number[];
     title?: string;
+    referenceLine?: string | number | undefined;
     yamlContent?: string;
 }
 
-export function YamlHighlight({ highlightedPaths = [], title = "routes.yml - Live Demo", yamlContent = pizzaYamlContent }: YamlHighlightProps) {
+export function YamlHighlight({
+    referenceLine,
+    highLightedLineNumbers = [],
+    highLightedLines = [],
+    title = "routes.yml - Live Demo",
+    yamlContent = pizzaYamlContent,
+}: YamlHighlightProps) {
     const [highlightedHtml, setHighlightedHtml] = useState("");
 
     useEffect(() => {
         const highlightCode = async () => {
             // Find the "pizza:" line and calculate relative line numbers
             const lines = yamlContent.split("\n");
-            const pizzaLineIndex = lines.findIndex((line) => line.trim() === "pizza:");
+            if (typeof referenceLine === "string") {
+                referenceLine = lines.findIndex((line) => line.trim() === referenceLine);
+            } else if (typeof referenceLine === "undefined") {
+                referenceLine = 0; // Default to start of file if not provided
+            }
+
+            // add highLightedLines to highLightedLineNumbers: lines.findIndex((line) => line.trim() === highLightedLine )
+            highLightedLineNumbers.push(...highLightedLines.map((line) => lines.findIndex((l) => l.trim() === line.toString())));
 
             // Convert relative line numbers to absolute line numbers
-            const highlightedLines: number[] = highlightedPaths.map((relativeLine) => {
-                if (relativeLine === 0) {
-                    return pizzaLineIndex + 1; // "pizza:" line itself (1-indexed)
+            const absolute: number[] = highLightedLineNumbers.map((number) => {
+                if (referenceLine === 0) {
+                    return referenceLine + 1; // "pizza:" line itself (1-indexed)
                 }
-                return pizzaLineIndex + 1 + relativeLine; // Add relative offset
+                return referenceLine + 1 + number; // Add relative offset
             });
 
             // Apply Shiki highlighting with built-in line highlighting
@@ -62,7 +77,7 @@ export function YamlHighlight({ highlightedPaths = [], title = "routes.yml - Liv
                         },
                         line(node, line) {
                             // Add line highlighting with Shiki's built-in system
-                            if (highlightedLines.includes(line)) {
+                            if (absolute.includes(line)) {
                                 this.addClassToHast(node, "highlighted");
                             }
                         },
