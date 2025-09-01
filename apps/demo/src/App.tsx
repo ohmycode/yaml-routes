@@ -17,13 +17,12 @@ export function RootComponent() {
                     <Link to={routeTo("getting_started")} className="hover:text-blue-200 transition-colors">
                         Getting Started
                     </Link>
-                    <Link to={routeTo("pizza_home")} className="hover:text-blue-200 transition-colors">
+                    <Link to={routeTo("pizza_list")} className="hover:text-blue-200 transition-colors">
                         Demo
                     </Link>
 
                     <div className="ml-auto flex items-center gap-4">
                         <LocaleSwitcher />
-                        <ThemeToggle />
                     </div>
                 </div>
             </nav>

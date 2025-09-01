@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useParams } from "@tanstack/react-router";
 import { useRouteTo, useCurrentLocale, useRouteName } from "../../routeCache.generated";
 import { Browser } from "./components/Browser";
 import { RouteInfoPanel } from "./components/RouteInfoPanel";
@@ -10,6 +10,7 @@ export default function Demo() {
     const location = useLocation();
     const currentLocale = useCurrentLocale();
     const routeName = useRouteName();
+    const params = useParams(true);
     debugger;
 
     // Demo data for our pizza restaurant

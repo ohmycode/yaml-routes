@@ -30,9 +30,11 @@ getting_started:
     path: /getting-started
     component: pages/GettingStarted
 
-# Route with different components per locale (Demo page)
-pizza_home:
-    path: /pizzas
+# Demo pages for a pizza website with i18n and nested routes
+pizza_list:
+    path:
+        en: /demo/our-pizzas
+        es: /demo/nuestras-pizzas
     component: pages/demo/Home
 
 pizza_type:

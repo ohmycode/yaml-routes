@@ -111,7 +111,8 @@ export function YamlHighlight({ highlightedPaths = [], title = "routes.yml - Liv
 }
 
 // YAML content for pizza routes
-export const pizzaYamlContent = `# 🍕 Mario's Legendary Pizza Palace - Routes Configuration
+export const pizzaYamlContent = `# 🍕 Pizzalandia.com - Routes Configuration
+# settings is a reserved word for global configuration
 settings:
   i18n:
     enabled: true
@@ -120,50 +121,41 @@ settings:
     forceLocaleUrl: true
   basePath: /yaml-routes
 
-# 🍕 Pizza menu and details
-pizza:
-  path:
-    en: /demo/pizza-corner/{pizzaType}
-    es: /demo/pizzalandia/{pizzaType}
-  component: pages/demo/Pizza
-  parameters:
-    pizzaType:
-      required: true
+# all other sections are routes
+home:
+    path: /
+    component: pages/Home
+
+pizza_list:
+    path: /pizzas
+    component: pages/PizzaList
+
+pizza_detail:
+    path:
+        en: /our-pizzas/{pizzaType}
+        es: /nuestras-pizzas/{pizzaType}
+    component: pages/PizzaType
 
 pizza_review_list:
-  path:
-    en: /demo/pizza-corner/{pizzaType}/reviews
-    es: /demo/pizzalandia/{pizzaType}/recomendaciones
-  component: pages/demo/PizzaReviewList
-  parameters:
-    pizzaType:
-      required: true
+    path:
+        en: /our-pizzas/{pizzaType}/reviews
+        es: /nuestras-pizzas/{pizzaType}/recomendaciones
+    component: pages/PizzaReviewList
 
 pizza_review:
-  path:
-    en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}
-    es: /demo/pizza-corner/{pizzaType}/recomendaciones/{reviewId}
-  component:
-    en: pages/demo/PizzaReview
-    es: pages/demo/Recomendacion
-  parameters:
-    pizzaType:
-      required: true
-    reviewId:
-      required: true
+    path:
+        en: /our-pizzas/{pizzaType}/reviews/{reviewId}
+        es: /nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}
+    component:
+        en: pages/PizzaReview
+        es: pages/Recomendacion
 
 pizza_review_comments:
-  path:
-    en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}/comment/{commentId}
-    es: /demo/pizzalandia/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
-  component: pages/demo/PizzaReviewComment
-  parameters:
-    pizzaType:
-      required: true
-    reviewId:
-      required: true
-    commentId:
-      required: true`;
+    path:
+        en: /our-pizzas/{pizzaType}/reviews/{reviewId}/comment/{commentId}
+        es: /nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
+    component: pages/PizzaReviewComment
+`;
 
 // Helper function to get highlighted paths for pizza routes
 export function getPizzaHighlightedPaths(routeType: string, params: Record<string, string> = {}, currentLocale: string = "en"): number[] {
@@ -171,18 +163,18 @@ export function getPizzaHighlightedPaths(routeType: string, params: Record<strin
         case "pizza":
             // Line numbers relative to "pizza:" line (0 = pizza: line itself)
             // 0: "pizza:"
-            // 2: "    en: /demo/pizza-corner/{pizzaType}"
-            // 3: "    es: /demo/pizzalandia/{pizzaType}"
-            // 4: "  component: pages/demo/Pizza"
+            // 2: "    en: /pizza-corner/{pizzaType}"
+            // 3: "    es: /pizzalandia/{pizzaType}"
+            // 4: "  component: pages/Pizza"
             const lines = [0]; // "pizza:" line
 
             if (currentLocale === "en") {
-                lines.push(2); // "en: /demo/pizza-corner/{pizzaType}"
+                lines.push(2); // "en: /pizza-corner/{pizzaType}"
             } else if (currentLocale === "es") {
-                lines.push(3); // "es: /demo/pizzalandia/{pizzaType}"
+                lines.push(3); // "es: /pizzalandia/{pizzaType}"
             }
 
-            lines.push(4); // "component: pages/demo/Pizza"
+            lines.push(4); // "component: pages/Pizza"
 
             return lines;
         default:
