@@ -184,3 +184,5 @@ export function PizzaReviewList() {
         </div>
     );
 }
+
+export default PizzaReviewList;

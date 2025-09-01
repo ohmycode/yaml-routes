@@ -247,3 +247,5 @@ Pro tip: Order extra sauce on the side - it's amazing for dipping the crust!`,
         </div>
     );
 }
+
+export default PizzaReview;
