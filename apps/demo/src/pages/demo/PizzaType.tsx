@@ -94,20 +94,8 @@ function Pizza() {
 
                 <div className="grid lg:grid-cols-2 gap-8">
                     {/* Left Side - YAML Configuration */}
-                    <div className="space-y-4">
-                        <div className="bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-700">
-                            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-white">
-                                📝 routes.yml Configuration
-                                <span className="text-sm bg-blue-900 text-blue-300 px-2 py-1 rounded">Live</span>
-                            </h2>
-                            <p className="text-gray-300 mb-4">The highlighted sections show the current active route and parameters</p>
-                            <YamlHighlight
-                                yamlContent={pizzaYamlContent}
-                                highlightedPaths={getPizzaHighlightedPaths("pizza", { pizzaType }, currentLocale)}
-                                title="Pizza Routes - Live Demo"
-                            />
-                        </div>
-                    </div>
+
+                    <YamlHighlight highlightedPaths={getPizzaHighlightedPaths("pizza", { pizzaType }, currentLocale)} title="Pizza Routes - Live Demo" />
 
                     {/* Right Side - Browser Mockup */}
                     <div className="space-y-4">

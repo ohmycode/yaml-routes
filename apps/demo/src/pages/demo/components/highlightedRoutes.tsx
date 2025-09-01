@@ -27,12 +27,12 @@ const lineHighlightStyles = `
 `;
 
 interface YamlHighlightProps {
-    yamlContent: string;
     highlightedPaths?: number[];
     title?: string;
+    yamlContent?: string;
 }
 
-export function YamlHighlight({ yamlContent, highlightedPaths = [], title = "routes.yml - Live Demo" }: YamlHighlightProps) {
+export function YamlHighlight({ highlightedPaths = [], title = "routes.yml - Live Demo", yamlContent = pizzaYamlContent }: YamlHighlightProps) {
     const [highlightedHtml, setHighlightedHtml] = useState("");
 
     useEffect(() => {
@@ -77,25 +77,34 @@ export function YamlHighlight({ yamlContent, highlightedPaths = [], title = "rou
     }, [yamlContent, highlightedPaths]);
 
     return (
-        <div className="relative group">
-            <style dangerouslySetInnerHTML={{ __html: lineHighlightStyles }} />
-            <div className="bg-gradient-to-r from-gray-800 to-gray-750 px-6 py-4 text-sm text-gray-300 rounded-t-xl border-b border-gray-700/50 flex items-center gap-3 shadow-lg">
-                <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 bg-red-500 rounded-full shadow-sm animate-pulse"></span>
-                    <span className="w-3 h-3 bg-yellow-500 rounded-full shadow-sm"></span>
-                    <span className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></span>
+        <div className="space-y-4">
+            <div className="bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-700">
+                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-white">
+                    📝 routes.yml
+                    <span className="text-sm bg-blue-900 text-blue-300 px-2 py-1 rounded">Live</span>
+                </h2>
+                <p className="text-gray-300 mb-4">The highlighted sections show the current active route and parameters</p>
+                <div className="relative group">
+                    <style dangerouslySetInnerHTML={{ __html: lineHighlightStyles }} />
+                    <div className="bg-gradient-to-r from-gray-800 to-gray-750 px-6 py-4 text-sm text-gray-300 rounded-t-xl border-b border-gray-700/50 flex items-center gap-3 shadow-lg">
+                        <div className="flex items-center gap-2">
+                            <span className="w-3 h-3 bg-red-500 rounded-full shadow-sm animate-pulse"></span>
+                            <span className="w-3 h-3 bg-yellow-500 rounded-full shadow-sm"></span>
+                            <span className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></span>
+                        </div>
+                        <span className="ml-2 font-medium text-gray-200">{title}</span>
+                        <div className="ml-auto flex items-center gap-2">
+                            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            <span className="text-xs text-green-400 font-medium">Live</span>
+                        </div>
+                    </div>
+                    <div className="relative overflow-hidden">
+                        <div className="!bg-gradient-to-br !from-gray-900 !to-gray-800 shadow-2xl border border-gray-700/50 rounded-b-xl relative overflow-x-auto group-hover:shadow-3xl transition-all duration-300">
+                            <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-b-xl"></div>
+                    </div>
                 </div>
-                <span className="ml-2 font-medium text-gray-200">{title}</span>
-                <div className="ml-auto flex items-center gap-2">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span className="text-xs text-green-400 font-medium">Live</span>
-                </div>
-            </div>
-            <div className="relative overflow-hidden">
-                <div className="!bg-gradient-to-br !from-gray-900 !to-gray-800 shadow-2xl border border-gray-700/50 rounded-b-xl relative overflow-x-auto group-hover:shadow-3xl transition-all duration-300">
-                    <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-b-xl"></div>
             </div>
         </div>
     );

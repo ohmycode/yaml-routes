@@ -67,14 +67,14 @@ about:
     component: pages/About
 
 # Route with different components per locale (Demo page)
-demo:
-    path: /demo
-    component: pages/demo/Demo
+pizza_home:
+    path: /pizza
+    component: pages/demo/Home
 
-pizza:
+pizza_type:
     path:
-        en: /demo/pizza-corner/{pizzaType}
-        es: /demo/pizzalandia/{pizzaType}
+        en: /demo/our-pizzas/{pizzaType}
+        es: /demo/nuestras-pizzas/{pizzaType}
     component: pages/demo/Pizza
     parameters:
         pizzaType:
@@ -83,8 +83,8 @@ pizza:
 
 pizza_review_list:
     path:
-        en: /demo/pizza-corner/{pizzaType}/reviews
-        es: /demo/pizzalandia/{pizzaType}/recomendaciones
+        en: /demo/our-pizzas/{pizzaType}/reviews
+        es: /demo/nuestras-pizzas/{pizzaType}/recomendaciones
     component: pages/demo/PizzaReviewList
     parameters:
         pizzaType:
@@ -93,8 +93,8 @@ pizza_review_list:
 
 pizza_review:
     path:
-        en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}
-        es: /demo/pizza-corner/{pizzaType}/recomendaciones/{reviewId}
+        en: /demo/our-pizzas/{pizzaType}/reviews/{reviewId}
+        es: /demo/nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}
     component:
         en: pages/demo/PizzaReview
         es: pages/demo/Recomendacion
@@ -108,8 +108,8 @@ pizza_review:
 
 pizza_review_comments:
     path:
-        en: /demo/pizza-corner/{pizzaType}/reviews/{reviewId}/comment/{commentId}
-        es: /demo/pizzalandia/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
+        en: /demo/our-pizzas/{pizzaType}/reviews/{reviewId}/comment/{commentId}
+        es: /demo/nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
     component: pages/demo/PizzaReviewComment
     parameters:
         pizzaType:
