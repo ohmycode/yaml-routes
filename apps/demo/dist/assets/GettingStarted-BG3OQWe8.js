@@ -1,4 +1,4 @@
-import{u as x,j as e,L as i,r as d}from"./index-DmC5lz2F.js";import{c as m}from"./bundle-full-k94LDjhq.js";function g({text:r,className:s=""}){const[t,o]=d.useState(!1),n=async()=>{await navigator.clipboard.writeText(r),o(!0),setTimeout(()=>o(!1),2e3)};return e.jsx("button",{onClick:n,className:`
+import{u as x,j as e,L as i,r as d}from"./index-CO-_ZL5r.js";import{c as m}from"./bundle-full-DahQOjOw.js";function g({text:r,className:s=""}){const[t,o]=d.useState(!1),n=async()=>{await navigator.clipboard.writeText(r),o(!0),setTimeout(()=>o(!1),2e3)};return e.jsx("button",{onClick:n,className:`
                 px-4 py-2 text-xs bg-gray-800/90 hover:bg-gray-700/90 
                 text-gray-300 hover:text-white rounded-lg 
                 transition-all duration-200 font-medium 

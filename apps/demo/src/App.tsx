@@ -26,7 +26,7 @@ export function RootComponent() {
                     <Link to={routeTo("about")} className="hover:text-blue-200 transition-colors">
                         About
                     </Link>
-                    <Link to={routeTo("demo")} className="hover:text-blue-200 transition-colors">
+                    <Link to={routeTo("pizza_home")} className="hover:text-blue-200 transition-colors">
                         Demo
                     </Link>
 

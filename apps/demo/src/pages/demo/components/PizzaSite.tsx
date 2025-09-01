@@ -9,7 +9,7 @@ interface BreadcrumbItem {
 
 interface PizzaSiteProps {
     breadcrumbs?: BreadcrumbItem[];
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 export function PizzaSite({ breadcrumbs = [], children }: PizzaSiteProps) {

@@ -39,11 +39,13 @@ const $ = {
         if (routerConfig) {
             for (const [key, value] of Object.entries(routerConfig)) {
                 if (key.toLowerCase().includes("component") && typeof value === "string") {
-                    const componentName =
-                        value
-                            .split("/")
-                            .pop()
-                            ?.replace(/[^a-zA-Z0-9]/g, "") || "Component";
+                    // Generate PascalCase component name from full path to prevent conflicts
+                    // Example: "pages/demo/Home" -> "PagesDemoHome"
+                    const componentName = value
+                        .split("/")
+                        .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1).replace(/[^a-zA-Z0-9]/g, ""))
+                        .join("");
+
                     if (lazyComponents) {
                         routerComponentImports += `\nconst ${componentName} = lazy(() => import('./${value}'));`;
                     } else {
@@ -218,12 +220,12 @@ export function useLocalePath(targetLocale: string): string {
                 if (value !== undefined && value !== null) {
                     // Handle component references specially
                     if (key.toLowerCase().includes("component") && typeof value === "string") {
-                        // Component reference - use the component name without quotes
-                        const componentName =
-                            value
-                                .split("/")
-                                .pop()
-                                ?.replace(/[^a-zA-Z0-9]/g, "") || "Component";
+                        // Generate PascalCase component name from full path to prevent conflicts
+                        // Example: "pages/demo/Home" -> "PagesDemoHome"
+                        const componentName = value
+                            .split("/")
+                            .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1).replace(/[^a-zA-Z0-9]/g, ""))
+                            .join("");
                         configOptions.push(`${key}: ${componentName}`);
                     } else {
                         // Regular values
@@ -276,11 +278,13 @@ function processRoutes(routes: GeneratedRoute[], config: any) {
 
         allComponents.forEach((componentPath) => {
             const importPath = generateComponentImportPath(componentPath);
-            const componentName =
-                componentPath
-                    .split("/")
-                    .pop()
-                    ?.replace(/[^a-zA-Z0-9]/g, "") || "Component";
+
+            // Generate PascalCase component name from full path to prevent conflicts
+            // Example: "pages/demo/Home" -> "PagesDemoHome"
+            const componentName = componentPath
+                .split("/")
+                .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1).replace(/[^a-zA-Z0-9]/g, ""))
+                .join("");
 
             if (lazyComponents) {
                 imports.add(`const ${componentName} = lazy(() => import('${importPath}'));`);

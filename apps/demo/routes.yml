@@ -68,14 +68,14 @@ about:
 
 # Route with different components per locale (Demo page)
 pizza_home:
-    path: /pizza
+    path: /pizzas
     component: pages/demo/Home
 
 pizza_type:
     path:
         en: /demo/our-pizzas/{pizzaType}
         es: /demo/nuestras-pizzas/{pizzaType}
-    component: pages/demo/Pizza
+    component: pages/demo/PizzaType
     parameters:
         pizzaType:
             type: string

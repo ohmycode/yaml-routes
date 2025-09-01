@@ -13,7 +13,7 @@ export function Browser({ domain, path = "", title = "Demo Site", theme = "light
     const currentLocale = useCurrentLocale();
 
     // Auto-generate domain based on locale if not provided
-    const autoGenDomain = domain || (currentLocale === "es" ? "pizzalandia.demo" : "pizza-corner.demo");
+    const autoGenDomain = domain || (currentLocale === "es" ? "pizzalandia.es" : "pizzacorner.com");
 
     const isDark = theme === "dark";
     const bgClass = isDark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900";

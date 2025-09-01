@@ -75,7 +75,7 @@ export default function Demo() {
 
                         {/* Right Side - Browser Mockup */}
                         <div className="space-y-4">
-                            <Browser path={`/pizza/`} theme="dark">
+                            <Browser path={`/pizzas/`} theme="dark">
                                 <PizzaSite
                                     breadcrumbs={[
                                         {
@@ -86,11 +86,13 @@ export default function Demo() {
                                             label: currentLocale === "es" ? "Menú de Pizzas" : currentLocale === "fr" ? "Menu Pizza" : "Pizza Menu",
                                         },
                                     ]}
-                                ></PizzaSite>
+                                >
+                                    TO DO
+                                </PizzaSite>
                             </Browser>
 
                             <RouteInfoPanel
-                                routeName="pizza"
+                                routeName="pizzas"
                                 component="pages/demo/Pizza"
                                 params={{ pizzaType: "margherita" }}
                                 urlPattern={currentLocale === "es" ? "/demo/pizzalandia/{pizzaType}" : "/demo/pizza-corner/{pizzaType}"}
