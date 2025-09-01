@@ -3,7 +3,10 @@ import { useParams, useNavigate } from "@tanstack/react-router";
 import { useCurrentLocale } from "../../routeCache.generated";
 
 export const PizzaReviewComment: React.FC = () => {
-    const { pizzaType, reviewId, commentId } = useParams({ strict: false });
+    const params = useParams({ strict: false });
+    const pizzaType = typeof params.pizzaType === "string" ? params.pizzaType : String(params.pizzaType || "");
+    const reviewId = typeof params.reviewId === "string" ? params.reviewId : String(params.reviewId || "");
+    const commentId = typeof params.commentId === "string" ? params.commentId : String(params.commentId || "");
     const navigate = useNavigate();
     const currentLocale = useCurrentLocale();
 

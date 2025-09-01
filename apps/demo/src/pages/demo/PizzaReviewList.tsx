@@ -2,9 +2,17 @@ import { Link, useParams } from "@tanstack/react-router";
 import { useRouteTo, useCurrentLocale } from "../../routeCache.generated";
 
 export function PizzaReviewList() {
-    const { pizzaType } = useParams({ strict: false });
+    const params = useParams({ strict: false });
+    const pizzaType = typeof params.pizzaType === "string" ? params.pizzaType : String(params.pizzaType || "");
     const routeTo = useRouteTo();
     const currentLocale = useCurrentLocale();
+
+    // Helper function to safely capitalize pizza type
+    const formatPizzaType = (type: string | undefined) => {
+        if (!type) return "Pizza";
+        const str = String(type);
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
 
     // Mock reviews data
     const reviews = [
@@ -72,25 +80,22 @@ export function PizzaReviewList() {
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <Link
-                        to={routeTo("pizza", { pizzaType: pizzaType as string })}
-                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4"
-                    >
+                    <Link to={routeTo("pizza", { pizzaType: pizzaType })} className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4">
                         ←{" "}
                         {currentLocale === "es"
-                            ? `Volver a Pizza de ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
+                            ? `Volver a Pizza de ${formatPizzaType(pizzaType)}`
                             : currentLocale === "fr"
-                            ? `Retour à Pizza ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
-                            : `Back to ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")} Pizza`}
+                            ? `Retour à Pizza ${formatPizzaType(pizzaType)}`
+                            : `Back to ${formatPizzaType(pizzaType)} Pizza`}
                     </Link>
 
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">
                         📝{" "}
                         {currentLocale === "es"
-                            ? `Reseñas para Pizza de ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
+                            ? `Reseñas para Pizza de ${formatPizzaType(pizzaType)}`
                             : currentLocale === "fr"
-                            ? `Avis pour Pizza ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")}`
-                            : `Reviews for ${(pizzaType?.charAt(0).toUpperCase() || "") + (pizzaType?.slice(1) || "")} Pizza`}
+                            ? `Avis pour Pizza ${formatPizzaType(pizzaType)}`
+                            : `Reviews for ${formatPizzaType(pizzaType)} Pizza`}
                     </h1>
 
                     <div className="flex items-center gap-4 mb-6">
@@ -137,7 +142,7 @@ export function PizzaReviewList() {
                                 </div>
                                 <Link
                                     to={routeTo("pizza_review", {
-                                        pizzaType: pizzaType as string,
+                                        pizzaType: pizzaType,
                                         reviewId: review.id,
                                     })}
                                     className="text-blue-600 hover:text-blue-800 font-medium"

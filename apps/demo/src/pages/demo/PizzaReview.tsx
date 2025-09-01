@@ -2,7 +2,9 @@ import { Link, useParams } from "@tanstack/react-router";
 import { useRouteTo } from "../../routeCache.generated";
 
 export function PizzaReview() {
-    const { pizzaType, reviewId } = useParams({ strict: false });
+    const params = useParams({ strict: false });
+    const pizzaType = typeof params.pizzaType === "string" ? params.pizzaType : String(params.pizzaType || "");
+    const reviewId = typeof params.reviewId === "string" ? params.reviewId : String(params.reviewId || "");
     const routeTo = useRouteTo();
 
     // Mock review data
@@ -103,19 +105,19 @@ Pro tip: Order extra sauce on the side - it's amazing for dipping the crust!`,
                 {/* Navigation */}
                 <div className="mb-8">
                     <Link
-                        to={routeTo("pizza_review_list", { pizzaType: pizzaType as string })}
+                        to={routeTo("pizza_review_list", { pizzaType: pizzaType })}
                         className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4"
                     >
                         ← Back to All Reviews
                     </Link>
 
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Link to={routeTo("pizza", { pizzaType: pizzaType as string })} className="hover:text-gray-800">
+                        <Link to={routeTo("pizza", { pizzaType: pizzaType })} className="hover:text-gray-800">
                             {pizzaType?.charAt(0).toUpperCase()}
                             {pizzaType?.slice(1)} Pizza
                         </Link>
                         <span>→</span>
-                        <Link to={routeTo("pizza_review_list", { pizzaType: pizzaType as string })} className="hover:text-gray-800">
+                        <Link to={routeTo("pizza_review_list", { pizzaType: pizzaType })} className="hover:text-gray-800">
                             Reviews
                         </Link>
                         <span>→</span>
@@ -214,8 +216,8 @@ Pro tip: Order extra sauce on the side - it's amazing for dipping the crust!`,
                                         <p className="text-gray-700">{comment.content}</p>
                                         <Link
                                             to={routeTo("pizza_review_comments", {
-                                                pizzaType: pizzaType as string,
-                                                reviewId: reviewId as string,
+                                                pizzaType: pizzaType,
+                                                reviewId: reviewId,
                                                 commentId: comment.id,
                                             })}
                                             className="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block"
