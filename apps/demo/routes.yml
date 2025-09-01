@@ -30,42 +30,6 @@ getting_started:
     path: /getting-started
     component: pages/GettingStarted
 
-advanced_examples:
-    path: /advanced-examples
-    component: pages/AdvancedExamples
-
-# Route with parameters
-user_profile:
-    path: /user/{id}
-    component: pages/UserProfile
-    parameters:
-        id:
-            type: string
-            required: true
-
-user_images:
-    path: /user/{id}/images
-    component: pages/UserImages
-    parameters:
-        id:
-            type: string
-            required: true
-
-user_image:
-    path: /user/{id}/images/{imageId}
-    component: pages/UserImage
-    parameters:
-        imageId:
-            type: string
-            required: true
-
-# Internationalized routes
-about:
-    path:
-        en: /about
-        es: /acerca-de
-    component: pages/About
-
 # Route with different components per locale (Demo page)
 pizza_home:
     path: /pizzas

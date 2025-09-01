@@ -17,15 +17,6 @@ export function RootComponent() {
                     <Link to={routeTo("getting_started")} className="hover:text-blue-200 transition-colors">
                         Getting Started
                     </Link>
-                    <Link to={routeTo("advanced_examples")} className="hover:text-blue-200 transition-colors">
-                        Advanced Examples
-                    </Link>
-                    <Link to={routeTo("user_profile", { id: "demo" })} className="hover:text-blue-200 transition-colors">
-                        User Demo
-                    </Link>
-                    <Link to={routeTo("about")} className="hover:text-blue-200 transition-colors">
-                        About
-                    </Link>
                     <Link to={routeTo("pizza_home")} className="hover:text-blue-200 transition-colors">
                         Demo
                     </Link>
