@@ -37,7 +37,7 @@ pizza_list:
         es: /demo/nuestras-pizzas
     component: pages/demo/Home
 
-pizza_type:
+pizza_detail:
     path:
         en: /demo/our-pizzas/{pizzaType}
         es: /demo/nuestras-pizzas/{pizzaType}

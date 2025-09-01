@@ -152,8 +152,8 @@ pizza_list:
 
 pizza_detail:
     path:
-        en: /our-pizzas/{pizzaType}
-        es: /nuestras-pizzas/{pizzaType}
+        en: /our-pizzas/{pizzaSlug}
+        es: /nuestras-pizzas/{pizzaSlug}
     component: pages/PizzaType
 
 pizza_review_list:

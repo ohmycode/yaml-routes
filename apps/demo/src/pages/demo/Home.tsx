@@ -4,6 +4,7 @@ import { Browser } from "./components/Browser";
 import { RouteInfoPanel } from "./components/RouteInfoPanel";
 import { YamlHighlight } from "./components/YamlHighlight";
 import { PizzaSite } from "./components/PizzaSite";
+import { Pizza } from "./components/Pizza";
 import { getPizzaData } from "./PizzaType";
 import { Layout } from "./components/Layout";
 
@@ -48,21 +49,28 @@ export default function Demo() {
                                         className="bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] border-l-4 border-red-500"
                                     >
                                         <div className="p-5">
-                                            <div className="flex items-start justify-between mb-3">
+                                            <div className="flex items-start gap-4 mb-3">
+                                                {/* Custom Pizza Slice */}
+                                                <div className="flex-shrink-0">
+                                                    <Pizza pizzaType={pizzaId} emoji={pizza.emoji} size="md" animated={true} />
+                                                </div>
+
                                                 <div className="flex-1">
                                                     <h3 className="text-xl font-bold text-white mb-1">{pizza.name}</h3>
                                                     <p className="text-gray-300 text-sm leading-relaxed mb-3">{pizza.description}</p>
-                                                    <div className="flex items-center gap-4 text-sm">
-                                                        <span className="flex items-center gap-1 text-gray-300">
-                                                            ⭐ <strong className="text-white">{pizza.rating}</strong> ({pizza.reviews}{" "}
-                                                            {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="text-right ml-4">
-                                                    <div className="text-2xl font-bold text-green-400">{pizza.price}</div>
-                                                    <div className="text-xs text-gray-400">
-                                                        {currentLocale === "es" ? "por pizza" : currentLocale === "fr" ? "par pizza" : "per pizza"}
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-4 text-sm">
+                                                            <span className="flex items-center gap-1 text-gray-300">
+                                                                ⭐ <strong className="text-white">{pizza.rating}</strong> ({pizza.reviews}{" "}
+                                                                {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <div className="text-2xl font-bold text-green-400">{pizza.price}</div>
+                                                            <div className="text-xs text-gray-400">
+                                                                {currentLocale === "es" ? "por pizza" : currentLocale === "fr" ? "par pizza" : "per pizza"}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
