@@ -2,7 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useRouteTo, useCurrentLocale } from "../../routeCache.generated";
 import { Browser } from "./components/Browser";
 import { RouteInfoPanel } from "./components/RouteInfoPanel";
-import { YamlHighlight, getPizzaHighlightedPaths, pizzaYamlContent } from "./components/highlightedRoutes";
+import { YamlHighlight } from "./components/YamlHighlight";
 import { PizzaSite } from "./components/PizzaSite";
 
 export default function Demo() {

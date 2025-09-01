@@ -176,28 +176,4 @@ pizza_review_comments:
         es: /nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
     component: pages/PizzaReviewComment
 `;
-
-// Helper function to get highlighted paths for pizza routes
-export function getPizzaHighlightedPaths(routeType: string, params: Record<string, string> = {}, currentLocale: string = "en"): number[] {
-    switch (routeType) {
-        case "pizza":
-            // Line numbers relative to "pizza:" line (0 = pizza: line itself)
-            // 0: "pizza:"
-            // 2: "    en: /pizza-corner/{pizzaType}"
-            // 3: "    es: /pizzalandia/{pizzaType}"
-            // 4: "  component: pages/Pizza"
-            const lines = [0]; // "pizza:" line
-
-            if (currentLocale === "en") {
-                lines.push(2); // "en: /pizza-corner/{pizzaType}"
-            } else if (currentLocale === "es") {
-                lines.push(3); // "es: /pizzalandia/{pizzaType}"
-            }
-
-            lines.push(4); // "component: pages/Pizza"
-
-            return lines;
-        default:
-            return [0]; // Just "pizza:" line
-    }
-}
+export default YamlHighlight;

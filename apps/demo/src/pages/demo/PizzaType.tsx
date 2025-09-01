@@ -1,6 +1,6 @@
 import { Link, useParams, useLocation } from "@tanstack/react-router";
 import { useRouteTo, useCurrentLocale, useRouteName } from "../../routeCache.generated";
-import { YamlHighlight, pizzaYamlContent, getPizzaHighlightedPaths } from "./components/highlightedRoutes";
+import { YamlHighlight } from "./components/YamlHighlight";
 import { RouteInfoPanel } from "./components/RouteInfoPanel";
 import { Browser } from "./components/Browser";
 import { PizzaSite } from "./components/PizzaSite";
