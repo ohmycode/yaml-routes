@@ -314,7 +314,7 @@ export default function Home() {
                         Get Started →
                     </Link>
                     <Link
-                        to={routeTo("pizza_home")}
+                        to={routeTo("pizza_list")}
                         className="border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-10 py-4 rounded-xl font-bold text-lg transition-all hover:shadow-lg"
                     >
                         Live Demo
@@ -531,7 +531,7 @@ export function UserCard({ userId }: { userId: string }) {
             </div>
 
             {/* CTA Section */}
-            <div className="text-center py-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl text-white mb-20">
+            {/* <div className="text-center py-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl text-white mb-20">
                 <h2 className="text-4xl font-bold mb-6">Ready to revolutionize your routing?</h2>
                 <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">Join developers who've already simplified their routing with YAML Routes</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -548,7 +548,7 @@ export function UserCard({ userId }: { userId: string }) {
                         Advanced Examples
                     </Link>
                 </div>
-            </div>
+            </div> */}
 
             {/* Footer */}
             <div className="text-center py-8 border-t border-gray-200 dark:border-gray-700">

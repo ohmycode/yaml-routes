@@ -14,7 +14,6 @@ import {
     validateRoutingConfig,
 } from "./utils";
 
-// 🚀 Ultra-clean template system - zero boilerplate, maximum power
 class CodeBuilder {
     private chunks: string[] = [];
 
@@ -30,7 +29,7 @@ class CodeBuilder {
     }
 }
 
-// 🎯 Smart templates that adapt to configuration
+// generator templates
 const $ = {
     imports: (components: string[], hasI18n: boolean, lazyComponents: boolean = false, routerConfig?: any) => {
         let routerComponentImports = "";
@@ -108,10 +107,13 @@ export function useCurrentLocale(): string {
   return detectedLocale || settings.i18n.defaultLocale;
 }
 
-export function useRouteTo() {
+export function useRouteTo(): RouteToFunction {
   const locale = useCurrentLocale();
-  return (id: string, params = {}) => {
-    const route = routeIdMappings[id.toLowerCase()];
+  return <K extends RouteNames>(
+    id: K,
+    ...params: RouteToParams<ExtractParams<K>>
+  ): string => {
+    const route = routeIdMappings[id.toLowerCase() as string];
     if (!route) return '/';
     
     // Get the localized path template
@@ -119,9 +121,28 @@ export function useRouteTo() {
     
     // Fill in parameters
     let finalPath = localizedTemplate;
-    Object.entries(params).forEach(([k, v]) => finalPath = finalPath.replace(\`{\${k}}\`, String(v)));
+    const paramObj = params[0] || {};
+    Object.entries(paramObj).forEach(([k, v]) => finalPath = finalPath.replace(\`{\${k}}\`, String(v)));
     return finalPath;
   };
+}
+
+export function routeTo<K extends RouteNames>(
+  id: K,
+  ...params: RouteToParams<ExtractParams<K>>
+): string {
+  const route = routeIdMappings[id.toLowerCase() as string];
+  if (!route) return '/';
+  
+  // For static usage without locale context, use default locale
+  const defaultLocale = settings.i18n?.defaultLocale || 'en';
+  const localizedTemplate = getLocalizedPath(route.path, defaultLocale);
+  
+  // Fill in parameters
+  let finalPath = localizedTemplate;
+  const paramObj = params[0] || {};
+  Object.entries(paramObj).forEach(([k, v]) => finalPath = finalPath.replace(\`{\${k}}\`, String(v)));
+  return finalPath;
 }
 
 export function useRouteName(): string {
@@ -191,10 +212,59 @@ export function useRouteParams(includeLocale: boolean = true): Record<string, st
 }`,
 
     routeIdMappings: (mappings: any) =>
-        `export const routeIdMappings: Record<string, { path: string; parameters: string[] }> = ${JSON.stringify(mappings, null, 2)};`,
+        `export const routeIdMappings: Record<string, { path: string; parameters: string[]; requiredParameters?: string[] }> = ${JSON.stringify(
+            mappings,
+            null,
+            2
+        )};`,
+
+    routeTypes: (mappings: any) => {
+        // Generate TypeScript types for route parameters
+        const routeEntries = Object.entries(mappings);
+
+        // Generate the route parameters interface
+        const paramInterfaces = routeEntries
+            .map(([routeId, mapping]: [string, any]) => {
+                const path = mapping.path as string;
+                const params = path.match(/\{([^}]+)\}/g);
+
+                if (!params || params.length === 0) {
+                    return `  '${routeId}': {};`;
+                }
+
+                const paramTypes = params
+                    .map((param) => {
+                        const paramName = param.slice(1, -1); // Remove { and }
+                        return `${paramName}: string`;
+                    })
+                    .join("; ");
+
+                return `  '${routeId}': { ${paramTypes} };`;
+            })
+            .join("\n");
+
+        // Generate route names union type
+        const routeNames = routeEntries.map(([routeId]) => `'${routeId}'`).join(" | ");
+
+        return `// Type-safe route definitions
+export interface RouteParams {
+${paramInterfaces}
+}
+
+export type RouteNames = ${routeNames};
+
+// Type-safe routeTo function types
+type ExtractParams<T extends RouteNames> = RouteParams[T];
+type HasRequiredParams<T> = {} extends T ? false : true;
+type RouteToParams<T> = HasRequiredParams<T> extends true ? [params: T] : [params?: T];
+
+export type RouteToFunction = <K extends RouteNames>(
+  routeId: K,
+  ...params: RouteToParams<ExtractParams<K>>
+) => string;`;
+    },
 
     localeSwitcherHelpers: () => {
-        // Directly embed the locale switcher helper functions for React-only environments
         return `
 // 🔧 Helper functions for locale switching (React hooks only)
 // Required imports: useLocation from '@tanstack/react-router'
@@ -423,11 +493,13 @@ function processRoutes(routes: GeneratedRoute[], config: any) {
     // Generate route ID mapping for the routeTo helper
     routes.forEach((route) => {
         const paramNames = Object.keys(route.parameters);
+        const requiredParams = paramNames.filter((name) => route.parameters[name]?.required);
 
         // Only use the original YAML key - developers should use the same convention
         routeIdMappings[route.id] = {
             path: route.path,
             parameters: paramNames,
+            requiredParameters: requiredParams,
         };
     });
 
@@ -519,6 +591,7 @@ export async function generateTanStackRoutes(config: BuildConfig): Promise<void>
     const code = new CodeBuilder()
         .section($.imports(processed.components, i18nEnabled, lazyComponents, routerConfig))
         .section($.settings(settings))
+        .section($.routeTypes(processed.routeIdMappings))
         .section($.i18nCode(processed.config, processed.pathMappings), i18nEnabled)
         .section($.routeIdMappings(processed.routeIdMappings))
         .section($.localeSwitcherHelpers(), i18nEnabled)

@@ -353,7 +353,7 @@ function App() {
             </div>
 
             {/* Next Steps Section - Enhanced */}
-            <div className="mt-20 py-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl text-white shadow-2xl">
+            {/* <div className="mt-20 py-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl text-white shadow-2xl">
                 <div className="text-center mb-12">
                     <h2 className="text-4xl font-bold mb-4">What's Next?</h2>
                     <p className="text-xl text-blue-100 max-w-2xl mx-auto">Ready to explore advanced features and see everything in action?</p>
@@ -375,7 +375,7 @@ function App() {
                     </Link>
 
                     <Link
-                        to={routeTo("pizza_home")}
+                        to={routeTo("pizza_list")}
                         className="group relative bg-white/10 backdrop-blur-sm hover:bg-white/20 p-8 rounded-2xl transition-all shadow-lg hover:shadow-2xl transform hover:-translate-y-2 border border-white/20"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -388,7 +388,7 @@ function App() {
                         </div>
                     </Link>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

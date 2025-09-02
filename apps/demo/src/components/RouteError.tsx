@@ -1,7 +1,7 @@
 // RouteError.tsx
 import * as React from "react";
 import type { ErrorComponentProps } from "@tanstack/react-router";
-import { codeToHtml, type HtmlRendererOptions, type Transformer } from "shiki";
+import { codeToHtml, type CodeToHastOptions, type Transformer } from "shiki";
 
 function toMessage(error: unknown) {
     if (error instanceof Error) return error.message || "Unexpected error";
@@ -58,7 +58,7 @@ export function RouteError(props: ErrorComponentProps) {
         if (!stack) return;
         if (typeof window === "undefined") return; // SSR safety
         (async () => {
-            const shikiOpts: HtmlRendererOptions = {
+            const shikiOpts: CodeToHastOptions = {
                 // Use a *great-looking* dark theme; also add a light theme for future-proofing
                 themes: { light: "github-light", dark: "one-dark-pro" },
                 lang: "txt", // treat as text; we add accents ourselves
