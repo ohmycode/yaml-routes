@@ -13,45 +13,6 @@ html {
     font-family: system-ui, sans-serif;
 }
 
-/* Smooth transitions for theme changes */
-* {
-    transition-property: background-color, border-color, color;
-    transition-duration: 150ms;
-    transition-timing-function: ease-in-out;
-}
-
-/* Custom scrollbar for dark mode */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background-color: rgb(243 244 246);
-}
-
-.dark ::-webkit-scrollbar-track {
-    background-color: rgb(31 41 55);
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: rgb(209 213 219);
-    border-radius: 0.25rem;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-    background-color: rgb(75 85 99);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(156 163 175);
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(107 114 128);
-}
-
-/* Code block styling */
 pre {
     font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
 }

@@ -137,7 +137,14 @@ export function PizzaReviewList() {
                         {/* Reviews List */}
                         <div className="space-y-6">
                             {reviews.map((review) => (
-                                <div key={review.id} className="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700">
+                                <Link
+                                    key={review.id}
+                                    to={routeTo("pizza_review", {
+                                        pizzaType: pizzaType,
+                                        reviewId: review.id,
+                                    })}
+                                    className="block bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700 hover:border-gray-600 cursor-pointer"
+                                >
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="flex items-center gap-3">
                                             <div className="text-3xl">{review.avatar}</div>
@@ -157,22 +164,16 @@ export function PizzaReviewList() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <Link
-                                            to={routeTo("pizza_review", {
-                                                pizzaType: pizzaType,
-                                                reviewId: review.id,
-                                            })}
-                                            className="text-blue-400 hover:text-blue-300 font-medium"
-                                        >
+                                        <div className="text-blue-400 hover:text-blue-300 font-medium">
                                             {currentLocale === "es" ? "Ver Detalles" : currentLocale === "fr" ? "Voir les Détails" : "View Details"} →
-                                        </Link>
+                                        </div>
                                     </div>
 
                                     <h4 className="text-lg font-semibold text-gray-100 mb-2">{review.title}</h4>
                                     <p className="text-gray-300 mb-4 leading-relaxed">{review.content}</p>
 
                                     <div className="flex items-center justify-between">
-                                        <button className="flex items-center gap-2 text-gray-400 hover:text-gray-200 transition-colors">
+                                        <div className="flex items-center gap-2 text-gray-400">
                                             <span>👍</span>
                                             <span>
                                                 {review.helpful}{" "}
@@ -182,9 +183,9 @@ export function PizzaReviewList() {
                                                     ? "ont trouvé cela utile"
                                                     : "found this helpful"}
                                             </span>
-                                        </button>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
 

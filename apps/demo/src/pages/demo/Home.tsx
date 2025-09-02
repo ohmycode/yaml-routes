@@ -45,9 +45,10 @@ export default function Demo() {
                         <div className="p-6 bg-gray-900 space-y-4">
                             {Object.entries(pizzaData).map(([pizzaId, pizza]: [string, any]) => {
                                 return (
-                                    <div
+                                    <Link
                                         key={pizzaId}
-                                        className="bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] border-l-4 border-red-500"
+                                        to={routeTo("pizza_detail", { pizzaType: pizzaId })}
+                                        className="block bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] border-l-4 border-red-500 cursor-pointer"
                                     >
                                         <div className="p-5">
                                             <div className="flex items-start gap-4 mb-3">
@@ -78,21 +79,27 @@ export default function Demo() {
 
                                             {/* Action Buttons */}
                                             <div className="flex gap-3 mt-4">
-                                                <Link
-                                                    to={routeTo("pizza_detail", { pizzaType: pizzaId })}
-                                                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-200 text-center font-medium text-sm shadow-md hover:shadow-lg"
-                                                >
+                                                <div className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-lg transition-all duration-200 text-center font-medium text-sm shadow-md">
                                                     🍕 {currentLocale === "es" ? "Ver Detalles" : currentLocale === "fr" ? "Voir Détails" : "View Details"}
-                                                </Link>
+                                                </div>
                                                 <Link
                                                     to={routeTo("pizza_review_list", { pizzaType: pizzaId })}
                                                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                    }}
+                                                    onMouseUp={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        window.open(routeTo("pizza_review_list", { pizzaType: pizzaId }), "_self");
+                                                    }}
                                                 >
                                                     💬 {reviews.length} {currentLocale === "es" ? "Reseñas" : currentLocale === "fr" ? "Avis" : "Reviews"}
                                                 </Link>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 );
                             })}
 
