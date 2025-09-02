@@ -34,7 +34,7 @@ export default function Demo() {
                         breadcrumbs={[
                             {
                                 label: currentLocale === "es" ? "Inicio" : currentLocale === "fr" ? "Accueil" : "Home",
-                                to: routeTo("demo"),
+                                to: routeTo("pizza_home"),
                             },
                             {
                                 label: currentLocale === "es" ? "Menú de Pizzas" : currentLocale === "fr" ? "Menu Pizza" : "Pizza Menu",

@@ -375,7 +375,7 @@ function App() {
                     </Link>
 
                     <Link
-                        to={routeTo("demo")}
+                        to={routeTo("pizza_home")}
                         className="group relative bg-white/10 backdrop-blur-sm hover:bg-white/20 p-8 rounded-2xl transition-all shadow-lg hover:shadow-2xl transform hover:-translate-y-2 border border-white/20"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
