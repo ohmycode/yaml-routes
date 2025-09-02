@@ -7,7 +7,7 @@ import { PizzaSite } from "./components/PizzaSite";
 import { Layout } from "./components/Layout";
 import { getPizzaData } from "./PizzaType";
 
-// Mock reviews data
+// Mock reviews data with detailed information
 export const reviews = [
     {
         id: "1",
@@ -15,10 +15,17 @@ export const reviews = [
         rating: 5,
         title: "Perfetto! 🤌",
         content: "This is exactly how my nonna used to make it! The crust is crispy, the sauce is perfect, and the cheese... mama mia!",
+        fullContent: `This is exactly how my nonna used to make it! The crust is crispy, the sauce is perfect, and the cheese... mama mia!
+            
+I've been making pizzas for 30 years, and I can tell when someone really knows what they're doing. This place gets it right. The dough has that perfect chew, the sauce isn't too sweet (a common mistake!), and they don't go overboard with toppings.
+
+The wood-fired oven really makes a difference - you can taste that smoky flavor that you just can't get from a regular oven. Bravo!`,
         date: "2024-08-28",
         avatar: "👨‍🍳",
         verified: true,
         helpful: 23,
+        photos: ["🍕", "🔥", "👨‍🍳"],
+        location: "Rome, Italy",
     },
     {
         id: "2",
@@ -26,10 +33,17 @@ export const reviews = [
         rating: 4,
         title: "Almost perfect",
         content: "Really great pizza! The only thing missing was a bit more basil, but overall fantastic. Will definitely order again!",
+        fullContent: `Really great pizza! The only thing missing was a bit more basil, but overall fantastic. Will definitely order again!
+            
+The delivery was surprisingly fast, and the pizza arrived hot. The box design is cute too! My only complaint is that I'm a huge basil fan and would have loved more, but that's probably just personal preference.
+
+The cheese quality is excellent - you can tell they use good ingredients. Price is fair for the quality you get.`,
         date: "2024-08-25",
         avatar: "👩‍💼",
         verified: true,
         helpful: 18,
+        photos: ["📦", "🧀"],
+        location: "San Francisco, CA",
     },
     {
         id: "3",
@@ -37,10 +51,17 @@ export const reviews = [
         rating: 5,
         title: "Best pizza in town! 🍕",
         content: "I've tried every pizza place in the city, and this is hands down the best. The delivery was super fast too!",
+        fullContent: `I've tried every pizza place in the city, and this is hands down the best. The delivery was super fast too!
+            
+As someone who orders pizza way too often (don't judge me!), I consider myself a bit of a connoisseur. This place exceeded all my expectations. The crust has the perfect balance of crispy and chewy, and they're generous with the toppings without making it soggy.
+
+Pro tip: Order extra sauce on the side - it's amazing for dipping the crust!`,
         date: "2024-08-22",
         avatar: "🧔",
         verified: false,
         helpful: 31,
+        photos: ["🍕", "🥤"],
+        location: "New York, NY",
     },
     {
         id: "4",
@@ -48,10 +69,15 @@ export const reviews = [
         rating: 4,
         title: "Muy deliciosa!",
         content: "Amazing flavor combinations! The wood-fired taste really comes through. My kids loved it too!",
+        fullContent: `Amazing flavor combinations! The wood-fired taste really comes through. My kids loved it too!
+        
+We ordered this for family pizza night and everyone was impressed. The kids especially loved the crispy edges, and my husband appreciated the authentic Italian flavors. Will definitely be our new go-to pizza place!`,
         date: "2024-08-20",
         avatar: "👩‍👧‍👦",
         verified: true,
         helpful: 15,
+        photos: ["👨‍👩‍👧‍👦", "🍕"],
+        location: "Los Angeles, CA",
     },
     {
         id: "5",
@@ -59,10 +85,43 @@ export const reviews = [
         rating: 3,
         title: "Good but pricey",
         content: "The pizza was good quality, but I think it's a bit overpriced for what you get. Taste was solid though.",
+        fullContent: `The pizza was good quality, but I think it's a bit overpriced for what you get. Taste was solid though.
+        
+Don't get me wrong - the pizza is tasty and you can tell they use quality ingredients. I just expected a bit more for the price point. The crust was good, toppings were fresh, but portion size could be larger. Still worth trying if you're in the area.`,
         date: "2024-08-18",
         avatar: "👨‍💻",
         verified: true,
         helpful: 8,
+        photos: ["💰", "🍕"],
+        location: "Seattle, WA",
+    },
+];
+
+// Mock comments data
+export const comments = [
+    {
+        id: "1",
+        author: "Mario Rossi",
+        avatar: "👨‍🍳",
+        content: "Grazie mille for the amazing review! We're so happy you enjoyed your pizza! 🍕❤️",
+        date: "2024-08-29",
+        isOwner: true,
+    },
+    {
+        id: "2",
+        author: "Pizza Lover 2000",
+        avatar: "🍕",
+        content: "Totally agree! This place is amazing. Did you try their garlic knots?",
+        date: "2024-08-29",
+        isOwner: false,
+    },
+    {
+        id: "3",
+        author: "Local Foodie",
+        avatar: "👩‍🍳",
+        content: "I need to try this place! Your review convinced me 😍",
+        date: "2024-08-30",
+        isOwner: false,
     },
 ];
 

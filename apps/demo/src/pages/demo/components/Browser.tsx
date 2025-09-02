@@ -33,7 +33,7 @@ export function Browser({ domain = "pizzalandia.com", path = "", title = "Demo S
                     <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
                     <span className="w-3 h-3 bg-green-500 rounded-full"></span>
                 </div>
-                <div className="flex-1 bg-gray-600 rounded px-3 py-1 text-sm text-gray-300 flex items-center gap-2">
+                <div className="flex-1 bg-gray-600 rounded px-3 py-1 text-sm text-gray-300 flex items-center gap-2 text-nowrap overflow-auto">
                     <span className="text-gray-400">🔒</span>
                     <span className="font-mono text-xs">
                         {domain}
