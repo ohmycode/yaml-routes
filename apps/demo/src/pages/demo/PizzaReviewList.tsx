@@ -1,5 +1,11 @@
-import { Link, useParams } from "@tanstack/react-router";
-import { useRouteTo, useCurrentLocale } from "../../routeCache.generated";
+import { Link, useParams, useLocation } from "@tanstack/react-router";
+import { useRouteTo, useCurrentLocale, useRouteName } from "../../routeCache.generated";
+import { YamlHighlight } from "./components/YamlHighlight";
+import { RouteInfoPanel } from "./components/RouteInfoPanel";
+import { Browser } from "./components/Browser";
+import { PizzaSite } from "./components/PizzaSite";
+import { Layout } from "./components/Layout";
+import { getPizzaData } from "./PizzaType";
 
 // Mock reviews data
 export const reviews = [
@@ -65,151 +71,135 @@ export function PizzaReviewList() {
     const pizzaType = typeof params.pizzaType === "string" ? params.pizzaType : String(params.pizzaType || "");
     const routeTo = useRouteTo();
     const currentLocale = useCurrentLocale();
+    const location = useLocation();
+    const currentRouteName = useRouteName();
 
-    // Helper function to safely capitalize pizza type
-    const formatPizzaType = (type: string | undefined) => {
-        if (!type) return "Pizza";
-        const str = String(type);
-        return str.charAt(0).toUpperCase() + str.slice(1);
+    // Get pizza data
+    const pizzaData = getPizzaData(currentLocale);
+    const pizza = pizzaData[pizzaType] || {
+        name: pizzaType ? `${String(pizzaType).charAt(0).toUpperCase()}${String(pizzaType).slice(1)} Pizza` : "Mystery Pizza",
+        emoji: "❓",
     };
 
     const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8">
-            <div className="max-w-4xl mx-auto">
-                {/* Header */}
-                <div className="mb-8">
-                    <Link to={routeTo("pizza", { pizzaType: pizzaType })} className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4">
-                        ←{" "}
-                        {currentLocale === "es"
-                            ? `Volver a Pizza de ${formatPizzaType(pizzaType)}`
-                            : currentLocale === "fr"
-                            ? `Retour à Pizza ${formatPizzaType(pizzaType)}`
-                            : `Back to ${formatPizzaType(pizzaType)} Pizza`}
-                    </Link>
+        <Layout>
+            {/* Left Side - YAML Configuration */}
+            <YamlHighlight referenceLine={currentRouteName + ":"} highLightedLineNumbers={[0, 1, 2]} />
 
-                    <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                        📝{" "}
-                        {currentLocale === "es"
-                            ? `Reseñas para Pizza de ${formatPizzaType(pizzaType)}`
-                            : currentLocale === "fr"
-                            ? `Avis pour Pizza ${formatPizzaType(pizzaType)}`
-                            : `Reviews for ${formatPizzaType(pizzaType)} Pizza`}
-                    </h1>
+            {/* Right Side - Browser Mockup */}
+            <div className="space-y-4">
+                <Browser>
+                    <PizzaSite
+                        breadcrumbs={[
+                            {
+                                label: currentLocale === "es" ? "Inicio" : currentLocale === "fr" ? "Accueil" : "Home",
+                                to: routeTo("pizza_list"),
+                            },
+                            {
+                                label: currentLocale === "es" ? "Menú de Pizzas" : currentLocale === "fr" ? "Menu Pizza" : "Pizza Menu",
+                            },
+                            {
+                                label: pizza.name,
+                                to: routeTo("pizza_detail", { pizzaType: pizzaType }),
+                            },
+                            {
+                                label: currentLocale === "es" ? "Reseñas" : currentLocale === "fr" ? "Avis" : "Reviews",
+                            },
+                        ]}
+                    >
+                        {/* Header */}
+                        <div className="mb-8">
+                            <h1 className="text-3xl font-bold text-gray-100 mb-4">
+                                📝{" "}
+                                {currentLocale === "es"
+                                    ? `Reseñas para ${pizza.name}`
+                                    : currentLocale === "fr"
+                                    ? `Avis pour ${pizza.name}`
+                                    : `Reviews for ${pizza.name}`}
+                            </h1>
 
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="flex items-center gap-2">
-                            <span className="text-2xl">⭐</span>
-                            <span className="text-2xl font-bold">{averageRating.toFixed(1)}</span>
-                            <span className="text-gray-600">
-                                ({reviews.length} {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
-                            </span>
-                        </div>
-                        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            ✍️ {currentLocale === "es" ? "Escribir una Reseña" : currentLocale === "fr" ? "Écrire un Avis" : "Write a Review"}
-                        </button>
-                    </div>
-                </div>
-
-                {/* Reviews List */}
-                <div className="space-y-6">
-                    {reviews.map((review) => (
-                        <div key={review.id} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-                            <div className="flex items-start justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="text-3xl">{review.avatar}</div>
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <h3 className="font-bold text-gray-800">{review.author}</h3>
-                                            {review.verified && (
-                                                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                                                    ✓ {currentLocale === "es" ? "Verificado" : currentLocale === "fr" ? "Vérifié" : "Verified"}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <div className="flex">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <span key={i} className={`text-lg ${i < review.rating ? "text-yellow-500" : "text-gray-300"}`}>
-                                                        ★
-                                                    </span>
-                                                ))}
-                                            </div>
-                                            <span className="text-gray-500 text-sm">{review.date}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <Link
-                                    to={routeTo("pizza_review", {
-                                        pizzaType: pizzaType,
-                                        reviewId: review.id,
-                                    })}
-                                    className="text-blue-600 hover:text-blue-800 font-medium"
-                                >
-                                    {currentLocale === "es" ? "Ver Detalles" : currentLocale === "fr" ? "Voir les Détails" : "View Details"} →
-                                </Link>
-                            </div>
-
-                            <h4 className="text-lg font-semibold text-gray-800 mb-2">{review.title}</h4>
-                            <p className="text-gray-700 mb-4 leading-relaxed">{review.content}</p>
-
-                            <div className="flex items-center justify-between">
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
-                                    <span>👍</span>
-                                    <span>
-                                        {review.helpful}{" "}
-                                        {currentLocale === "es"
-                                            ? "encontraron esto útil"
-                                            : currentLocale === "fr"
-                                            ? "ont trouvé cela utile"
-                                            : "found this helpful"}
+                            <div className="flex items-center justify-between gap-4 mb-6">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-2xl">⭐</span>
+                                    <span className="text-2xl font-bold text-gray-100">{averageRating.toFixed(1)}</span>
+                                    <span className="text-gray-300">
+                                        ({reviews.length} {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
                                     </span>
-                                </button>
-                                <div className="flex gap-2">
-                                    <button className="text-gray-500 hover:text-gray-700">
-                                        💬 {currentLocale === "es" ? "Responder" : currentLocale === "fr" ? "Répondre" : "Reply"}
-                                    </button>
-                                    <button className="text-gray-500 hover:text-gray-700">
-                                        🚩 {currentLocale === "es" ? "Reportar" : currentLocale === "fr" ? "Signaler" : "Report"}
-                                    </button>
                                 </div>
+                                <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                    ✍️ {currentLocale === "es" ? "Escribir una Reseña" : currentLocale === "fr" ? "Écrire un Avis" : "Write a Review"}
+                                </button>
                             </div>
                         </div>
-                    ))}
-                </div>
 
-                {/* Load More */}
-                <div className="text-center mt-8">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        📜 {currentLocale === "es" ? "Cargar Más Reseñas" : currentLocale === "fr" ? "Charger Plus d'Avis" : "Load More Reviews"}
-                    </button>
-                </div>
-
-                {/* Quick Stats */}
-                <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 mt-8">
-                    <h4 className="font-bold text-gray-800 mb-4">
-                        📊 {currentLocale === "es" ? "Resumen de Reseñas" : currentLocale === "fr" ? "Résumé des Avis" : "Review Summary"}
-                    </h4>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                        {[5, 4, 3, 2, 1].map((stars) => {
-                            const count = reviews.filter((r) => r.rating === stars).length;
-                            const percentage = (count / reviews.length) * 100;
-                            return (
-                                <div key={stars} className="bg-white/60 rounded-lg p-3">
-                                    <div className="flex items-center justify-center gap-1 mb-1">
-                                        <span>{stars}</span>
-                                        <span className="text-yellow-500">★</span>
+                        {/* Reviews List */}
+                        <div className="space-y-6">
+                            {reviews.map((review) => (
+                                <div key={review.id} className="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-3xl">{review.avatar}</div>
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <h3 className="font-bold text-gray-100">{review.author}</h3>
+                                                </div>
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <div className="flex">
+                                                        {[...Array(5)].map((_, i) => (
+                                                            <span key={i} className={`text-lg ${i < review.rating ? "text-yellow-400" : "text-gray-600"}`}>
+                                                                ★
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                    <span className="text-gray-400 text-sm">{review.date}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <Link
+                                            to={routeTo("pizza_review", {
+                                                pizzaType: pizzaType,
+                                                reviewId: review.id,
+                                            })}
+                                            className="text-blue-400 hover:text-blue-300 font-medium"
+                                        >
+                                            {currentLocale === "es" ? "Ver Detalles" : currentLocale === "fr" ? "Voir les Détails" : "View Details"} →
+                                        </Link>
                                     </div>
-                                    <div className="text-2xl font-bold text-gray-800">{count}</div>
-                                    <div className="text-xs text-gray-600">{percentage.toFixed(0)}%</div>
+
+                                    <h4 className="text-lg font-semibold text-gray-100 mb-2">{review.title}</h4>
+                                    <p className="text-gray-300 mb-4 leading-relaxed">{review.content}</p>
+
+                                    <div className="flex items-center justify-between">
+                                        <button className="flex items-center gap-2 text-gray-400 hover:text-gray-200 transition-colors">
+                                            <span>👍</span>
+                                            <span>
+                                                {review.helpful}{" "}
+                                                {currentLocale === "es"
+                                                    ? "encontraron esto útil"
+                                                    : currentLocale === "fr"
+                                                    ? "ont trouvé cela utile"
+                                                    : "found this helpful"}
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
-                            );
-                        })}
-                    </div>
-                </div>
+                            ))}
+                        </div>
+
+                        {/* Load More */}
+                        <div className="text-center mt-8">
+                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                                📜 {currentLocale === "es" ? "Cargar Más Reseñas" : currentLocale === "fr" ? "Charger Plus d'Avis" : "Load More Reviews"}
+                            </button>
+                        </div>
+                    </PizzaSite>
+                </Browser>
+
+                <RouteInfoPanel />
             </div>
-        </div>
+        </Layout>
     );
 }
 

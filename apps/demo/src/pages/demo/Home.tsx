@@ -7,6 +7,7 @@ import { PizzaSite } from "./components/PizzaSite";
 import { Pizza } from "./components/Pizza";
 import { getPizzaData } from "./PizzaType";
 import { Layout } from "./components/Layout";
+import { reviews } from "./PizzaReviewList";
 
 export default function Demo() {
     const routeTo = useRouteTo();
@@ -61,7 +62,7 @@ export default function Demo() {
                                                     <div className="flex items-center justify-between">
                                                         <div className="flex items-center gap-4 text-sm">
                                                             <span className="flex items-center gap-1 text-gray-300">
-                                                                ⭐ <strong className="text-white">{pizza.rating}</strong> ({pizza.reviews}{" "}
+                                                                ⭐ <strong className="text-white">{pizza.rating}</strong> ({reviews.length}{" "}
                                                                 {currentLocale === "es" ? "reseñas" : currentLocale === "fr" ? "avis" : "reviews"})
                                                             </span>
                                                         </div>
@@ -85,9 +86,9 @@ export default function Demo() {
                                                 </Link>
                                                 <Link
                                                     to={routeTo("pizza_review_list", { pizzaType: pizzaId })}
-                                                    className="bg-orange-900 text-orange-200 px-4 py-2 rounded-lg hover:bg-orange-800 transition-colors text-sm font-medium shadow-sm hover:shadow-md"
+                                                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
                                                 >
-                                                    💬 {pizza.reviews} {currentLocale === "es" ? "Reseñas" : currentLocale === "fr" ? "Avis" : "Reviews"}
+                                                    💬 {reviews.length} {currentLocale === "es" ? "Reseñas" : currentLocale === "fr" ? "Avis" : "Reviews"}
                                                 </Link>
                                             </div>
                                         </div>

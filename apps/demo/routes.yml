@@ -50,7 +50,7 @@ pizza_detail:
 pizza_review_list:
     path:
         en: /demo/our-pizzas/{pizzaType}/reviews
-        es: /demo/nuestras-pizzas/{pizzaType}/recomendaciones
+        es: /demo/nuestras-pizzas/{pizzaType}/resenas
     component: pages/demo/PizzaReviewList
     parameters:
         pizzaType:
@@ -60,7 +60,7 @@ pizza_review_list:
 pizza_review:
     path:
         en: /demo/our-pizzas/{pizzaType}/reviews/{reviewId}
-        es: /demo/nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}
+        es: /demo/nuestras-pizzas/{pizzaType}/resenas/{reviewId}
     component:
         en: pages/demo/PizzaReview
         es: pages/demo/Recomendacion
@@ -75,7 +75,7 @@ pizza_review:
 pizza_review_comments:
     path:
         en: /demo/our-pizzas/{pizzaType}/reviews/{reviewId}/comment/{commentId}
-        es: /demo/nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}/commentario/{commentId}
+        es: /demo/nuestras-pizzas/{pizzaType}/resenas/{reviewId}/commentario/{commentId}
     component: pages/demo/PizzaReviewComment
     parameters:
         pizzaType:
