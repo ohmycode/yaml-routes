@@ -550,6 +550,31 @@ export function UserCard({ userId }: { userId: string }) {
                 </div>
             </div> */}
 
+            {/* Credits Section */}
+            <div className="text-center py-12 mb-8">
+                <div className="max-w-2xl mx-auto bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-800/50 dark:to-blue-900/20 p-8 rounded-2xl border border-gray-200/50 dark:border-gray-700/30 backdrop-blur-sm shadow-lg">
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                        <span className="text-2xl">🙏</span>
+                        <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
+                            Credits
+                        </h3>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                        YAML Routes wouldn't exist without the amazing foundation provided by{" "}
+                        <a
+                            href="https://tanstack.com/router"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors underline decoration-blue-300 dark:decoration-blue-600 underline-offset-2 hover:decoration-blue-500 dark:hover:decoration-blue-400"
+                        >
+                            @tanstack/router
+                        </a>
+                        . Their incredible work on type-safe routing made this project possible.
+                    </p>
+                    <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">Thank you for building the future of React routing! 🚀</div>
+                </div>
+            </div>
+
             {/* Footer */}
             <div className="text-center py-8 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-gray-600 dark:text-gray-400 mb-2">
