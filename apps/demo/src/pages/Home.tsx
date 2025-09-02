@@ -314,7 +314,7 @@ export default function Home() {
                         Get Started →
                     </Link>
                     <Link
-                        to={routeTo("pizza_homea")}
+                        to={routeTo("pizza_home")}
                         className="border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-10 py-4 rounded-xl font-bold text-lg transition-all hover:shadow-lg"
                     >
                         Live Demo
