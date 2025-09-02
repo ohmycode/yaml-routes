@@ -81,9 +81,9 @@ jspm_packages/
 .vscode-test
 
 # Generated files
-src/routeCache.generated.tsx
+src/routes.gen.tsx
 src/paraglide/
-apps/demo/src/routeCache.generated.tsx
+apps/demo/src/routes.gen.tsx
 apps/demo/src/paraglide/
 
 # Turbo

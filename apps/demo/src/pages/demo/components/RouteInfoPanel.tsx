@@ -1,5 +1,5 @@
 import { useLocation } from "@tanstack/react-router";
-import { useCurrentLocale, useRouteName, useRouteParams } from "../../../routeCache.generated";
+import { useCurrentLocale, useRouteName, useRouteParams } from "../../../routes.gen";
 
 export function RouteInfoPanel() {
     const currentLocale = useCurrentLocale();

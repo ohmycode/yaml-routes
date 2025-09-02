@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useCurrentLocale } from "../../../routeCache.generated";
+import { useCurrentLocale } from "../../../routes.gen";
 
 interface BrowserProps {
     domain?: string;

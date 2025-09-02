@@ -99,7 +99,7 @@ No manual intervention needed! 🚀
 my-app/
 ├── routes.yml                    # Your route configuration
 ├── src/
-│   ├── routeCache.generated.tsx   # Auto-generated (don't edit!)
+│   ├── routes.gen.tsx   # Auto-generated (don't edit!)
 │   ├── App.tsx
 │   └── pages/
 │       ├── Home.tsx

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { settings, useCurrentLocale, useLocalePath } from "../routeCache.generated";
+import { settings, useCurrentLocale, useLocalePath } from "../routes.gen";
 
 export function LocaleSwitcher() {
     // Get supported locales from generated config (completely dynamic)

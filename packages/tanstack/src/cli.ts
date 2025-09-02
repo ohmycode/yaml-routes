@@ -56,7 +56,7 @@ Usage:
 
 Options:
   -c, --config <path>    Path to routing YAML file (default: routes.yml)
-  -o, --output <path>    Output file path (default: src/routeCache.generated.tsx)
+  -o, --output <path>    Output file path (default: src/routes.gen.tsx)
   -w, --watch            Watch for changes and regenerate automatically
   -h, --help             Show this help message
   -v, --version          Show version number
@@ -157,7 +157,7 @@ async function main() {
 
     const config: BuildConfig = {
         configPath: resolve(options.config || "routes.yml"),
-        outputPath: resolve(options.output || "src/routeCache.generated.tsx"),
+        outputPath: resolve(options.output || "src/routes.gen.tsx"),
         framework: "tanstack-router",
     };
 

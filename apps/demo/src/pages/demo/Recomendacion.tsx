@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
-import { useCurrentLocale } from "../../routeCache.generated";
+import { useCurrentLocale } from "../../routes.gen";
 
 export function Recomendacion() {
     const params = useParams({ strict: false });

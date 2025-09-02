@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useRouteTo } from "../routeCache.generated";
+import { useRouteTo } from "../routes.gen";
 import { useEffect, useState } from "react";
 import { codeToHtml } from "shiki";
 
@@ -297,7 +297,7 @@ yarn yaml-routes
                         <div className="mt-6 p-6 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border border-green-200 dark:border-green-700">
                             <p className="text-green-700 dark:text-green-300 text-lg">
                                 <strong className="text-green-800 dark:text-green-400">✨ Generated code:</strong> Creates{" "}
-                                <code className="bg-green-200/70 dark:bg-green-800 px-2 py-1 rounded font-mono text-sm">src/routeCache.generated.tsx</code> with
+                                <code className="bg-green-200/70 dark:bg-green-800 px-2 py-1 rounded font-mono text-sm">src/routes.gen.tsx</code> with
                                 TypeScript types, route helpers, and internationalization support.
                             </p>
                         </div>
@@ -323,7 +323,7 @@ yarn yaml-routes
 
                         <ShikiCodeBlock language="typescript" title="App.tsx">
                             {`import { Link } from "@tanstack/react-router";
-import { useRouteTo } from "./routeCache.generated"; // ← Your generated file
+import { useRouteTo } from "./routes.gen"; // ← Your generated file
 
 function App() {
     const routeTo = useRouteTo();

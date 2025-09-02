@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useRouteTo } from "../routeCache.generated";
+import { useRouteTo } from "../routes.gen";
 import { useState, useEffect } from "react";
 import { codeToHtml } from "shiki";
 
@@ -357,7 +357,7 @@ about:
                         icon="🔒"
                         title="Type Safety"
                         description="Generated TypeScript types catch errors before they reach production. Full autocomplete and IntelliSense support."
-                        codeExample={`import { routeTo } from "./routeCache.generated";
+                        codeExample={`import { routeTo } from "./routes.gen";
 
 // ✅ Type-safe navigation with autocomplete
 const profileUrl = routeTo("user_profile", { 
@@ -469,13 +469,13 @@ about:
 🔧 Loading routing configuration...
 🚀 Generating TanStack Router code-based routes cache...
 🌐 i18n enabled, default locale: en, supported: [en, es]
-✅ Generated code-based route cache: src/routeCache.generated.tsx
+✅ Generated code-based route cache: src/routes.gen.tsx
 📊 Generated 4 base routes with 6 localized variants
 🎉 Route generation completed!`}
                             </ShikiCodeBlock>
 
                             <ShikiCodeBlock language="typescript" title="App.tsx">
-                                {`import { routeTo } from "./routeCache.generated";
+                                {`import { routeTo } from "./routes.gen";
 
 export function UserCard({ userId }: { userId: string }) {
     // ✅ Type-safe routing with autocomplete

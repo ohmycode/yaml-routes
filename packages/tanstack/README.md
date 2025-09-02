@@ -132,7 +132,7 @@ npx yaml-routes --help
 -   📖 Reads your `routes.yml` file
 -   🔨 Generates type-safe TypeScript routes
 -   🌐 Handles i18n automatically
--   ✅ Creates `src/routeCache.generated.tsx`
+-   ✅ Creates `src/routes.gen.tsx`
 
 #### 🔥 Development with Watch Mode
 
@@ -162,7 +162,7 @@ import { generateTanStackRoutes } from "@yaml-routes/tanstack";
 
 await generateTanStackRoutes({
     configPath: "routes.yml",
-    outputPath: "src/routeCache.generated.tsx",
+    outputPath: "src/routes.gen.tsx",
 });
 ```
 
@@ -170,7 +170,7 @@ await generateTanStackRoutes({
 
 ```tsx
 import { RouterProvider } from "@tanstack/react-router";
-import { router, routeTo } from "./routeCache.generated";
+import { router, routeTo } from "./routes.gen";
 
 function App() {
     return <RouterProvider router={router} />;
@@ -259,7 +259,7 @@ yaml-routes [options]
 
 Options:
   -c, --config <path>    Path to routing YAML file (default: routes.yml)
-  -o, --output <path>    Output file path (default: src/routeCache.generated.tsx)
+  -o, --output <path>    Output file path (default: src/routes.gen.tsx)
   -h, --help             Show help message
   -v, --version          Show version number
 ```
@@ -294,7 +294,7 @@ getLocalizedPath("/about", "fr"); // → '/fr/a-propos'
 Access global configuration:
 
 ```typescript
-import { settings } from "./routeCache.generated";
+import { settings } from "./routes.gen";
 
 console.log(settings.i18n?.defaultLocale); // → 'en'
 ```

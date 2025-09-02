@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { RouterProvider, Outlet, Link } from "@tanstack/react-router";
-import { router, useRouteTo } from "./routeCache.generated";
+import { router, useRouteTo } from "./routes.gen";
 import { LocaleSwitcher } from "./components/LocaleSwitcher";
 import { ThemeToggle } from "./components/ThemeToggle";
 

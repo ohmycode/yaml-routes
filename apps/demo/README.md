@@ -25,7 +25,7 @@ This demo serves as both:
 ```
 src/
 ├── App.tsx                 # Main app with navigation
-├── routeCache.generated.tsx # Generated routes (auto-created)
+├── routes.gen.tsx # Generated routes (auto-created)
 ├── routes.yml             # Route configuration
 ├── hooks/
 │   └── useTheme.ts         # Dark/light mode hook

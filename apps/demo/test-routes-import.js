@@ -1,1 +1,2 @@
-import { routes } from "./src/routeCache.generated"; console.log("Routes count:", routes.length);
+import { routes } from "./src/routes.gen";
+console.log("Routes count:", routes.length);

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { useCurrentLocale, useLocalePath } from "../../../routeCache.generated";
+import { useCurrentLocale, useLocalePath } from "../../../routes.gen";
 
 interface BreadcrumbItem {
     label: string;

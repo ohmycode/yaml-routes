@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from "@tanstack/react-router";
-import { useRouteTo, useCurrentLocale, useRouteName, extractRouteParameters, useRouteParams } from "../../routeCache.generated";
+import { useRouteTo, useCurrentLocale, useRouteName, extractRouteParameters, useRouteParams } from "../../routes.gen";
 import { Browser } from "./components/Browser";
 import { RouteInfoPanel } from "./components/RouteInfoPanel";
 import { YamlHighlight } from "./components/YamlHighlight";
