@@ -4,9 +4,15 @@ Type-safe routing configuration for TanStack Router using clean YAML syntax with
 
 **[View interactive Live Demo →](https://ohmycode.github.io/yaml-routes)**
 
+## Why ?
+
+Modern React routing has moved towards file-based systems (TanStack Router, React Router v7/Remix, Next.js, etc.), but this approach creates significant challenges for internationalized applications and maintainable URL management.
+
+**[Why choose YAML Routes over file-based routing? →](#why-yaml-routes)**
+
 ## What is YAML Routes?
 
-A build-time tool that generates type-safe TanStack Router code from a simple YAML configuration. Perfect for internationalized (i18n) applications where file-based routing falls short.
+A tiny build-time tool that generates type-safe TanStack Router code from a simple YAML configuration. Perfect for internationalized (i18n) applications where file-based routing falls short.
 
 ```yaml
 # routes.yml - Single source of truth for all routes
@@ -46,25 +52,26 @@ npx yaml-routes --watch  # Generate routes + watch for changes
 <Link to={routeTo("about")}>About</Link>
 ```
 
-## Key Features
+## Features
 
+-   **Internationalization** - Built-in i18n with locale-specific urls and components
+-   **React hooks** - Everything you need to integrate the routing inside your react components
+-   **Watch Mode** - Auto-regeneration during development for instant route updates
 -   **Type-Safe Routes** - Full TypeScript support with generated types and IDE autocomplete
--   **Internationalization** - Built-in i18n with locale-specific paths and automatic locale preservation
--   **Watch Mode** - Auto-regeneration during development for instant feedback
 -   **TanStack Router** - Deep integration with TanStack Router v1.130.0+
--   **Zero Config** - Works out of the box with sensible defaults
--   **Parameter Validation** - Type-safe route parameters with validation
-
-**[Why choose YAML Routes over file-based routing? →](#why-yaml-routes)**
+-   **Zero Config** - Works out of the box, no package installation required
 
 ## Quick Start
 
-Create a routes.yml file in your project root
+Create a routes.yml file in your project root (you can copy the example above to get started), then simply run
 
 ```bash
-# Generate routes with watch mode for development
 npx yaml-routes --watch
+```
 
+in your terminal, no installation needed.
+
+```typescript
 # Use in your app
 import { RouterProvider } from '@tanstack/react-router'
 import { router, routeTo } from './src/routes.gen'
@@ -75,7 +82,10 @@ function App() {
 
 // Type-safe navigation
 <a href={routeTo('user_profile', { id: '123' })}>Profile</a>
+
 ```
+
+You can also install the npm package @yaml-routes/tanstack for deeper integration, visit the [Documentation](https://ohmycode.github.io/yaml-routes/)
 
 ## Generated Helper Functions
 
@@ -193,45 +203,13 @@ function UserProfile() {
 
 All functions are fully typed based on your YAML configuration, providing IDE autocomplete and compile-time error checking.
 
----
-
-## Project Structure
-
-This is a monorepo containing:
-
-### Packages
-
--   **[@yaml-routes/tanstack](./packages/tanstack)** - Core package for TanStack Router integration
-
-### Applications
-
--   **[Demo App](./apps/demo)** - Interactive showcase with real-world examples
-
-## Development
-
-```bash
-# Install dependencies
-pnpm install
-
-# Start development (demo app + package watching)
-pnpm dev
-
-# Build all packages
-pnpm build
-
-# Run tests
-pnpm test
-```
-
-## Why YAML Routes?
-
-Modern React routing has moved towards file-based systems (TanStack Router, React Router v7/Remix, Next.js), but this approach creates significant challenges for internationalized applications and maintainable URL management.
+## Why YAML Routes
 
 ### The File-Based Routing Problem
 
 File-based routing works well for simple apps, but breaks down with i18n:
 
-```
+```bash
 pages/
 ├── about.tsx           → /about
 ├── contact.tsx         → /contact
@@ -331,7 +309,37 @@ The generated output is clean, production-ready TanStack Router code with helper
 -   [Routing Format Reference](./ROUTING_FORMAT.md) - Complete YAML syntax guide
 -   [Quick Start Guide](./ROUTING_GUIDE.md) - Step-by-step setup instructions
 
-## Contributing
+---
+
+## Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development (demo app + package watching)
+pnpm dev
+
+# Build all packages
+pnpm build
+
+# Run tests
+pnpm test
+```
+
+## Project Structure
+
+This is a monorepo containing:
+
+### A package
+
+-   **[@yaml-routes/tanstack](./packages/tanstack)** - Core package for TanStack Router integration
+
+### An Application (tanstack-start)
+
+-   **[Demo App](./apps/demo)** - Github Page, Documentation & interactive demo
+
+### Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/new-feature`)
