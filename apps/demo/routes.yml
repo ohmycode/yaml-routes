@@ -63,7 +63,7 @@ pizza_review:
         es: /demo/nuestras-pizzas/{pizzaType}/resenas/{reviewId}
     component:
         en: pages/demo/PizzaReview
-        es: pages/demo/Recomendacion
+        es: pages/demo/JamonSerranoSpecial
     parameters:
         pizzaType:
             type: string

@@ -168,7 +168,7 @@ pizza_review:
         es: /nuestras-pizzas/{pizzaType}/recomendaciones/{reviewId}
     component:
         en: pages/PizzaReview
-        es: pages/Recomendacion
+        es: pages/JamonSerranoSpecial
 
 pizza_review_comments:
     path:

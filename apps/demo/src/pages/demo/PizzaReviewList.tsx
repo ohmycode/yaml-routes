@@ -145,7 +145,7 @@ export function PizzaReviewList() {
     return (
         <Layout>
             {/* Left Side - YAML Configuration */}
-            <YamlHighlight referenceLine={currentRouteName + ":"} highLightedLineNumbers={[0, 1, 2]} />
+            <YamlHighlight referenceLine={currentRouteName + ":"} highLightedLineNumbers={currentLocale === "es" ? [0, 3, 4] : [0, 2, 4]} />
 
             {/* Right Side - Browser Mockup */}
             <div className="space-y-4">

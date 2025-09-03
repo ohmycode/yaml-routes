@@ -17,15 +17,10 @@ export default function Demo() {
     const params = useRouteParams();
     const pizzaData = getPizzaData(currentLocale);
 
-    const routeInfo = {
-        type: "pizza-details",
-        highlightedLines: [0, 1, 2, 3, 4, 5, 6, 7, 8], // pizza block
-    };
-
     return (
         <Layout>
             {/* Left Side - Browser Mockup */}
-            <YamlHighlight referenceLine={"home:"} highLightedLineNumbers={[0, 1, 2]} />
+            <YamlHighlight referenceLine={"pizza_list:"} highLightedLineNumbers={[0, 1, 2]} />
 
             {/* Right Side - Browser Mockup */}
             <div className="space-y-4">
@@ -85,15 +80,6 @@ export default function Demo() {
                                                 <Link
                                                     to={routeTo("pizza_review_list", { pizzaType: pizzaId })}
                                                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                    }}
-                                                    onMouseUp={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        window.open(routeTo("pizza_review_list", { pizzaType: pizzaId }), "_self");
-                                                    }}
                                                 >
                                                     💬 {reviews.length} {currentLocale === "es" ? "Reseñas" : currentLocale === "fr" ? "Avis" : "Reviews"}
                                                 </Link>

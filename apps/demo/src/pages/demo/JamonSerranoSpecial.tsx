@@ -8,7 +8,7 @@ import { Layout } from "./components/Layout";
 import { getPizzaData } from "./PizzaType";
 import { reviews, comments } from "./PizzaReviewList";
 
-export function PizzaReview() {
+export function JamonSerranoSpecial() {
     const params = useParams({ strict: false });
     const pizzaType = typeof params.pizzaType === "string" ? params.pizzaType : String(params.pizzaType || "");
     const reviewId = typeof params.reviewId === "string" ? params.reviewId : String(params.reviewId || "");
@@ -43,7 +43,7 @@ export function PizzaReview() {
     return (
         <Layout>
             {/* Left Side - YAML Configuration */}
-            <YamlHighlight referenceLine={currentRouteName + ":"} highLightedLineNumbers={[0, 2, 5]} />
+            <YamlHighlight referenceLine={currentRouteName + ":"} highLightedLineNumbers={[0, 3, 6]} />
 
             {/* Right Side - Browser Mockup */}
             <div className="space-y-4">
@@ -70,6 +70,13 @@ export function PizzaReview() {
                             },
                         ]}
                     >
+                        {/* Special Serrano week teaser */}
+                        <div className="bg-yellow-900 text-yellow-100 rounded-lg p-4 mb-4 border border-yellow-700">
+                            <h2 className="text-xl font-bold mb-2">🥓 ¡Semana Especial de Jamón Serrano!"</h2>
+                            <p className="text-yellow-200">
+                                Disfruta de un 20% de descuento en todas las pizzas con jamón serrano esta semana. ¡No te lo pierdas!
+                            </p>
+                        </div>
                         {/* Main Review */}
                         <div className="bg-gray-800 rounded-lg p-8 mb-8 border border-gray-700">
                             <div className="flex items-start justify-between mb-6">
@@ -78,7 +85,7 @@ export function PizzaReview() {
                                     <div>
                                         <div className="flex items-center gap-2 mb-1">
                                             <h2 className="text-2xl font-bold text-gray-100">{review.author}</h2>
-                                            <div className="text-gray-500">📍 {review.location}</div>
+                                            <span className="text-gray-500">📍 {review.location}</span>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <div className="flex">
@@ -172,7 +179,7 @@ export function PizzaReview() {
                             </div>
 
                             {/* Add Comment */}
-                            <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                            {/* <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
                                 <h4 className="font-semibold text-gray-100 mb-3">
                                     💭 {currentLocale === "es" ? "Agregar un comentario" : currentLocale === "fr" ? "Ajouter un commentaire" : "Add a comment"}
                                 </h4>
@@ -192,7 +199,7 @@ export function PizzaReview() {
                                         {currentLocale === "es" ? "Publicar Comentario" : currentLocale === "fr" ? "Publier le Commentaire" : "Post Comment"}
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </PizzaSite>
                 </Browser>
@@ -203,4 +210,4 @@ export function PizzaReview() {
     );
 }
 
-export default PizzaReview;
+export default JamonSerranoSpecial;

@@ -73,9 +73,6 @@ const PizzaType = function () {
 
     // Pizza data for fun demo content - moved message calls to getter functions
     const pizzaData: Record<string, any> = getPizzaData(currentLocale);
-    const iDontExist = pizzaData["IDONTEXIST"]; // Just to demonstrate no linter error
-
-    console.log("iDontExist", iDontExist);
 
     const pizza = pizzaData[pizzaType] || {
         name: pizzaType ? `${String(pizzaType).charAt(0).toUpperCase()}${String(pizzaType).slice(1)} Pizza` : "Mystery Pizza",
@@ -89,7 +86,7 @@ const PizzaType = function () {
     return (
         <Layout>
             {/* Left Side - YAML Configuration */}
-            <YamlHighlight referenceLine={currentRouteName + ":"} highLightedLineNumbers={[0, 1, 2]} />
+            <YamlHighlight referenceLine={currentRouteName + ":"} highLightedLineNumbers={currentLocale === "es" ? [0, 3, 4] : [0, 2, 4]} />
 
             {/* Right Side - Browser Mockup */}
             <div className="space-y-4">

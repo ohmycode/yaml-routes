@@ -44,7 +44,6 @@ settings:
         defaultLocale: en
         forceLocaleUrl: true
         supportedLocales: [en, fr, es]
-    render: ssr
 
 # Route definitions
 home:
@@ -94,68 +93,74 @@ settings:
 
 #### Using CLI (recommended) - Dead Simple! ⚡
 
+Option 1: Run directly with npx, no package installation needed (always uses latest version)
+
 ```bash
-# Option 1: Add to your package.json scripts (recommended)
+# generate routes on demand
+npx yaml-routes
+
+# watch mode for development 🔥 (auto-regenerate on changes)
+npx yaml-routes --watch
+```
+
+Option 2: install package (if you want to keep a specific version)
+
+```bash
+npm install @yaml-routes/tanstack
+# or
+pnpm add @yaml-routes/tanstack
+# or
+yarn add @yaml-routes/tanstack
+```
+
+# recommended: Add npx script to your package.json scripts
+
+```javascript
+// if you use npx
 {
+  // ...
   "scripts": {
-    "build:routes": "yaml-routes"
+    // ...
+    "build:routes": "npx yaml-routes",
+    "routes:watch": "npx yaml-routes --watch"
   }
 }
 
-# Then run it
-npm run build:routes
-# or
-pnpm run build:routes
-
-# Option 2: Run directly with npx (no setup needed!)
-npx yaml-routes
-
-# Option 3: Watch mode for development 🔥 (auto-regenerate on changes)
-npx yaml-routes --watch
-# or add to package.json:
+// if you installed the package
 {
+  // ...
   "scripts": {
+    // ...
+    "build:routes": "yaml-routes",
     "routes:watch": "yaml-routes --watch"
   }
 }
+```
 
-# Option 4: Custom configuration
+# Then run it
+
+```bash
+npm run build:routes
+# or
+pnpm run build:routes
+# or
+yarn run build:routes
+```
+
+## Advanced usage
+
+### Using the CLI with custom arguments
+
+```bash
+# custom configuration
 npx yaml-routes --config my-routes.yml --output src/routes.generated.tsx
-npx yaml-routes --watch --config my-routes.yml    # Watch custom config
+npx yaml-routes --watch --config my-routes.yml
 
 # Get help
 npx yaml-routes --help
 ```
 
-**That's it!** The CLI automatically:
-
--   📖 Reads your `routes.yml` file
--   🔨 Generates type-safe TypeScript routes
--   🌐 Handles i18n automatically
--   ✅ Creates `src/routes.gen.tsx`
-
-#### 🔥 Development with Watch Mode
-
-For the best development experience, use watch mode to automatically regenerate routes when your YAML file changes:
-
-```bash
-# Start watch mode (runs continuously)
-npx yaml-routes --watch
-
-# Or use a package.json script
-npm run routes:watch
-```
-
-When you modify your `routes.yml`:
-
--   👀 **Instant detection** - File changes are detected immediately
--   ⚡ **Auto-regeneration** - Routes are rebuilt automatically
--   🎯 **Zero intervention** - No manual commands needed
--   🔄 **Continuous watching** - Keeps running until you stop it
-
-Perfect for rapid development! 🚀
-
-#### Using the API (advanced)
+### Using the API in javascript (advanced)
 
 ```typescript
 import { generateTanStackRoutes } from "@yaml-routes/tanstack";
@@ -166,11 +171,18 @@ await generateTanStackRoutes({
 });
 ```
 
-### 3. Use generated routes in your app
+**That's it!** The CLI automatically:
+
+-   📖 Reads your `routes.yml` file
+-   🔨 Generates type-safe TypeScript routes
+-   🌐 Handles i18n
+-   ✅ Creates `src/routes.gen.tsx`
+
+### Use generated routes in your app
 
 ```tsx
 import { RouterProvider } from "@tanstack/react-router";
-import { router, routeTo } from "./routes.gen";
+import { router, useRouteTo } from "./routes.gen";
 
 function App() {
     return <RouterProvider router={router} />;
@@ -178,6 +190,7 @@ function App() {
 
 // Navigation helpers
 function Navigation() {
+    const routeTo = useRouteTo();
     return (
         <nav>
             <a href={routeTo("home")}>Home</a>
@@ -281,14 +294,6 @@ routeTo("user_profile", { id: "123" }); // → '/user/123'
 routeTo("about", {}, "fr"); // → '/fr/a-propos'
 ```
 
-#### `getLocalizedPath(basePath, locale)`
-
-Get localized version of a path:
-
-```typescript
-getLocalizedPath("/about", "fr"); // → '/fr/a-propos'
-```
-
 #### `settings`
 
 Access global configuration:
@@ -325,17 +330,8 @@ pnpm test:watch
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+PRs welcome! see github project for details.
 
 ## 📄 License
 
-MIT License - see the [LICENSE](../../LICENSE) file for details.
-
-## 🔗 Related
-
--   [TanStack Router](https://tanstack.com/router) - The router this package integrates with
--   [Demo App](../../apps/demo) - Example implementation
+MIT License

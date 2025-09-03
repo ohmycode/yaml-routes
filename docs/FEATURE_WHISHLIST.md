@@ -4,21 +4,33 @@
 
 Currently YAML Routes generates basic TypeScript, but could be enhanced with:
 
--   **Route Parameter Validation**: Add Zod schema generation for route parameters
--   **Search Parameter Schemas**: Generate type-safe search parameter validation
+-   Route Parameter Validation: Add Zod schema generation for route parameters
+-   Search Parameter Schemas: Generate type-safe search parameter validation
 
 ### Performance Optimizations
 
 Based on TanStack Router docs:
 
--   **Preloading Strategy**: Add configurable preload strategies (`intent`, `hover`, etc.)
--   **route strategy** : Select between SSG, SSR and Client side rendering
+-   Preloading Strategy: Add configurable preload strategies (`intent`, `hover`, etc.)
+-   route strategy : Select between SSG, SSR and Client side rendering
+-   scrollTop option
 
 ### Enhanced Route Features
 
 Missing TanStack Router capabilities:
 
--   **Route Loaders**: Add YAML config for data loading functions
--   **Loader Data Types**: Auto-generate TypeScript interfaces for loader return types
--   **Before Load Guards**: Authentication/authorization checks
--   **Meta Tags**: SEO and page metadata configuration
+-   Route Loaders: Add YAML config for data loading functions
+-   Loader Data Types: Auto-generate TypeScript interfaces for loader return types
+-   Before Load Guards: Authentication/authorization checks
+-   Meta Tags: SEO and page metadata configuration
+
+Scrolltop
+
+```js
+createFileRoute("/about")({
+    component: About,
+    onLoad: () => {
+        window.scrollTo(0, 0);
+    },
+});
+```
