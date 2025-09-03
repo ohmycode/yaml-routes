@@ -1,6 +1,6 @@
 {
     "name": "@yaml-routes/tanstack",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "YAML-based routing configuration for TanStack Router with i18n support",
     "type": "module",
     "main": "./dist/index.js",

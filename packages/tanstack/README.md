@@ -2,15 +2,15 @@
 
 Type-safe routing configuration for TanStack Router using clean YAML syntax with built-in internationalization.
 
-## Why ?
-
-Modern React routing has moved towards file-based systems (TanStack Router, React Router v7/Remix, Next.js, etc.), but this approach creates significant challenges for internationalized applications and maintainable URL management.
-
 ## 🚀 Live Demo
 
 **[Try it live →](https://ohmycode.github.io/yaml-routes)**
 
 See all features in action with interactive examples, copy-paste installation commands, and live code samples.
+
+## Why ?
+
+Modern React routing has moved towards file-based systems (TanStack Router, React Router v7/Remix, Next.js, etc.), but this approach creates significant challenges for internationalized applications and maintainable URL management.
 
 ## What is YAML Routes?
 
