@@ -2,7 +2,7 @@
 
 Type-safe routing configuration for TanStack Router using clean YAML syntax with built-in internationalization.
 
-**[View interactive Live Demo →](https://ohmycode.github.io/yaml-routes)**
+**[View interactive Live Demo →](https://ohmycode.github.io/yaml-routes/demo/our-pizzas)**
 
 ## Why ?
 
