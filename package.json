@@ -15,7 +15,8 @@
         "package:build": "pnpm --filter @yaml-routes/tanstack build",
         "package:test": "pnpm --filter @yaml-routes/tanstack test",
         "changeset": "changeset",
-        "version-packages": "changeset version",
+        "version-packages": "changeset version && pnpm sync-versions",
+        "sync-versions": "node scripts/sync-versions.js",
         "release": "pnpm build && changeset publish",
         "release:dry": "pnpm package:build && pnpm package:test && cd packages/tanstack && npm publish --access public --dry-run && echo '✅ Package ready for publishing! Run: pnpm changeset && pnpm version-packages && pnpm release'",
         "release-all-in-one": "pnpm changeset && pnpm version && pnpm -r build && pnpm release"

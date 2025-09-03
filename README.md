@@ -307,9 +307,27 @@ The generated output is clean, production-ready TanStack Router code with helper
 
 This is a monorepo containing:
 
-### A package
+### Packages
 
 -   **[@yaml-routes/tanstack](./packages/tanstack)** - Core package for TanStack Router integration
+-   **[yaml-routes](./packages/yaml-routes)** - Unscoped CLI alias for convenience
+
+### Version Synchronization
+
+Both packages maintain synchronized versions:
+
+-   When one package is updated, both get the same version bump
+-   The `yaml-routes` package acts as a lightweight proxy to `@yaml-routes/tanstack`
+-   Users can use either `npx @yaml-routes/tanstack` or `npx yaml-routes`
+
+```bash
+# Both commands are equivalent:
+npx @yaml-routes/tanstack --help
+npx yaml-routes --help
+
+# Manual version sync (if needed):
+pnpm sync-versions
+```
 
 ### An Application (tanstack-start)
 

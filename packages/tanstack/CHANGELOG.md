@@ -1,10 +1,11 @@
 # @yaml-routes/tanstack
 
-## 0.3.1
+## 0.3.3
 
 ### Patch Changes
 
--   still updating the CLI
+-   updating the CLI
+-   sync yaml-routes @ @yaml-routes/tanstack packages
 
 ## 0.3.0
 

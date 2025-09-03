@@ -1,0 +1,37 @@
+{
+    "name": "yaml-routes",
+    "version": "0.3.3",
+    "description": "YAML-based routing configuration generator - CLI alias for @yaml-routes/tanstack",
+    "type": "module",
+    "bin": {
+        "yaml-routes": "./bin/yaml-routes.js"
+    },
+    "files": [
+        "bin",
+        "README.md"
+    ],
+    "scripts": {
+        "prepublishOnly": "chmod +x bin/yaml-routes.js"
+    },
+    "keywords": [
+        "yaml-routes",
+        "routing",
+        "cli",
+        "tanstack-router",
+        "alias"
+    ],
+    "author": "ohmycode",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ohmycode/yaml-routes.git",
+        "directory": "packages/yaml-routes"
+    },
+    "homepage": "https://ohmycode.github.io/yaml-routes",
+    "bugs": {
+        "url": "https://github.com/ohmycode/yaml-routes/issues"
+    },
+    "dependencies": {
+        "@yaml-routes/tanstack": "workspace:*"
+    }
+}

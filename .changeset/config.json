@@ -3,7 +3,7 @@
     "changelog": "@changesets/cli/changelog",
     "commit": false,
     "fixed": [],
-    "linked": [],
+    "linked": [["@yaml-routes/tanstack", "yaml-routes"]],
     "access": "public",
     "baseBranch": "main",
     "updateInternalDependencies": "patch",
