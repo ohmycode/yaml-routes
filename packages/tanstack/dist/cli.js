@@ -1,6 +1,6 @@
 import {
   generateTanStackRoutes
-} from "./chunk-2YWFS7JB.js";
+} from "./chunk-WLWNXGZN.js";
 
 // src/cli.ts
 import { readFile } from "fs/promises";
@@ -71,7 +71,13 @@ async function generateRoutes(config) {
     console.log("\u{1F389} Routes generated successfully!");
     return true;
   } catch (error) {
-    console.error("\u274C Error generating routes:", error);
+    if (error instanceof Error && error.message.includes("ENOENT: Configuration file not found")) {
+      console.error("\u274C", error.message);
+    } else if (error instanceof Error && error.message.includes("Failed to parse YAML")) {
+      console.error("\u274C", error.message);
+    } else {
+      console.error("\u274C Error generating routes:", error instanceof Error ? error.message : error);
+    }
     return false;
   }
 }

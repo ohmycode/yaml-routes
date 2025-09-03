@@ -10,14 +10,58 @@ import { writeFile } from "fs/promises";
 
 // src/utils.ts
 import { readFile } from "fs/promises";
+import { existsSync } from "fs";
 import { load } from "js-yaml";
 async function loadRoutingConfig(configPath = "routes.yml") {
   try {
+    if (!existsSync(configPath)) {
+      throw new Error(`ENOENT: Configuration file not found: ${configPath}
+
+\u{1F4DD} To get started, create a routes.yml file in your project root:
+
+Example routes.yml:
+---
+settings:
+  i18n:
+    enabled: true
+    defaultLocale: en
+    supportedLocales: [en, fr, es]
+
+home:
+  path: /
+  component: pages/Home
+
+about:
+  path: /about
+  component: pages/About
+---
+
+\u{1F4D6} For more examples and documentation, visit:
+   https://ohmycode.github.io/yaml-routes`);
+    }
     const yamlContent = await readFile(configPath, "utf-8");
-    const config = load(yamlContent);
-    return config;
+    try {
+      const config = load(yamlContent);
+      if (!config || typeof config !== "object") {
+        throw new Error(`Invalid YAML content: Configuration must be an object, got ${typeof config}`);
+      }
+      return config;
+    } catch (yamlError) {
+      throw new Error(`Failed to parse YAML in ${configPath}: ${yamlError instanceof Error ? yamlError.message : yamlError}
+
+\u{1F4A1} Common YAML issues:
+   - Check indentation (use spaces, not tabs)
+   - Ensure proper YAML syntax
+   - Verify quotes are balanced
+
+\u{1F4D6} For YAML syntax help, visit:
+   https://yaml.org/spec/1.2/spec.html`);
+    }
   } catch (error) {
-    throw new Error(`Failed to load routing configuration from ${configPath}: ${error}`);
+    if (error instanceof Error && (error.message.includes("ENOENT: Configuration file not found") || error.message.includes("Failed to parse YAML"))) {
+      throw error;
+    }
+    throw new Error(`Failed to load routing configuration from ${configPath}: ${error instanceof Error ? error.message : error}`);
   }
 }
 function isRouteConfig(value) {
@@ -554,7 +598,13 @@ async function generateRoutes(config) {
     console.log("\u{1F389} Routes generated successfully!");
     return true;
   } catch (error) {
-    console.error("\u274C Error generating routes:", error);
+    if (error instanceof Error && error.message.includes("ENOENT: Configuration file not found")) {
+      console.error("\u274C", error.message);
+    } else if (error instanceof Error && error.message.includes("Failed to parse YAML")) {
+      console.error("\u274C", error.message);
+    } else {
+      console.error("\u274C Error generating routes:", error instanceof Error ? error.message : error);
+    }
     return false;
   }
 }

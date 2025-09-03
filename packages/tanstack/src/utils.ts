@@ -1,14 +1,64 @@
 import { readFile } from "fs/promises";
+import { existsSync } from "fs";
 import { load } from "js-yaml";
 import type { RoutingConfig, RouteConfig, SupportedLocale } from "./types";
 
 export async function loadRoutingConfig(configPath: string = "routes.yml"): Promise<RoutingConfig> {
     try {
+        // Check if file exists first for better error message
+        if (!existsSync(configPath)) {
+            throw new Error(`ENOENT: Configuration file not found: ${configPath}
+
+📝 To get started, create a routes.yml file in your project root:
+
+Example routes.yml:
+---
+settings:
+  i18n:
+    enabled: true
+    defaultLocale: en
+    supportedLocales: [en, fr, es]
+
+home:
+  path: /
+  component: pages/Home
+
+about:
+  path: /about
+  component: pages/About
+---
+
+📖 For more examples and documentation, visit:
+   https://ohmycode.github.io/yaml-routes`);
+        }
+
         const yamlContent = await readFile(configPath, "utf-8");
-        const config = load(yamlContent) as RoutingConfig;
-        return config;
+
+        try {
+            const config = load(yamlContent) as RoutingConfig;
+            if (!config || typeof config !== "object") {
+                throw new Error(`Invalid YAML content: Configuration must be an object, got ${typeof config}`);
+            }
+            return config;
+        } catch (yamlError) {
+            throw new Error(`Failed to parse YAML in ${configPath}: ${yamlError instanceof Error ? yamlError.message : yamlError}
+
+💡 Common YAML issues:
+   - Check indentation (use spaces, not tabs)
+   - Ensure proper YAML syntax
+   - Verify quotes are balanced
+
+📖 For YAML syntax help, visit:
+   https://yaml.org/spec/1.2/spec.html`);
+        }
     } catch (error) {
-        throw new Error(`Failed to load routing configuration from ${configPath}: ${error}`);
+        // Re-throw our custom errors as-is
+        if (error instanceof Error && (error.message.includes("ENOENT: Configuration file not found") || error.message.includes("Failed to parse YAML"))) {
+            throw error;
+        }
+
+        // Handle other unexpected errors
+        throw new Error(`Failed to load routing configuration from ${configPath}: ${error instanceof Error ? error.message : error}`);
     }
 }
 

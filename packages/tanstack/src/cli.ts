@@ -82,7 +82,15 @@ async function generateRoutes(config: BuildConfig): Promise<boolean> {
         console.log("🎉 Routes generated successfully!");
         return true;
     } catch (error) {
-        console.error("❌ Error generating routes:", error);
+        // Check if it's our user-friendly error message
+        if (error instanceof Error && error.message.includes("ENOENT: Configuration file not found")) {
+            console.error("❌", error.message);
+        } else if (error instanceof Error && error.message.includes("Failed to parse YAML")) {
+            console.error("❌", error.message);
+        } else {
+            // For other errors, show the original format
+            console.error("❌ Error generating routes:", error instanceof Error ? error.message : error);
+        }
         return false;
     }
 }
