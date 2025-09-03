@@ -12,7 +12,7 @@ settings:
     basePath: /yaml-routes
 
     # Performance optimizations
-    lazyComponents: true # Enable lazy loading for better code splitting (false by default)
+    lazyComponents: false # Enable lazy loading for better code splitting (false by default)
 
     # TanStack Router configuration
     router:

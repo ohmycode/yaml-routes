@@ -303,15 +303,17 @@ YAML Routes is a **build-time tool** that generates standard TanStack Router cod
 
 The generated output is clean, production-ready TanStack Router code with helper functions for type-safe navigation.
 
-## Documentation
-
--   [Package Documentation](./packages/tanstack/README.md) - Detailed API reference
--   [Routing Format Reference](./ROUTING_FORMAT.md) - Complete YAML syntax guide
--   [Quick Start Guide](./ROUTING_GUIDE.md) - Step-by-step setup instructions
-
----
-
 ## Development
+
+This is a monorepo containing:
+
+### A package
+
+-   **[@yaml-routes/tanstack](./packages/tanstack)** - Core package for TanStack Router integration
+
+### An Application (tanstack-start)
+
+-   **[Demo App](./apps/demo)** - Github Page, Documentation & interactive demo
 
 ```bash
 # Install dependencies
@@ -326,18 +328,6 @@ pnpm build
 # Run tests
 pnpm test
 ```
-
-## Project Structure
-
-This is a monorepo containing:
-
-### A package
-
--   **[@yaml-routes/tanstack](./packages/tanstack)** - Core package for TanStack Router integration
-
-### An Application (tanstack-start)
-
--   **[Demo App](./apps/demo)** - Github Page, Documentation & interactive demo
 
 ### Contributing
 
