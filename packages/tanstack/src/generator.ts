@@ -127,74 +127,9 @@ export function useRouteTo(): RouteToFunction {
   };
 }
 
-export function routeTo<K extends RouteNames>(
-  id: K,
-  ...params: RouteToParams<ExtractParams<K>>
-): string {
-  const route = routeIdMappings[id.toLowerCase() as string];
-  if (!route) return '/';
-  
-  // For static usage without locale context, use default locale
-  const defaultLocale = settings.i18n?.defaultLocale || 'en';
-  const localizedTemplate = getLocalizedPath(route.path, defaultLocale);
-  
-  // Fill in parameters
-  let finalPath = localizedTemplate;
-  const paramObj = params[0] || {};
-  Object.entries(paramObj).forEach(([k, v]) => finalPath = finalPath.replace(\`{\${k}}\`, String(v)));
-  return finalPath;
-}
-
-export function useRouteName(): string {
-  const location = useLocation();
-  
-  // Use TanStack Router's built-in route matching
-  // The pathname already contains the matched route information
-  const pathname = location.pathname;
-  
-  // Quick path normalization
-  let normalizedPath = pathname;
-  ${
-      config.basePath
-          ? `if (normalizedPath.startsWith('${config.basePath}')) {
-    normalizedPath = normalizedPath.slice(${config.basePath.length}) || '/';
-  }`
-          : ""
-  }
-  
-  // Remove locale prefix for route matching
-  const supportedLocales = ${JSON.stringify(config.locales)};
-  for (const locale of supportedLocales) {
-    if (locale !== settings.i18n.defaultLocale) {
-      const localePrefix = '/' + locale;
-      if (normalizedPath === localePrefix || normalizedPath === localePrefix + '/') {
-        normalizedPath = '/';
-        break;
-      } else if (normalizedPath.startsWith(localePrefix + '/')) {
-        normalizedPath = normalizedPath.slice(localePrefix.length);
-        break;
-      }
-    }
-  }
-  
-  // Direct lookup in route mappings (most efficient)
-  for (const [routeId, routeData] of Object.entries(routeIdMappings)) {
-    // Check exact match first (fastest)
-    if (routeData.path === normalizedPath) {
-      return routeId;
-    }
-    
-    // Check pattern match only if needed
-    if (routeData.path.includes('{')) {
-      const pathPattern = routeData.path.replace(/{[^}]+}/g, '[^/]+');
-      const regex = new RegExp('^' + pathPattern.replace(/\\//g, '\\\\/') + '$');
-      if (regex.test(normalizedPath)) {
-        return routeId;
-      }
-    }
-  }
-  
-  return normalizedPath === '/' ? 'home' : 'unknown';
+export function useRouteName(): RouteNames | "unknown" {
+    const current = useCurrentRoute();
+    return (current?.routeId as RouteNames) ?? "unknown";
 }
 
 export function useRouteParams(includeLocale: boolean = true): Record<string, string> {
