@@ -495,4 +495,4 @@ export {
   validateRoutingConfig,
   generateTanStackRoutes
 };
-//# sourceMappingURL=chunk-56RHWCFF.js.map
+//# sourceMappingURL=chunk-2YWFS7JB.js.map

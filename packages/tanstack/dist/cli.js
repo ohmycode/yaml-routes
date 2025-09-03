@@ -1,6 +1,6 @@
 import {
   generateTanStackRoutes
-} from "./chunk-56RHWCFF.js";
+} from "./chunk-2YWFS7JB.js";
 
 // src/cli.ts
 import { readFile } from "fs/promises";

@@ -10,7 +10,7 @@ import {
   loadRoutingConfig,
   normalizeRouteName,
   validateRoutingConfig
-} from "./chunk-56RHWCFF.js";
+} from "./chunk-2YWFS7JB.js";
 export {
   convertYamlPathToReactRouterPath,
   convertYamlPathToTanstackPath,
