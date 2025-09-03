@@ -76,9 +76,20 @@ settings:
     router:
         basePath: /your-app
     i18n:
-        forceLocaleUrl: true # 🎯 Enable automatic locale preservation
+        forceLocaleUrl: true # Enable automatic locale preservation
         defaultLocale: en
         locales: [en, es, fr]
+
+home:
+    path: /
+    component: pages/Home
+
+about:
+    path:
+        en: /about
+        fr: /a-propos
+        es: /acerca-de
+    component: pages/About
 ```
 
 ### 2. Generate routes
