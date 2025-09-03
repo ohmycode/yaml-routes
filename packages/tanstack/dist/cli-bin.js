@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-#!/usr/bin/env node
 
 // src/cli.ts
 import { readFile as readFile3 } from "fs/promises";
