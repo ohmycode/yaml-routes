@@ -1,6 +1,10 @@
 # @yaml-routes/tanstack
 
-YAML-based routing configuration for TanStack Router with built-in internationalization support.
+Type-safe routing configuration for TanStack Router using clean YAML syntax with built-in internationalization.
+
+## Why ?
+
+Modern React routing has moved towards file-based systems (TanStack Router, React Router v7/Remix, Next.js, etc.), but this approach creates significant challenges for internationalized applications and maintainable URL management.
 
 ## 🚀 Live Demo
 
@@ -8,17 +12,57 @@ YAML-based routing configuration for TanStack Router with built-in international
 
 See all features in action with interactive examples, copy-paste installation commands, and live code samples.
 
-## 🚀 Features
+## What is YAML Routes?
 
-## 🚀 Features
+A tiny build-time tool that generates type-safe TanStack Router code from a simple YAML configuration. Perfect for internationalized (i18n) applications where file-based routing falls short.
 
--   � **YAML Configuration**: Define routes in clean, readable YAML format
--   🌐 **Built-in i18n**: Multi-language routing with locale-specific paths and components
--   🔗 **forceLocaleUrl**: Preserve user's language preference across navigation
--   🎯 **Type Safety**: Full TypeScript support with generated types
--   ⚡ **TanStack Router**: Built specifically for TanStack Router v1.130.0+
--   📦 **Zero Config**: Works out of the box with sensible defaults
--   🚀 **CLI Tool**: Simple command-line interface for route generation
+```yaml
+# routes.yml - Single source of truth for all routes
+settings:
+    i18n:
+        enabled: true
+        defaultLocale: en
+        supportedLocales: [en, fr, es]
+        forceLocaleUrl: true
+
+home:
+    path: /
+    component: pages/Home
+
+about:
+    path:
+        en: /about
+        fr: /a-propos
+        es: /acerca-de
+    component: pages/About
+
+user_profile:
+    path: /user/{id}
+    component: pages/UserProfile
+    parameters:
+        id:
+            type: string
+            required: true
+```
+
+```bash
+npx yaml-routes --watch  # Generate routes + watch for changes
+```
+
+```typescript
+// Type-safe navigation
+<Link to={routeTo("about")}>About</Link>
+```
+
+## Features
+
+-   **YAML Configuration**: Define routes in clean, readable YAML format
+-   **Built-in i18n**: Multi-language routing with locale-specific paths and components
+-   **forceLocaleUrl**: Preserve user's language preference across navigation
+-   **Type Safety**: Full TypeScript support with generated types
+-   **TanStack Router**: Built specifically for TanStack Router v1.130.0
+-   **Zero Config**: Works out of the box with sensible defaults
+-   **CLI Tool**: Simple command-line interface for route generation
 
 ## 📦 Installation
 
@@ -99,7 +143,7 @@ Option 1: Run directly with npx, no package installation needed (always uses lat
 # generate routes on demand
 npx yaml-routes
 
-# watch mode for development 🔥 (auto-regenerate on changes)
+# watch mode for development (auto-regenerate on changes)
 npx yaml-routes --watch
 ```
 
