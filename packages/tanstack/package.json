@@ -1,6 +1,6 @@
 {
     "name": "@yaml-routes/tanstack",
-    "version": "0.2.5",
+    "version": "0.3.0",
     "description": "YAML-based routing configuration for TanStack Router with i18n support",
     "type": "module",
     "main": "./dist/index.js",
@@ -17,7 +17,7 @@
         }
     },
     "bin": {
-        "yaml-routes": "./dist/cli.js"
+        "yaml-routes": "./dist/cli-bin.js"
     },
     "files": [
         "dist",
@@ -27,6 +27,7 @@
     "scripts": {
         "dev": "tsup --watch",
         "build": "tsup",
+        "prepublishOnly": "pnpm run build && chmod +x dist/cli-bin.js",
         "test": "vitest run",
         "test:watch": "vitest",
         "type-check": "tsc --noEmit",

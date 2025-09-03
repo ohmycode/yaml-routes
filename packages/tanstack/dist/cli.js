@@ -1,12 +1,11 @@
-#!/usr/bin/env node
 import {
   generateTanStackRoutes
 } from "./chunk-56RHWCFF.js";
 
 // src/cli.ts
 import { readFile } from "fs/promises";
+import { watch, realpathSync } from "fs";
 import { resolve } from "path";
-import { watch } from "fs";
 function parseArgs(args) {
   const options = {};
   for (let i = 0; i < args.length; i++) {
@@ -139,11 +138,9 @@ async function main() {
     process.exit(success ? 0 : 1);
   }
 }
-var isMainModule = import.meta.url === `file://${process.argv[1]}` || import.meta.url.endsWith("/cli.js") && process.argv[1].endsWith("/cli.js");
-if (isMainModule) {
-  main().catch((error) => {
-    console.error("Fatal error:", error);
-    process.exit(1);
-  });
-}
+export {
+  main,
+  parseArgs,
+  printHelp
+};
 //# sourceMappingURL=cli.js.map

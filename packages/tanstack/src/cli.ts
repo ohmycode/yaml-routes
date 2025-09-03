@@ -1,12 +1,12 @@
-#!/usr/bin/env node
-
 import { readFile } from "fs/promises";
+import { watch, realpathSync } from "fs";
 import { resolve } from "path";
-import { watch } from "fs";
+import { fileURLToPath } from "url";
+
 import type { BuildConfig } from "./types";
 import { generateTanStackRoutes } from "./generator";
 
-interface CLIOptions {
+export interface CLIOptions {
     config?: string;
     output?: string;
     watch?: boolean;
@@ -14,12 +14,10 @@ interface CLIOptions {
     version?: boolean;
 }
 
-function parseArgs(args: string[]): CLIOptions {
+export function parseArgs(args: string[]): CLIOptions {
     const options: CLIOptions = {};
-
     for (let i = 0; i < args.length; i++) {
         const arg = args[i];
-
         switch (arg) {
             case "-c":
             case "--config":
@@ -43,11 +41,10 @@ function parseArgs(args: string[]): CLIOptions {
                 break;
         }
     }
-
     return options;
 }
 
-function printHelp() {
+export function printHelp() {
     console.log(`
 yaml-routes - Generate routes from YAML configuration
 
@@ -104,13 +101,11 @@ async function watchMode(config: BuildConfig): Promise<void> {
     console.log(`📄 Output file: ${config.outputPath}`);
     console.log("🔄 Press Ctrl+C to stop watching\n");
 
-    // Initial generation
     const initialSuccess = await generateRoutes(config);
     if (!initialSuccess) {
         console.error("❌ Initial route generation failed. Fix errors and save the config file to retry.");
     }
 
-    // Debounced regeneration function
     const debouncedGenerate = debounce(async () => {
         console.log("\n📝 Config file changed, regenerating routes...");
         const success = await generateRoutes(config);
@@ -119,29 +114,26 @@ async function watchMode(config: BuildConfig): Promise<void> {
         } else {
             console.log("❌ Fix errors and save again to retry.\n");
         }
-    }, 100); // 100ms debounce
+    }, 100);
 
-    // Watch the config file
     const watcher = watch(config.configPath, (eventType) => {
         if (eventType === "change") {
             debouncedGenerate();
         }
     });
 
-    // Graceful shutdown
     process.on("SIGINT", () => {
         console.log("\n🛑 Stopping watch mode...");
         watcher.close();
         process.exit(0);
     });
-
     process.on("SIGTERM", () => {
         watcher.close();
         process.exit(0);
     });
 }
 
-async function main() {
+export async function main() {
     const args = process.argv.slice(2);
     const options = parseArgs(args);
 
@@ -149,7 +141,6 @@ async function main() {
         printHelp();
         process.exit(0);
     }
-
     if (options.version) {
         await printVersion();
         process.exit(0);
@@ -169,12 +160,26 @@ async function main() {
     }
 }
 
-// Only run if this file is being executed directly
-const isMainModule = import.meta.url === `file://${process.argv[1]}` || (import.meta.url.endsWith("/cli.js") && process.argv[1].endsWith("/cli.js"));
-
-if (isMainModule) {
-    main().catch((error: any) => {
-        console.error("Fatal error:", error);
-        process.exit(1);
-    });
+/** Robust ESM "is main" check that doesn't break when imported */
+function isExecutedAsBin(): boolean {
+    try {
+        const thisFile = realpathSync(fileURLToPath(import.meta.url));
+        const invoked = process.argv[1] ? realpathSync(process.argv[1]) : "";
+        if (invoked && invoked === thisFile) return true;
+        // npm/yarn/pnpm shim paths look like node_modules/.bin/yaml-routes(.cmd)
+        if (/[\\/]\.bin[\\/](yaml-routes)(\.cmd)?$/.test(invoked)) return true;
+    } catch {
+        return true; // be lenient
+    }
+    return false;
 }
+
+// Do NOT auto-run here; leave execution to the bin wrapper.
+// If you *really* want this file to be runnable directly (node dist/cli.js),
+// uncomment the block below:
+// if (isExecutedAsBin()) {
+//   main().catch(err => {
+//     console.error("Fatal error:", err);
+//     process.exit(1);
+//   });
+// }
